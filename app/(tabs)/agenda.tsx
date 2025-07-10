@@ -6,9 +6,9 @@ const deloitteLogo = require('@/assets/images/icon.png'); // Replace with your l
 const avatarIcon = require('@/assets/images/icon.png'); // Replace with your avatar
 
 const days = [
-  { label: 'Mon', date: '08', active: true },
-  { label: 'Tue', date: '09', active: false },
-  { label: 'Wed', date: '10', active: false },
+  { label: 'Mon', date: '08', active: true, disabled: false },
+  { label: 'Tue', date: '09', active: false, disabled: false },
+  { label: 'Wed', date: '10', active: false,   disabled: false },
 ];
 
 const agendaData = [
