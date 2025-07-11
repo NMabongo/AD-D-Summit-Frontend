@@ -1,99 +1,65 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const deloitteLogo = require('@/assets/images/icon.png');
-const avatarIcon = require('@/assets/images/icon.png');
-const micBg = require('@/assets/images/icon.png');
+const mindfulBanner = require('@/assets/images/icon.png');
 
-const speakers = [
+const sessions = [
   {
     id: '1',
-    name: 'Bheki Ntshezi',
-    title: 'AI Expert',
-    avatar: require('@/assets/images/icon.png'),
+    title: 'Deloitte Partner Summit 2025',
+    description: 'Start your day with a 10-minute guided meditation session focusing on breath awareness and intention setting.',
+    duration: '5hr 30min',
   },
   {
     id: '2',
-    name: 'Mark Davis',
-    title: 'Tech CEO',
-    avatar: require('@/assets/images/icon.png'),
+    title: 'Deloitte Partner Summit 2025',
+    description: 'Practice mindful movement with a guided walking meditation in nature, focusing on each step and breath.',
+    duration: '5hr 30min',
   },
   {
     id: '3',
-    name: 'Lisa Wang',
-    title: 'Blockchain',
-    avatar: require('@/assets/images/icon.png'),
-  },
-  {
-    id: '4',
-    name: 'Lisa Chen',
-    title: 'AI Expert',
-    avatar: require('@/assets/images/icon.png'),
-  },
-  {
-    id: '5',
-    name: 'Lisa Chen',
-    title: 'AI Expert',
-    avatar: require('@/assets/images/icon.png'),
-  },
-  {
-    id: '6',
-    name: 'Mark Davis',
-    title: 'Tech CEO',
-    avatar: require('@/assets/images/icon.png'),
-  },
-  {
-    id: '7',
-    name: 'Lisa Wang',
-    title: 'Blockchain',
-    avatar: require('@/assets/images/icon.png'),
-  },
-  {
-    id: '8',
-    name: 'Lisa Chen',
-    title: 'AI Expert',
-    avatar: require('@/assets/images/icon.png'),
+    title: 'Deloitte Partner Summit 2025',
+    description: 'Deep relaxation technique that guides you through releasing tension from every part of your body.',
+    duration: '5hr 30min',
   },
 ];
 
-const numColumns = 2;
-const cardWidth = (Dimensions.get('window').width - 48) / 2;
-
-export default function FeaturedSpeakers() {
+export default function Mindful() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* Header */}
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.header}>
-        <Image source={deloitteLogo} style={styles.logo} />
+        <Image source={mindfulBanner} style={styles.logo} />
         <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
         <TouchableOpacity>
           <View style={styles.avatarCircle}>
-            <Image source={avatarIcon} style={styles.avatarImg} />
+            <Image source={mindfulBanner} style={styles.avatarImg} />
           </View>
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Banner */}
+      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View style={styles.bannerContainer}>
-          <Image source={micBg} style={styles.bannerImg} resizeMode="cover" />
+          <Image source={mindfulBanner} style={styles.bannerImg} resizeMode="cover" />
           <View style={styles.bannerOverlay}>
-            <Text style={styles.bannerTitle}>Featured Speakers</Text>
+            <Text style={styles.bannerTitle}>Mindfulness</Text>
           </View>
         </View>
 
-        {/* Speakers Grid */}
-        <View style={styles.speakersGrid}>
-          {speakers.map((speaker) => (
-            <View key={speaker.id} style={styles.speakerCard}>
-              <Image source={speaker.avatar} style={styles.speakerAvatar} />
-              <Text style={styles.speakerName}>{speaker.name}</Text>
-              <Text style={styles.speakerTitle}>{speaker.title}</Text>
+        {sessions.map((session) => (
+          <View key={session.id} style={styles.sessionCard}>
+            <Text style={styles.sessionTitle}>{session.title}</Text>
+            <Text style={styles.sessionDescription}>{session.description}</Text>
+            <View style={styles.sessionFooter}>
+              <Icon name="time-outline" size={18} color="#888" />
+              <Text style={styles.sessionDuration}>{session.duration}</Text>
+              <TouchableOpacity style={styles.registerButton}>
+                <Text style={styles.registerButtonText}>Register</Text>
+              </TouchableOpacity>
             </View>
-          ))}
-        </View>
+          </View>
+        ))}
       </ScrollView>
 
       <View style={styles.bottomNav}>
@@ -105,20 +71,20 @@ export default function FeaturedSpeakers() {
           <Icon name="calendar" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel} >Agenda</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}  onPress={() => router.push('/(tabs)/featuredSpeakers')}>
-          <Icon name="people" size={24} color="#8DD22A" />
-          <Text style={styles.navLabelActive}>Speakers</Text>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/featuredSpeakers')}>
+          <Icon name="people" size={24} color="#BDBDBD" />
+          <Text style={styles.navLabel} >Speakers</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
-          <Icon name="leaf" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Mindfulness</Text>
+          <Icon name="leaf" size={24} color="#8DD22A" />
+          <Text style={styles.navLabelActive} >Mindfulness</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <Icon name="person" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -187,44 +153,51 @@ const styles = StyleSheet.create({
     fontSize: 26,
     textAlign: 'center',
   },
-  speakersGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    marginTop: 8,
-  },
-  speakerCard: {
+  sessionCard: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    alignItems: 'center',
-    width: cardWidth,
+    marginHorizontal: 16,
     marginBottom: 18,
-    paddingVertical: 18,
+    padding: 18,
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 1 },
     elevation: 1,
   },
-  speakerAvatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginBottom: 10,
-    backgroundColor: '#eee',
+  sessionTitle: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#222',
+    marginBottom: 6,
   },
-  speakerName: {
+  sessionDescription: {
+    color: '#444',
+    fontSize: 15,
+    marginBottom: 12,
+  },
+  sessionFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  sessionDuration: {
+    color: '#888',
+    fontSize: 14,
+    marginLeft: 6,
+    flex: 1,
+  },
+  registerButton: {
+    backgroundColor: '#8DD22A',
+    borderRadius: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+    marginLeft: 12,
+  },
+  registerButtonText: {
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
-    color: '#222',
-    marginBottom: 2,
-    textAlign: 'center',
-  },
-  speakerTitle: {
-    color: '#888',
-    fontSize: 13,
-    textAlign: 'center',
   },
   bottomNav: {
     flexDirection: 'row',
@@ -253,5 +226,6 @@ const styles = StyleSheet.create({
     color: '#8DD22A',
     fontWeight: 'bold',
     fontSize: 12,
-  }
+    marginTop: 2,
+  },
 });

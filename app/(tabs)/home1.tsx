@@ -1,26 +1,24 @@
-import SummitBg from '@/assets/images/svg/homeBanner'; // SVG as React component
+import SummitBg from '@/assets/images/svg/homeBanner';
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-const deloitteLogo = require('@/assets/images/icon.png'); // Replace with your actual icon path
-const micIcon = require('@/assets/images/icon.png'); // Replace with your actual icon path
+const deloitteLogo = require('@/assets/images/icon.png');
+const micIcon = require('@/assets/images/icon.png');
 
 export default function Home() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* Header */}
       <View style={styles.header}>
         <Image source={deloitteLogo} style={styles.logo} />
         <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
         <TouchableOpacity>
           <View style={styles.avatarCircle}>
-            {/* Avatar image here */}
           </View>
         </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Hero Section */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
             <SummitBg width="100%" height="100%" />
@@ -38,7 +36,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Stats */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>160+</Text>
@@ -54,7 +51,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Countdown */}
         <View style={styles.countdownCard}>
           <View style={styles.countdownHeader}>
             <Text style={styles.countdownTitle}>Event Starts In</Text>
@@ -80,7 +76,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Agenda */}
         <View style={styles.agendaHeaderRow}>
           <Text style={styles.agendaTitle}>Day 1 Agenda</Text>
           <TouchableOpacity>
@@ -110,11 +105,33 @@ export default function Home() {
           </View>
         </View>
       </ScrollView>
+
+            <View style={styles.bottomNav}>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/home1')}>
+                <Icon name="home" size={24} color="#8DD22A" />
+                <Text style={styles.navLabelActive} >Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/agenda')}>
+                <Icon name="calendar" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >Agenda</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/featuredSpeakers')}>
+                <Icon name="people" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >Speakers</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
+                <Icon name="leaf" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >Mindfulness</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem}>
+                <Icon name="person" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel}>Profile</Text>
+              </TouchableOpacity>
+            </View>
     </SafeAreaView>
   );
 }
 
-// ...styles remain unchanged...
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',

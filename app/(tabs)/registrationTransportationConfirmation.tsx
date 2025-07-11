@@ -30,7 +30,6 @@ export default function RegistrationTransportationConfirmation() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          {/* CARD */}
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm your transportation</Text>
             <Text style={styles.subtitle}>Let us know your preference</Text>
@@ -73,7 +72,6 @@ export default function RegistrationTransportationConfirmation() {
             </Text>
           </View>
 
-          {/* BUTTONS OUTSIDE CARD */}
           <View style={styles.bottomButtonsContainer}>
             <TouchableOpacity
               style={styles.navButton}

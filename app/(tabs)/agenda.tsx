@@ -1,9 +1,10 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const deloitteLogo = require('@/assets/images/icon.png'); // Replace with your logo
-const avatarIcon = require('@/assets/images/icon.png'); // Replace with your avatar
+const deloitteLogo = require('@/assets/images/icon.png');
+const avatarIcon = require('@/assets/images/icon.png');
 
 const days = [
   { label: 'Mon', date: '08', active: true, disabled: false },
@@ -131,21 +132,20 @@ export default function Agenda() {
         ))}
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/home1')}>
           <Icon name="home" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Home</Text>
+          <Text style={styles.navLabel}  >Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/agenda')}>
           <Icon name="calendar" size={24} color="#8DD22A" />
           <Text style={styles.navLabelActive}>Agenda</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/featuredSpeakers')}>
           <Icon name="people" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Speakers</Text>
+          <Text style={styles.navLabel} >Speakers</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
           <Icon name="leaf" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>Mindfulness</Text>
         </TouchableOpacity>
