@@ -21,6 +21,75 @@ export default function RegistrationScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateEmail = (text: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(text);
+  };
+
+  const validatePassword = (text: string) => {
+    const isValid = text.length >= 8 && /[A-Z]/.test(text) && /[0-9]/.test(text);
+    if (!isValid) {
+      setPasswordError(
+        'Password must be at least 8 characters long, contain an uppercase letter, and a number'
+      );
+    }
+    return isValid;
+  };
+
+  const validateInput = () => {
+    let isValid = true;
+
+    if (!firstName.trim()) {
+      setFirstNameError('First name is required');
+      isValid = false;
+    } else {
+      setFirstNameError('');
+    }
+
+    if (!lastName.trim()) {
+      setLastNameError('Last name is required');
+      isValid = false;
+    } else {
+      setLastNameError('');
+    }
+
+    if (!email.trim() || !validateEmail(email)) {
+      setEmailError('Invalid email format');
+      isValid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!validatePassword(password)) {
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    return isValid;
+  };
+
+  const backTrigger = () => {
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setRegion('');
+    setPassword('');
+
+    setFirstNameError('');
+    setLastNameError('');
+    setEmailError('');
+    setPasswordError('');
+
+
+    router.back();
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#000' }}>
       <RegistrationScreenBackground />
@@ -41,8 +110,14 @@ export default function RegistrationScreen() {
                   placeholder="John"
                   placeholderTextColor="#bdbdbd"
                   value={firstName}
-                  onChangeText={setFirstName}
+                  onChangeText={(text) => {
+                    setFirstName(text);
+                    if (text.trim()) setFirstNameError('');
+                  }}
                 />
+                {firstNameError ? (
+                  <Text style={styles.warningText}>⚠️ {firstNameError}</Text>
+                ) : null}
               </View>
 
               <View style={styles.inputContainer}>
@@ -52,8 +127,14 @@ export default function RegistrationScreen() {
                   placeholder="Doe"
                   placeholderTextColor="#bdbdbd"
                   value={lastName}
-                  onChangeText={setLastName}
+                  onChangeText={(text) => {
+                    setLastName(text);
+                    if (text.trim()) setLastNameError('');
+                  }}
                 />
+                {lastNameError ? (
+                  <Text style={styles.warningText}>⚠️ {lastNameError}</Text>
+                ) : null}
               </View>
             </View>
 
@@ -65,12 +146,22 @@ export default function RegistrationScreen() {
                   placeholder="Johndoe@deloitte.com"
                   placeholderTextColor="#bdbdbd"
                   value={email}
-                  onChangeText={setEmail}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    if (!validateEmail(text)) {
+                      setEmailError('Invalid email format');
+                    } else {
+                      setEmailError('');
+                    }
+                  }}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
                 <Icon name="mail-outline" size={20} color="#bdbdbd" style={{ marginRight: 10 }} />
               </View>
+              {emailError ? (
+                <Text style={styles.warningText}>⚠️ {emailError}</Text>
+              ) : null}
             </View>
 
             <View style={[styles.inputContainer, styles.textInputLong]}>
@@ -95,7 +186,12 @@ export default function RegistrationScreen() {
                   placeholder="Enter new password"
                   placeholderTextColor="#bdbdbd"
                   value={password}
-                  onChangeText={setPassword}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    if (validatePassword(text)) {
+                      setPasswordError('');
+                    }
+                  }}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                 />
@@ -108,21 +204,32 @@ export default function RegistrationScreen() {
                   />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.warningText}>⚠️ Do not use your Deloitte password</Text>
+              {passwordError ? (
+                <Text style={styles.warningText}>⚠️ {passwordError}</Text>
+              ) : null}
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                if (validateInput()) {
+                  console.log('All valid!');
+                }
+              }}
+            >
               <Text style={styles.buttonText}>Register Now</Text>
             </TouchableOpacity>
 
             <Text style={styles.footerText}>
-              Having problems? <Text style={styles.contactText}  onPress={() => router.push('/(tabs)/contactUs')}>Contact us</Text>
+              Having problems?{' '}
+              <Text style={styles.contactText} onPress={() => router.push('/(tabs)/contactUs')}>
+                Contact us
+              </Text>
             </Text>
           </View>
 
-          {/* Bottom navigation buttons */}
           <View style={styles.bottomButtonsContainer}>
-            <TouchableOpacity style={styles.secondaryButton} onPress={() => router.back()}>
+            <TouchableOpacity style={styles.secondaryButton} onPress={backTrigger}>
               <Text style={styles.secondaryButtonText}>Back</Text>
             </TouchableOpacity>
 
