@@ -1,0 +1,35 @@
+{
+  "africaConsulting": "Africa Consulting Services",
+  "appName": "AD-D Summit",
+  "appDescription": "A platform for the Africa Consulting Services Leadership Summit",
+    "welcomePage": {
+        "title": "Welcome to the AD-D Summit",
+        "subtitle": "Leadership Summit 2025",
+        "builtBy": "BUILT BY",
+        "cardTitle": "Deloitte Africa",
+        "cardSubtitle": "Product & Platform Engineering",
+        "hostedBy": "HOSTED BY",
+        "cardSubtitlePractice": "Microsoft Practice",
+        "buttonText": "Get Started"
+    },
+    "registrationScreen": {
+        "title": "Registration",
+        "subtitle": "Please fill in your details to register",
+        "namePlaceholder": "Full Name",
+        "emailPlaceholder": "Email Address",
+        "phonePlaceholder": "Phone Number",
+        "passwordPlaceholder": "Password",
+        "confirmPasswordPlaceholder": "Confirm Password",
+        "registerButtonText": "Register",
+        "alreadyHaveAccount": "Already have an account? ",
+        "loginLinkText": "Login"
+    },
+    "loginScreen": {
+        "title": "Login",
+        "subtitle": "Please enter your credentials to login",
+        "emailPlaceholder": "Email Address",
+        "passwordPlaceholder": "Password",
+        "loginButtonText": "Login",
+        "forgotPasswordText": "Forgot Password?"
+    }
+}
