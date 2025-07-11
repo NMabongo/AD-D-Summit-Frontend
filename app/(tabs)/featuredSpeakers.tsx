@@ -1,3 +1,4 @@
+import en from '@/assets/translations/en.json';
 import { router } from 'expo-router';
 import React from 'react';
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -99,23 +100,23 @@ export default function FeaturedSpeakers() {
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/home1')}>
           <Icon name="home" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >Home</Text>
+          <Text style={styles.navLabel} >{en.navigationOptions.home}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/agenda')}>
           <Icon name="calendar" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >Agenda</Text>
+          <Text style={styles.navLabel} >{en.navigationOptions.agenda}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}  onPress={() => router.push('/(tabs)/featuredSpeakers')}>
           <Icon name="people" size={24} color="#8DD22A" />
-          <Text style={styles.navLabelActive}>Speakers</Text>
+          <Text style={styles.navLabelActive}>{en.navigationOptions.featuredSpeakers}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
-          <Icon name="leaf" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Mindfulness</Text>
+          <Icon name="cloud" size={24} color="#BDBDBD" />
+          <Text style={styles.navLabel}>{en.navigationOptions.mindful}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/profile')}>
           <Icon name="person" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Profile</Text>
+          <Text style={styles.navLabel}>{en.navigationOptions.profile}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

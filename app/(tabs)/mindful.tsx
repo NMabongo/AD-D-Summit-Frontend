@@ -76,10 +76,10 @@ export default function Mindful() {
           <Text style={styles.navLabel} >Speakers</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
-          <Icon name="leaf" size={24} color="#8DD22A" />
+          <Icon name="cloud" size={24} color="#8DD22A" />
           <Text style={styles.navLabelActive} >Mindfulness</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem}  onPress={() => router.push('/(tabs)/profile')}>
           <Icon name="person" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>

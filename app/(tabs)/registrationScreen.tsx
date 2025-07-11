@@ -116,7 +116,7 @@ export default function RegistrationScreen() {
             </TouchableOpacity>
 
             <Text style={styles.footerText}>
-              Having problems? <Text style={styles.contactText}>Contact us</Text>
+              Having problems? <Text style={styles.contactText}  onPress={() => router.push('/(tabs)/contactUs')}>Contact us</Text>
             </Text>
           </View>
 

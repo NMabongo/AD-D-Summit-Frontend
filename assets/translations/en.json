@@ -31,5 +31,13 @@
         "passwordPlaceholder": "Password",
         "loginButtonText": "Login",
         "forgotPasswordText": "Forgot Password?"
+    },
+    "navigationOptions": {
+        "home": "Home",
+        "mindful": "Mindfulness",
+        "registrationTransportationConfirmation": "Registration & Transportation Confirmation",
+        "profile": "Profile",
+        "agenda": "Agenda",
+        "featuredSpeakers": "Speakers"
     }
 }

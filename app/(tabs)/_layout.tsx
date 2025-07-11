@@ -52,6 +52,12 @@ export default function TabLayout() {
           title: 'registrationTransportationConfirmation',
           tabBarStyle: { display: 'none' },
         }} />
+        <Tabs.Screen
+        name="contactUs"
+        options={{
+          title: 'Contact Us',
+          tabBarStyle: { display: 'none' },
+        }} />
     </Tabs>
   );
 }
