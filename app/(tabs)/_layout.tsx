@@ -58,6 +58,12 @@ export default function TabLayout() {
           title: 'Contact Us',
           tabBarStyle: { display: 'none' },
         }} />
+        <Tabs.Screen
+        name="mindfulness"
+        options={{
+          title: 'mindfulness',
+          tabBarStyle: { display: 'none' },
+        }} />
     </Tabs>
   );
 }

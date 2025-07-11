@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   countdownCard: {
-    backgroundColor: 'linear-gradient(90deg, #FF9800 0%, #FF5722 100%)', // fallback for web, use View+absolute bg for RN
+    backgroundColor: 'linear-gradient(90deg, #FF9800 0%, #FF5722 100%)', 
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 18,
@@ -260,7 +260,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
-    backgroundColor: '#FF9800',
   },
   countdownHeader: {
     flexDirection: 'row',

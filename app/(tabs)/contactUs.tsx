@@ -1,5 +1,6 @@
 import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -9,7 +10,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 export default function ContactUs() {
@@ -19,7 +20,8 @@ export default function ContactUs() {
   const [message, setMessage] = useState('');
 
   return (
-      <WelcomePageBackground >
+    <View style={{ flex: 1 }}>
+      <WelcomePageBackground style={StyleSheet.absoluteFillObject} />
 
       <KeyboardAvoidingView
         style={styles.container}
@@ -43,7 +45,7 @@ export default function ContactUs() {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>First Name</Text>
+              <Text style={styles.label}>Last Name</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Ntshezi"
@@ -69,7 +71,7 @@ export default function ContactUs() {
             </View>
           </View>
 
-          <View style={styles.inputContainer}>
+          <View style={styles.inputContainerMessage}>
             <Text style={styles.label}>Message</Text>
             <TextInput
               style={[styles.input, styles.messageInput]}
@@ -82,12 +84,12 @@ export default function ContactUs() {
             />
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => {router.push('/(tabs)/home1');}}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
-      </WelcomePageBackground>
+    </View>
   );
 }
 
@@ -101,6 +103,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
+    marginTop:150,
     flexGrow: 1,
     justifyContent: 'center',
   },
@@ -126,6 +129,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 16,
   },
+    inputContainerMessage: {
+    flex: 1,
+    marginBottom: 200,
+  },
   label: {
     color: '#fff',
     marginBottom: 6,
@@ -141,6 +148,7 @@ const styles = StyleSheet.create({
   messageInput: {
     height: 100,
     textAlignVertical: 'top',
+    marginTop: 0,
   },
   emailInputWrapper: {
     flexDirection: 'row',
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: 30,
   },
   buttonText: {
     color: '#fff',
