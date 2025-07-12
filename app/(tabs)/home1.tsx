@@ -1,26 +1,26 @@
-import SummitBg from '@/assets/images/svg/homeBanner'; // SVG as React component
+import SummitBg from '@/assets/images/svg/homeBanner';
+import en from '@/assets/translations/en.json';
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-const deloitteLogo = require('@/assets/images/icon.png'); // Replace with your actual icon path
-const micIcon = require('@/assets/images/icon.png'); // Replace with your actual icon path
+
+const deloitteLogo = require('@/assets/images/icon.png');
+const micIcon = require('@/assets/images/icon.png');
 
 export default function Home() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* Header */}
       <View style={styles.header}>
         <Image source={deloitteLogo} style={styles.logo} />
         <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
         <TouchableOpacity>
           <View style={styles.avatarCircle}>
-            {/* Avatar image here */}
           </View>
         </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Hero Section */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
             <SummitBg width="100%" height="100%" />
@@ -38,7 +38,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Stats */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>160+</Text>
@@ -54,7 +53,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Countdown */}
         <View style={styles.countdownCard}>
           <View style={styles.countdownHeader}>
             <Text style={styles.countdownTitle}>Event Starts In</Text>
@@ -80,7 +78,6 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Agenda */}
         <View style={styles.agendaHeaderRow}>
           <Text style={styles.agendaTitle}>Day 1 Agenda</Text>
           <TouchableOpacity>
@@ -110,11 +107,33 @@ export default function Home() {
           </View>
         </View>
       </ScrollView>
+
+            <View style={styles.bottomNav}>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/home1')}>
+                <Icon name="home" size={24} color="#8DD22A" />
+                <Text style={styles.navLabelActive} >{en.navigationOptions.home}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/agenda')}>
+                <Icon name="calendar" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >{en.navigationOptions.agenda}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/featuredSpeakers')}>
+                <Icon name="people" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >{en.navigationOptions.featuredSpeakers}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
+                <Icon name="cloud" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel} >{en.navigationOptions.mindful}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/profile')}>
+                <Icon name="person" size={24} color="#BDBDBD" />
+                <Text style={styles.navLabel}>{en.navigationOptions.profile}</Text>
+              </TouchableOpacity>
+            </View>
     </SafeAreaView>
   );
 }
 
-// ...styles remain unchanged...
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',
@@ -231,7 +250,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   countdownCard: {
-    backgroundColor: 'linear-gradient(90deg, #FF9800 0%, #FF5722 100%)', // fallback for web, use View+absolute bg for RN
+    backgroundColor: 'linear-gradient(90deg, #FF9800 0%, #FF5722 100%)', 
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 18,
@@ -241,7 +260,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
-    backgroundColor: '#FF9800',
   },
   countdownHeader: {
     flexDirection: 'row',
