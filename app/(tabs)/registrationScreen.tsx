@@ -2,7 +2,9 @@ import RegistrationScreenBackground from '@/assets/images/svg/registrationScreen
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  FlatList,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -20,11 +22,22 @@ export default function RegistrationScreen() {
   const [region, setRegion] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [regionError, setRegionError] = useState('');
+
+  const regions = [
+    'North America',
+    'EMEA (Europe, Middle East, Africa)',
+    'Asia Pacific',
+    'Latin America',
+    'Africa',
+    'Oceania',
+  ];
 
   const validateEmail = (text: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,6 +78,13 @@ export default function RegistrationScreen() {
       setEmailError('');
     }
 
+    if (!region.trim()) {
+      setRegionError('Region is required');
+      isValid = false;
+    } else {
+      setRegionError('');
+    }
+
     if (!validatePassword(password)) {
       isValid = false;
     } else {
@@ -75,6 +95,11 @@ export default function RegistrationScreen() {
   };
 
   const backTrigger = () => {
+    clearErrors();
+    router.back();
+  };
+
+  const clearErrors = () => {
     setFirstName('');
     setLastName('');
     setEmail('');
@@ -85,10 +110,8 @@ export default function RegistrationScreen() {
     setLastNameError('');
     setEmailError('');
     setPasswordError('');
-
-
-    router.back();
-  }
+    setRegionError('');
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#000' }}>
@@ -166,16 +189,18 @@ export default function RegistrationScreen() {
 
             <View style={[styles.inputContainer, styles.textInputLong]}>
               <Text style={styles.label}>Region</Text>
-              <View style={styles.inputIconRow}>
-                <TextInput
-                  style={[styles.input, { flex: 1 }]}
-                  placeholder=""
-                  placeholderTextColor="#bdbdbd"
-                  value={region}
-                  onChangeText={setRegion}
-                />
+              <TouchableOpacity
+                style={styles.dropdownTrigger}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text style={region ? styles.dropdownText : styles.dropdownPlaceholder}>
+                  {region || 'Select your region'}
+                </Text>
                 <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: 10 }} />
-              </View>
+              </TouchableOpacity>
+              {regionError ? (
+                <Text style={styles.warningText}>⚠️ {regionError}</Text>
+              ) : null}
             </View>
 
             <View style={[styles.inputContainer, styles.textInputLong]}>
@@ -206,7 +231,9 @@ export default function RegistrationScreen() {
               </View>
               {passwordError ? (
                 <Text style={styles.warningText}>⚠️ {passwordError}</Text>
-              ) : null}
+              ) : (
+                <Text style={styles.warningText}>⚠️ Do not use your Deloitte password</Text>
+              )}
             </View>
 
             <TouchableOpacity
@@ -222,7 +249,10 @@ export default function RegistrationScreen() {
 
             <Text style={styles.footerText}>
               Having problems?{' '}
-              <Text style={styles.contactText} onPress={() => router.push('/(tabs)/contactUs')}>
+              <Text style={styles.contactText} onPress={() => {
+                clearErrors();
+                router.push('/(tabs)/contactUs')
+              }}>
                 Contact us
               </Text>
             </Text>
@@ -235,13 +265,49 @@ export default function RegistrationScreen() {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => router.push('/(tabs)/registrationAttendanceConfirmation')}
+              onPress={() => {
+                clearErrors();
+                router.push('/(tabs)/registrationAttendanceConfirmation')
+              }}
             >
               <Text style={styles.secondaryButtonText}>Skip</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <FlatList
+              data={regions}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.regionOption}
+                  onPress={() => {
+                    setRegion(item);
+                    setRegionError('');
+                    setModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.regionOptionText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
@@ -365,5 +431,58 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  dropdownTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    justifyContent: 'space-between',
+    minHeight: 44,
+  },
+  dropdownText: {
+    fontSize: 15,
+    color: '#222',
+    flex: 1,
+  },
+  dropdownPlaceholder: {
+    fontSize: 15,
+    color: '#bdbdbd',
+    flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    maxHeight: '50%',
+    width: '80%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  regionOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+  },
+  regionOptionText: {
+    fontSize: 16,
+    color: '#222',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginHorizontal: 15,
   },
 });
