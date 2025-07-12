@@ -1,4 +1,5 @@
 import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
+import ErrorModal from '@/components/ErrorModal';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -14,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from './data_constants';
 
 export default function RegistrationScreen() {
   const [firstName, setFirstName] = useState('');
@@ -23,6 +25,10 @@ export default function RegistrationScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorModalTitle, setErrorModalTitle] = useState('');
+  const [errorModalMessage, setErrorModalMessage] = useState('');
+
 
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
@@ -54,45 +60,81 @@ export default function RegistrationScreen() {
     return isValid;
   };
 
-  const validateInput = () => {
-    let isValid = true;
 
-    if (!firstName.trim()) {
-      setFirstNameError('First name is required');
-      isValid = false;
-    } else {
-      setFirstNameError('');
-    }
+const validateInput = async () => { 
+  let isValid = true;
 
-    if (!lastName.trim()) {
-      setLastNameError('Last name is required');
-      isValid = false;
-    } else {
-      setLastNameError('');
-    }
+  if (!firstName.trim()) {
+    setFirstNameError('First name is required');
+    isValid = false;
+  } else {
+    setFirstNameError('');
+  }
 
-    if (!email.trim() || !validateEmail(email)) {
-      setEmailError('Invalid email format');
-      isValid = false;
-    } else {
-      setEmailError('');
-    }
+  if (!lastName.trim()) {
+    setLastNameError('Last name is required');
+    isValid = false;
+  } else {
+    setLastNameError('');
+  }
 
-    if (!region.trim()) {
-      setRegionError('Region is required');
-      isValid = false;
-    } else {
-      setRegionError('');
-    }
+  if (!email.trim() || !validateEmail(email)) {
+    setEmailError('Invalid email format');
+    isValid = false;
+  } else {
+    setEmailError('');
+  }
 
-    if (!validatePassword(password)) {
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
+  if (!region.trim()) {
+    setRegionError('Region is required');
+    isValid = false;
+  } else {
+    setRegionError('');
+  }
 
-    return isValid;
-  };
+  if (!validatePassword(password)) {
+    isValid = false;
+  } else {
+    setPasswordError('');
+  }
+
+  if (isValid) {
+    try {
+      const response = await fetch('https://localhost:7072/api/AppControllercs/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          region,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push('/(tabs)/registrationAttendanceConfirmation');
+      } else {
+        setErrorModalTitle(failedRegistration);
+        if (data.message === userExists) {
+          setErrorModalTitle(userExistsTitle);
+          setErrorModalMessage(`${userExists} ${tryDifferentEmail}`);
+        } else {
+          setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
+        }
+        setErrorModalVisible(true);
+      }
+    } catch (error) {
+        setErrorModalTitle(serverErrorTitle);
+        setErrorModalMessage(serverErrorMessage);
+        setErrorModalVisible(true);
+  }}
+  return isValid; 
+};
 
   const backTrigger = () => {
     clearErrors();
@@ -238,10 +280,8 @@ export default function RegistrationScreen() {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                if (validateInput()) {
-                  console.log('All valid!');
-                }
+              onPress={async () => {
+                await validateInput();
               }}
             >
               <Text style={styles.buttonText}>Register Now</Text>
@@ -308,6 +348,14 @@ export default function RegistrationScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+      
+      <ErrorModal
+        visible={errorModalVisible}
+        title={errorModalTitle}
+        message={errorModalMessage}
+        onClose={() => setErrorModalVisible(false)}
+      />
+
     </View>
   );
 }

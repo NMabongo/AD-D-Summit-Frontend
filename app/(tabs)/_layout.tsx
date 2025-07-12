@@ -59,9 +59,9 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }} />
         <Tabs.Screen
-        name="mindfulness"
+        name="mindful"
         options={{
-          title: 'mindfulness',
+          title: 'mindful',
           tabBarStyle: { display: 'none' },
         }} />
     </Tabs>
