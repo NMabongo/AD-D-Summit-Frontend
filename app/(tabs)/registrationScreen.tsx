@@ -30,6 +30,7 @@ export default function RegistrationScreen() {
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [userExistsError, setUserExistsError] = useState(false);
 
 
 
@@ -126,12 +127,10 @@ const validateInput = async () => {
         if (data.message === userExists) {
           setErrorModalTitle(userExistsTitle);
           setErrorModalMessage(`${userExists} ${tryDifferentEmail} or Login to your account.`);
+          setUserExistsError(true);
 
             // Show login modal after short delay so error is shown first
-          setTimeout(() => {
-            setErrorModalVisible(false);
-            setLoginModalVisible(true);
-          }, 1000);
+    
         } else {
           setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
         }
@@ -362,16 +361,24 @@ const validateInput = async () => {
         visible={errorModalVisible}
         title={errorModalTitle}
         message={errorModalMessage}
-        onClose={() => setErrorModalVisible(false)}
+        onClose={() => {
+          setErrorModalVisible(false);
+          setUserExistsError(false);
+        }}
+        userExists={userExistsError}
+        onLoginPress={() => {
+          setErrorModalVisible(false);
+          setUserExistsError(false);
+          setLoginModalVisible(true); 
+        }}
       />
 
       <LoginModal
         visible={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
         onLogin={(email, password) => {
-          // handle login logic here (e.g., fetch to /login API)
-          console.log('Login:', email, password);
           setLoginModalVisible(false);
+          clearErrors();  
         }}
       />
 

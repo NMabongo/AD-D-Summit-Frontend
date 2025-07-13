@@ -6,9 +6,11 @@ interface ErrorModalProps {
   title: string;
   message: string;
   onClose: () => void;
+  userExists?: boolean;
+  onLoginPress?: () => void; 
 }
 
-const ErrorModal: React.FC<ErrorModalProps> = ({ visible, title, message, onClose }) => {
+const ErrorModal: React.FC<ErrorModalProps> = ({ visible, title, message, onClose, userExists, onLoginPress}) => {
   return (
     <Modal
       transparent
@@ -19,7 +21,17 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ visible, title, message, onClos
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
+            {userExists ? (
+              <Text style={styles.message}>
+                User already exists. Please try a different email or{' '}
+                <Text style={{ color: '#8DD22A' }} onPress={onLoginPress}>
+                  Login
+                </Text>{' '}
+                to your account.
+              </Text>
+            ) : (
+              <Text style={styles.message}>{message}</Text>
+            )}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
