@@ -1,5 +1,6 @@
 import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import ErrorModal from '@/components/ErrorModal';
+import LoginModal from '@/components/LoginModal';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -28,6 +29,8 @@ export default function RegistrationScreen() {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+
 
 
   const [firstNameError, setFirstNameError] = useState('');
@@ -122,7 +125,13 @@ const validateInput = async () => {
         setErrorModalTitle(failedRegistration);
         if (data.message === userExists) {
           setErrorModalTitle(userExistsTitle);
-          setErrorModalMessage(`${userExists} ${tryDifferentEmail}`);
+          setErrorModalMessage(`${userExists} ${tryDifferentEmail} or Login to your account.`);
+
+            // Show login modal after short delay so error is shown first
+          setTimeout(() => {
+            setErrorModalVisible(false);
+            setLoginModalVisible(true);
+          }, 1000);
         } else {
           setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
         }
@@ -348,12 +357,22 @@ const validateInput = async () => {
           </View>
         </TouchableOpacity>
       </Modal>
-      
+
       <ErrorModal
         visible={errorModalVisible}
         title={errorModalTitle}
         message={errorModalMessage}
         onClose={() => setErrorModalVisible(false)}
+      />
+
+      <LoginModal
+        visible={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
+        onLogin={(email, password) => {
+          // handle login logic here (e.g., fetch to /login API)
+          console.log('Login:', email, password);
+          setLoginModalVisible(false);
+        }}
       />
 
     </View>
