@@ -1,9 +1,11 @@
+import MindfulnessActivityBanner from '@/assets/images/svg/mindfulnessActivityBanner';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const deloitteLogo = require('@/assets/images/icon.png'); // Replace with your logo
-const avatarIcon = require('@/assets/images/icon.png'); // Replace with your avatar
-const mindfulnessBg = require('@/assets/images/icon.png'); // Replace with your mindfulness banner image
+
+const deloitteLogo = require('@/assets/images/favicon.png'); // Replace with your logo
+const avatarIcon = require('@/assets/images/react-logo.png'); // Replace with your avatar
+const mindfulnessBg = require('@/assets/images/svg/mindfulnessActivityBanner'); // Replace with your mindfulness banner image
 
 const activities = [
   {
@@ -39,16 +41,12 @@ export default function MindfulnessActivity() {
           </View>
         </TouchableOpacity>
       </View>
-
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+      <ScrollView contentContainerStyle={{ padding: 0 }}>
         {/* Banner */}
-        <View style={styles.bannerContainer}>
-          <Image source={mindfulnessBg} style={styles.bannerImg} resizeMode="cover" />
-          <View style={styles.bannerOverlay}>
-            <Text style={styles.bannerTitle}>Mindfulness</Text>
-          </View>
+        <View >
+          <MindfulnessActivityBanner />
         </View>
-
+        
         {/* Activities List */}
         {activities.map(activity => (
           <View key={activity.id} style={styles.activityCard}>
@@ -107,14 +105,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-  },
-  bannerContainer: {
-    width: '100%',
-    height: 160,
-    position: 'relative',
-    marginBottom: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   bannerImg: {
     width: 160,
