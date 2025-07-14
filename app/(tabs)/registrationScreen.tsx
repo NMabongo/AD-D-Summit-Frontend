@@ -121,7 +121,7 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/(tabs)/registrationAttendanceConfirmation');
+        router.push('/registration/registrationAttendanceConfirmation');
       } else {
         setErrorModalTitle(failedRegistration);
         if (data.message === userExists) {
@@ -315,7 +315,7 @@ const validateInput = async () => {
               style={styles.secondaryButton}
               onPress={() => {
                 clearErrors();
-                router.push('/(tabs)/registrationAttendanceConfirmation')
+                router.push('/registration/registrationAttendanceConfirmation');
               }}
             >
               <Text style={styles.secondaryButtonText}>Skip</Text>

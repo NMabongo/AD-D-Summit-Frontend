@@ -1,4 +1,5 @@
 import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -11,13 +12,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const nextScreen = () => {
-  // Logic to navigate to the next screen
   console.log("Navigating to the next screen...", "/registration/registrationTransportationConfirmation");
   router.push('/registration/registrationTransportationConfirmation');
-}
+};
+
 const attendanceOptions = [
   { label: "Wouldn't miss it!", value: 'yes' },
   { label: 'Catch you the next time!', value: 'no' },
@@ -74,34 +74,37 @@ export default function RegistrationAttendanceConfirmation() {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity style={styles.button}>
-              <Icon name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+            <TouchableOpacity style={styles.button} onPress={nextScreen}>
+              <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
 
             <Text style={styles.footerText}>
-              Having problems? <Text style={styles.contactText} onPress={() => {router.push('/(tabs)/contactUs')}}>Contact us</Text>
+              Having problems?{' '}
+              <Text
+                style={styles.contactText}
+                onPress={() => router.push('/(tabs)/contactUs')}
+              >
+                Contact us
+              </Text>
+                        <View style={styles.bottomButtonsContainer}>
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.back()}
+                          >
+                            <Text style={styles.backButtonText}>Back</Text>
+                          </TouchableOpacity>
+              
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.push('/registration/registrationTransportationConfirmation')}
+                          >
+                            <Text style={styles.backButtonText}>Skip</Text>
+                          </TouchableOpacity>
+                        </View>
             </Text>
           </View>
-          <Text style={styles.label}>Message</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your message"
-            placeholderTextColor="#bdbdbd"
-            value={message}
-            onChangeText={setMessage}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-          <TouchableOpacity style={styles.button} onPress={nextScreen}>
-            <Icon name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-          <Text style={styles.footerText}>
-            Having problems? <Text style={styles.contactText}>Contact us</Text>
-          </Text>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
@@ -163,7 +166,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 13,
     marginBottom: 4,
-    left: 0,
   },
   input: {
     backgroundColor: '#fff',
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginHorizontal: 24,
   },
-  buttonSecondary: {
+  navButton: {
     backgroundColor: '#000',
     borderRadius: 20,
     paddingVertical: 10,
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
   },
-  buttonSecondaryText: {
+  backButtonText: {
     color: '#fff',
     fontSize: 16,
   },

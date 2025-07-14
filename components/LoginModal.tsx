@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Modal,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ErrorModal from './ErrorModal';
@@ -60,7 +60,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
       if (response.ok) {
         onLogin(email, password);
         clearData();
-        router.push('/(tabs)/registrationAttendanceConfirmation'); 
+        router.push('/registration/registrationAttendanceConfirmation'); 
       } else {
         setErrorMessage(data.message || 'Login failed. Please try again.');
         setErrorVisible(true);
