@@ -1,9 +1,7 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -20,19 +18,72 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="welcomePage"
+        name="index"
         options={{
-          title: 'Welcome Page',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
+          title: 'Home',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="registrationScreen"
+        options={{
+          title: 'Register',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="registrationAttendanceConfirmation"
+        options={{
+          title: 'registrationAttendanceConfirmation',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="registrationTransportationConfirmation"
+        options={{
+          title: 'registrationTransportationConfirmation',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="contactUs"
+        options={{
+          title: 'Contact Us',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="mindful"
+        options={{
+          title: 'mindful',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="home1"
+        options={{
+          title: 'Home 1',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="agenda"
+        options={{
+          title: 'Agenda',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="featuredSpeakers"
+        options={{
+          title: 'Speakers',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarStyle: { display: 'none' },
+        }} />
     </Tabs>
   );
 }

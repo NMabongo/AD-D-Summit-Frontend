@@ -1,13 +1,13 @@
 import * as React from "react";
 import Svg, {
-    Defs,
-    Image,
-    Pattern,
-    Rect,
-    SvgProps,
-    Use,
+  Defs,
+  Image,
+  Pattern,
+  Rect,
+  SvgProps,
+  Use,
 } from "react-native-svg";
-const registrationScreen1Background = (props: SvgProps) => (
+const RegistrationScreenBackground = (props: SvgProps) => (
   <Svg
     width={'100%'}
     height={'100%'}
@@ -47,4 +47,4 @@ const registrationScreen1Background = (props: SvgProps) => (
     </Defs>
   </Svg>
 );
-export default registrationScreen1Background;
+export default RegistrationScreenBackground;
