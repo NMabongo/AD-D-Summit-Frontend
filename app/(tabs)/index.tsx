@@ -1,34 +1,31 @@
 import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
-// import { Button } from '@react-navigation/elements';
+import en from "@/assets/translations/en.json";
 import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const nextScreen = () => {
-  // Logic to navigate to the next screen
-  console.log("Navigating to the next screen...", "/registration/registrationScreen1");
-  router.push('/registration/registrationScreen1');
-}
-export default function WelcomePage({  }) {
+
+
+export default function homeScreen(){
   return (
     <View style={styles.container}>
       <WelcomePageBackground />
       <View style={
         { flex: 1, justifyContent: 'center', alignItems: 'center' }
       } >
-        <Text style={styles.title}>Africa Consulting Services</Text>
-        <Text style={styles.subtitle}>Leadership Summit 2025</Text>
+        <Text style={styles.title}>{en.africaConsulting}</Text>
+        <Text style={styles.subtitle}>{en.welcomePage.subtitle}</Text>
         <View style={styles.card}>
-          <Text style={styles.builtBy}>BUILT BY</Text>
-          <Text style={styles.cardTitle}>Deloitte Africa</Text>
-          <Text style={styles.cardSubtitle}>Product &amp; Platform Engineering</Text>
+          <Text style={styles.builtBy}>{en.welcomePage.builtBy}</Text>
+          <Text style={styles.cardTitle}>{en.welcomePage.cardTitle}</Text>
+          <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitle}</Text>
           <View style={styles.divider} />
-          <Text style={styles.hostedBy}>HOSTED BY</Text>
-          <Text style={styles.cardSubtitle}>Microsoft Practice</Text>
-          <TouchableOpacity style={styles.button} onPress={nextScreen}>
-            <Text style={styles.buttonText}>Lets go!</Text>
-          </TouchableOpacity>
+          <Text style={styles.hostedBy}>{en.welcomePage.hostedBy}</Text>
+          <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitlePractice}</Text>
         </View>
+        <TouchableOpacity style={styles.button} onPress={ () => router.push('/registrationScreen')}>
+          <Text style={styles.buttonText}>{en.welcomePage.buttonText}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -107,7 +104,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     marginTop: 16,
     marginBottom: 32,
-    width: '90%',
+    width: 220,
     alignItems: 'center',
   },
   buttonText: {
@@ -115,6 +112,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  buttonHover: {
+  backgroundColor: 'darkgreen',
+},
   footerImage: {
     position: 'absolute',
     bottom: 0,

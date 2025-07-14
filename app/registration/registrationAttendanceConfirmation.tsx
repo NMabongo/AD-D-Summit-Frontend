@@ -1,14 +1,23 @@
-import RegistrationScreen1Background from '@/assets/images/svg/registrationScreen1Background';
+import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const nextScreen = () => {
-  // Logic to navigate to the next screen
   console.log("Navigating to the next screen...", "/registration/registrationTransportationConfirmation");
   router.push('/registration/registrationTransportationConfirmation');
-}
+};
+
 const attendanceOptions = [
   { label: "Wouldn't miss it!", value: 'yes' },
   { label: 'Catch you the next time!', value: 'no' },
@@ -20,66 +29,96 @@ export default function RegistrationAttendanceConfirmation() {
   const [message, setMessage] = useState('');
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000'}}>
-      <RegistrationScreen1Background />
+    <View style={{ flex: 1, backgroundColor: '#000' }}>
+      <RegistrationScreenBackground />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={[styles.overlay, { flex: 1, justifyContent: 'center', alignItems: 'center' }]}>
-          <Text style={styles.title}>Confirm your attendance</Text>
-          <Text style={styles.subtitle}>Summit dates:  8 - 9 Sep '25</Text>
-          <View style={{ marginTop: 16, marginBottom: 18 }}>
-            {attendanceOptions.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                style={styles.radioRow}
-                onPress={() => setSelected(option.value)}
-                activeOpacity={0.7}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.overlay}>
+            <Text style={styles.title}>Confirm your attendance</Text>
+            <Text style={styles.subtitle}>Summit dates:  8 - 9 Sep '25</Text>
+
+            <View style={{ marginTop: 16, marginBottom: 18 }}>
+              {attendanceOptions.map(option => (
+                <TouchableOpacity
+                  key={option.value}
+                  style={styles.radioRow}
+                  onPress={() => setSelected(option.value)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.radioOuter}>
+                    {selected === option.value && <View style={styles.radioInner} />}
+                  </View>
+                  <Text style={styles.radioLabel}>{option.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 18 }}>
+              <Text style={[styles.label, { marginRight: 12, marginBottom: 0 }]}>Message</Text>
+            </View>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your message"
+              placeholderTextColor="#bdbdbd"
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+            />
+
+            <TouchableOpacity style={styles.button} onPress={nextScreen}>
+              <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.footerText}>
+              Having problems?{' '}
+              <Text
+                style={styles.contactText}
+                onPress={() => router.push('/(tabs)/contactUs')}
               >
-                <View style={styles.radioOuter}>
-                  {selected === option.value && <View style={styles.radioInner} />}
-                </View>
-                <Text style={styles.radioLabel}>{option.label}</Text>
-              </TouchableOpacity>
-            ))}
+                Contact us
+              </Text>
+                        <View style={styles.bottomButtonsContainer}>
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.back()}
+                          >
+                            <Text style={styles.backButtonText}>Back</Text>
+                          </TouchableOpacity>
+              
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.push('/registration/registrationTransportationConfirmation')}
+                          >
+                            <Text style={styles.backButtonText}>Skip</Text>
+                          </TouchableOpacity>
+                        </View>
+            </Text>
           </View>
-          <Text style={styles.label}>Message</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your message"
-            placeholderTextColor="#bdbdbd"
-            value={message}
-            onChangeText={setMessage}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-          <TouchableOpacity style={styles.button} onPress={nextScreen}>
-            <Icon name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-          <Text style={styles.footerText}>
-            Having problems? <Text style={styles.contactText}>Contact us</Text>
-          </Text>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.7)',
     borderRadius: 18,
     padding: 24,
+    paddingTop: 10,
     margin: 24,
-    marginTop: 80,
+    marginTop: 75,
+    marginBottom: 24,
     alignItems: 'flex-start',
     shadowColor: '#000',
     shadowOpacity: 0.25,
@@ -127,7 +166,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 13,
     marginBottom: 4,
-    marginLeft: 2,
   },
   input: {
     backgroundColor: '#fff',
@@ -166,5 +204,24 @@ const styles = StyleSheet.create({
   contactText: {
     color: '#8DD22A',
     fontWeight: 'bold',
+  },
+    bottomButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16,
+    marginHorizontal: 24,
+  },
+  navButton: {
+    backgroundColor: '#000',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+  backButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
