@@ -3,7 +3,6 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -30,9 +29,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
+          tabBarStyle: { display: 'none' },
         }} />
       <Tabs.Screen
         name="registrationScreen"
@@ -62,6 +59,30 @@ export default function TabLayout() {
         name="mindful"
         options={{
           title: 'mindful',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="home1"
+        options={{
+          title: 'Home 1',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="agenda"
+        options={{
+          title: 'Agenda',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="featuredSpeakers"
+        options={{
+          title: 'Speakers',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
           tabBarStyle: { display: 'none' },
         }} />
     </Tabs>
