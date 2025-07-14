@@ -128,9 +128,6 @@ const validateInput = async () => {
           setErrorModalTitle(userExistsTitle);
           setErrorModalMessage(`${userExists} ${tryDifferentEmail} or Login to your account.`);
           setUserExistsError(true);
-
-            // Show login modal after short delay so error is shown first
-    
         } else {
           setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
         }
@@ -295,7 +292,7 @@ const validateInput = async () => {
               <Text style={styles.buttonText}>Register Now</Text>
             </TouchableOpacity>
 
-            <Text style={styles.footerText}>
+            {/* <Text style={styles.footerText}>
               Having problems?{' '}
               <Text style={styles.contactText} onPress={() => {
                 clearErrors();
@@ -304,6 +301,20 @@ const validateInput = async () => {
                 Contact us
               </Text>
             </Text>
+             */}
+            <Text style={styles.footerText}>
+          Having problems?{' '}
+          <Text style={styles.contactText} onPress={() => {
+            clearErrors();
+            router.push('/(tabs)/contactUs')
+          }}>
+            Contact us
+          </Text>
+          {'  |  '}
+          <Text style={styles.contactText} onPress={() => setLoginModalVisible(true)}>
+            Login
+          </Text>
+        </Text>
           </View>
 
           <View style={styles.bottomButtonsContainer}>

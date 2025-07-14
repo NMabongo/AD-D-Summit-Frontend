@@ -75,6 +75,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
     }
   };
 
+  const handleClose = () => {
+    clearData();
+    onClose();
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -130,7 +135,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity onPress={handleClose}>
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
