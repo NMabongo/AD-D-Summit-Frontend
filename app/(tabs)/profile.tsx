@@ -1,7 +1,8 @@
 import en from '@/assets/translations/en.json';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -16,12 +17,78 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const profileAvatar = require('@/assets/images/icon.png');
 
 export default function Profile() {
-  const [firstName, setFirstName] = useState('Bheki');
-  const [lastName, setLastName] = useState('Ntshezi');
-  const [email, setEmail] = useState('bntshezi@deloitte.com');
-  const [region, setRegion] = useState('South Africa');
-  const [password, setPassword] = useState('***********************');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('mail@gmail.com'); 
+  const [region, setRegion] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLoadProfile = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7072/api/AppControllercs/getuserprofile?email=${encodeURIComponent(email)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.profile) {
+        setFirstName(data.profile.firstName);
+        setLastName(data.profile.lastName);
+        setEmail(data.profile.email);
+        setRegion(data.profile.region);
+        setPassword(data.profile.password);
+      } else {
+        Alert.alert('Error', data.message || 'Failed to load profile.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An unexpected error occurred.');
+      console.error(error);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch('https://localhost:7072/api/AppControllercs/updateprofile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          lastName,
+          region,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', data.message || 'Profile updated successfully.');
+      } else {
+        Alert.alert('Error', data.message || 'Failed to update profile.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'An unexpected error occurred during update.');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleLoadProfile();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
@@ -33,7 +100,7 @@ export default function Profile() {
               <Icon name="checkmark" size={28} color="#fff" />
             </View>
           </View>
-          <Text style={styles.profileName}>Bheki Ntshezi</Text>
+          <Text style={styles.profileName}>{`${firstName} ${lastName}`}</Text>
           <Text style={styles.profileSubtitle}>Update and save your profile</Text>
         </View>
 
@@ -43,7 +110,6 @@ export default function Profile() {
               <Text style={styles.label}>First Name</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Bheki"
                 placeholderTextColor="#bdbdbd"
                 value={firstName}
                 onChangeText={setFirstName}
@@ -53,7 +119,6 @@ export default function Profile() {
               <Text style={styles.label}>Last Name</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Ntshezi"
                 placeholderTextColor="#bdbdbd"
                 value={lastName}
                 onChangeText={setLastName}
@@ -66,12 +131,10 @@ export default function Profile() {
             <View style={styles.inputIconRow}>
               <TextInput
                 style={[styles.input, { flex: 1 }]}
-                placeholder="bntshezi@deloitte.com"
                 placeholderTextColor="#bdbdbd"
                 value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
+                editable={false}
+                selectTextOnFocus={false}
               />
               <Icon name="mail-outline" size={20} color="#bdbdbd" style={{ marginRight: 10 }} />
             </View>
@@ -82,7 +145,6 @@ export default function Profile() {
             <View style={styles.inputIconRow}>
               <TextInput
                 style={[styles.input, { flex: 1 }]}
-                placeholder="South Africa"
                 placeholderTextColor="#bdbdbd"
                 value={region}
                 onChangeText={setRegion}
@@ -116,8 +178,14 @@ export default function Profile() {
         </View>
 
         <View style={{ alignItems: 'center', marginBottom: 32 }}>
-          <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save Changes</Text>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleUpdateProfile}
+            disabled={loading}
+          >
+            <Text style={styles.saveButtonText}>
+              {loading ? 'Saving...' : 'Save Changes'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
