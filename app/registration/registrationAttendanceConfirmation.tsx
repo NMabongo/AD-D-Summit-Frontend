@@ -13,10 +13,6 @@ import {
   View,
 } from 'react-native';
 
-const nextScreen = () => {
-  console.log("Navigating to the next screen...", "/registration/registrationTransportationConfirmation");
-  router.push('/registration/registrationTransportationConfirmation');
-};
 
 const attendanceOptions = [
   { label: "Wouldn't miss it!", value: 'yes' },
@@ -74,7 +70,7 @@ export default function RegistrationAttendanceConfirmation() {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity style={styles.button} onPress={nextScreen}>
+            <TouchableOpacity style={styles.button}>
               <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>

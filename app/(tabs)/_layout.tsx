@@ -37,18 +37,7 @@ export default function TabLayout() {
           title: 'Register',
           tabBarStyle: { display: 'none' },
         }} />
-      <Tabs.Screen
-        name="registrationAttendanceConfirmation"
-        options={{
-          title: 'registrationAttendanceConfirmation',
-          tabBarStyle: { display: 'none' },
-        }} />
-        <Tabs.Screen
-        name="registrationTransportationConfirmation"
-        options={{
-          title: 'registrationTransportationConfirmation',
-          tabBarStyle: { display: 'none' },
-        }} />
+
         <Tabs.Screen
         name="contactUs"
         options={{

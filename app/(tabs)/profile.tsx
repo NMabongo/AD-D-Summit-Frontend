@@ -1,5 +1,6 @@
 import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import en from '@/assets/translations/en.json';
+import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
@@ -20,10 +21,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+
 export default function Profile() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('mail@gmail.com');
+  const [email, setEmail] = useState('');
   const [region, setRegion] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -100,7 +102,7 @@ export default function Profile() {
   };
 
 
-  const handleLoadProfile = async () => {
+ const handleLoadProfile = async (authToken: string) => {
     try {
       const response = await fetch(
         `https://localhost:7072/api/AppControllercs/getuserprofile?email=${encodeURIComponent(email)}`,
@@ -108,6 +110,7 @@ export default function Profile() {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
@@ -134,11 +137,12 @@ export default function Profile() {
 
     try {
       setLoading(true);
-
+      const token = await getToken();
       const response = await fetch('https://localhost:7072/api/AppControllercs/updateprofile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           email,
@@ -155,7 +159,7 @@ export default function Profile() {
         Alert.alert('Update Failed', data.message || 'Profile update failed.');
       }
     } catch (error) {
-      Alert.alert('Error', 'An unexpected error occurred during update.');
+      Alert.alert('Update Failed', 'An unexpected error occurred during update.');
     } finally {
       setLoading(false);
     }
@@ -163,9 +167,21 @@ export default function Profile() {
 
   useFocusEffect(
     useCallback(() => {
-      handleLoadProfile();
+      const verifyAuthAndLoad = async () => {
+       const token = await getToken();
+       console.log(token);
+       if (!token) {
+         console.log('Not Logged In', 'Please login first.');
+         router.replace('/');
+       } else {
+         handleLoadProfile(token);
+       }
+      };
+
+      verifyAuthAndLoad();
     }, [])
   );
+
 
   const showAnimatedCheckmark = () => {
     setShowCheckmark(true);

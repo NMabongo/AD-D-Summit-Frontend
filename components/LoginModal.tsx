@@ -1,3 +1,4 @@
+import { saveToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -57,9 +58,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.token) {
         onLogin(email, password);
         clearData();
+         await saveToken(data.token);
         router.push('/registration/registrationAttendanceConfirmation'); 
       } else {
         setErrorMessage(data.message || 'Login failed. Please try again.');
