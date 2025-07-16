@@ -1,6 +1,6 @@
 import en from '@/assets/translations/en.json';
-import Header from '@/components/Header';
-import { router } from 'expo-router';
+import HeaderWithMenu from '@/components/HeaderWithMenu';
+import { Route, router } from 'expo-router';
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -60,10 +60,19 @@ const agendaData = [
 export default function Agenda() {
   const [selectedDay, setSelectedDay] = useState(0);
 
+    const [menuResetKey, setMenuResetKey] = useState(0);
+  
+    const handleTabPress = (route: string) => {
+      setMenuResetKey((prev) => prev + 1); 
+      router.push(route as Route );
+    };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-      <Header/>
+     <View style={styles.headerContainer}>
+        <HeaderWithMenu resetSignal={menuResetKey}/>
+     </View>
 
       {/* Month Selector */}
       <View style={styles.monthRow}>
@@ -127,23 +136,23 @@ export default function Agenda() {
       </ScrollView>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/home1')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home1')}>
           <Icon name="home" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}  >{en.navigationOptions.home}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/agenda')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/agenda')}>
           <Icon name="calendar" size={24} color="#8DD22A" />
           <Text style={styles.navLabelActive}>{en.navigationOptions.agenda}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/featuredSpeakers')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/featuredSpeakers')}>
           <Icon name="people" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel} >{en.navigationOptions.featuredSpeakers}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/mindful')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/mindful')}>
           <Icon name="cloud" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>{en.navigationOptions.mindful}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/profile')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/profile')}>
           <Icon name="person" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>{en.navigationOptions.profile}</Text>
         </TouchableOpacity>
@@ -153,6 +162,10 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
+    headerContainer:{
+      zIndex: 1000,
+      position: 'relative', 
+  } ,
   monthRow: {
     flexDirection: 'row',
     alignItems: 'center',
