@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -19,13 +20,19 @@ const attendanceOptions = [
   { label: 'Catch you the next time!', value: 'no' },
   { label: 'Mulling It over', value: 'maybe' },
 ];
+  const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
 export default function RegistrationAttendanceConfirmation() {
   const [selected, setSelected] = useState('yes');
   const [message, setMessage] = useState('');
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
+    <View style={{ flex: 1 }}>
+    <ImageBackground
+          source={profileBackground}
+          style={styles.background}
+          resizeMode="cover"
+        >
       <RegistrationScreenBackground />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -102,6 +109,7 @@ export default function RegistrationAttendanceConfirmation() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
   );
 }
@@ -219,5 +227,16 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });

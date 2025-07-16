@@ -1,10 +1,10 @@
-import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import ErrorModal from '@/components/ErrorModal';
 import LoginModal from '@/components/LoginModal';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   FlatList,
+  ImageBackground,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -160,9 +160,15 @@ const validateInput = async () => {
     setRegionError('');
   };
 
+    const profileBackground = require('@/assets/images/eventRegistration.jpg')
+
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
-      <RegistrationScreenBackground />
+    <View style={{ flex: 1}}>
+            <ImageBackground
+          source={profileBackground}
+          style={styles.background}
+          resizeMode="cover"
+        >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -292,16 +298,6 @@ const validateInput = async () => {
               <Text style={styles.buttonText}>Register Now</Text>
             </TouchableOpacity>
 
-            {/* <Text style={styles.footerText}>
-              Having problems?{' '}
-              <Text style={styles.contactText} onPress={() => {
-                clearErrors();
-                router.push('/(tabs)/contactUs')
-              }}>
-                Contact us
-              </Text>
-            </Text>
-             */}
             <Text style={styles.footerText}>
           Having problems?{' '}
           <Text style={styles.contactText} onPress={() => {
@@ -392,7 +388,7 @@ const validateInput = async () => {
           clearErrors();  
         }}
       />
-
+</ImageBackground>
     </View>
   );
 }
@@ -569,5 +565,16 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#eee',
     marginHorizontal: 15,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });

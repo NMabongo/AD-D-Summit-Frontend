@@ -1,4 +1,3 @@
-import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import en from '@/assets/translations/en.json';
 import LoginModal from '@/components/LoginModal';
 import { getToken } from '@/utils/authToken';
@@ -10,6 +9,7 @@ import {
   Animated,
   FlatList,
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -21,6 +21,7 @@ import {
   View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 
 
 export default function Profile() {
@@ -204,10 +205,14 @@ export default function Profile() {
   };
 
   const profileAvatar = require('@/assets/images/icon.png');
+  const profileBackground = require('@/assets/images/profilebackground.png')
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
-      <RegistrationScreenBackground />
+      <ImageBackground
+    source={profileBackground}
+    style={styles.background}
+    resizeMode="cover"
+  >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -412,7 +417,7 @@ export default function Profile() {
          }}
       />
       </KeyboardAvoidingView>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -659,5 +664,16 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#eee',
     marginHorizontal: 15,
+  },
+    background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });

@@ -1,7 +1,7 @@
-import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -21,14 +21,19 @@ const transportationOptions = [
   { label: 'Will arrange my own', value: 'own' },
   { label: 'Not decided yet', value: 'undecided' },
 ];
+  const profileBackground = require('@/assets/images/confirmTransportation.jpg')
 
 export default function RegistrationTransportationConfirmation() {
   const [selected, setSelected] = useState('pickup');
   const [message, setMessage] = useState('');
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
-      <RegistrationScreenBackground />
+    <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={profileBackground}
+          style={styles.background}
+          resizeMode="cover"
+        >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -93,6 +98,7 @@ export default function RegistrationTransportationConfirmation() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
   );
 }
@@ -206,5 +212,16 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center', 
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });
