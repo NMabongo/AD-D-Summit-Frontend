@@ -1,5 +1,6 @@
 import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import en from '@/assets/translations/en.json';
+import LoginModal from '@/components/LoginModal';
 import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
@@ -30,6 +31,7 @@ export default function Profile() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loginModalVisible, setLoginModalVisible] = useState(false)
 
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -169,10 +171,9 @@ export default function Profile() {
     useCallback(() => {
       const verifyAuthAndLoad = async () => {
        const token = await getToken();
-       console.log(token);
        if (!token) {
-         console.log('Not Logged In', 'Please login first.');
-         router.replace('/');
+        router.push('/(tabs)/home1')
+        setLoginModalVisible(true);
        } else {
          handleLoadProfile(token);
        }
@@ -400,7 +401,13 @@ export default function Profile() {
             <Icon name="checkmark" size={42} color="#fff" />
           </Animated.View>
         )}
-
+      <LoginModal
+        visible={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
+        onLogin={() => {
+          setLoginModalVisible(false);
+        }}
+      />
       </KeyboardAvoidingView>
     </View>
   );
