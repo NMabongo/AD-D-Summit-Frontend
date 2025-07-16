@@ -1,10 +1,11 @@
 import en from '@/assets/translations/en.json';
+import Header from '@/components/Header';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const deloitteLogo = require('@/assets/images/icon.png');
+
 const avatarIcon = require('@/assets/images/icon.png');
 
 const days = [
@@ -62,15 +63,7 @@ export default function Agenda() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-      <View style={styles.header}>
-        <Image source={deloitteLogo} style={styles.logo} />
-        <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
-        <TouchableOpacity>
-          <View style={styles.avatarCircle}>
-            <Image source={avatarIcon} style={styles.avatarImg} />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <Header/>
 
       {/* Month Selector */}
       <View style={styles.monthRow}>
@@ -160,44 +153,6 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F2F2F2',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#fff',
-  },
-  headerTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#222',
-    flex: 1,
-    textAlign: 'center',
-  },
-  avatarCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarImg: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-  },
   monthRow: {
     flexDirection: 'row',
     alignItems: 'center',

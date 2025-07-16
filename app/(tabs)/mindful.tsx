@@ -1,7 +1,9 @@
+import Header from '@/components/Header';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const mindfulBanner = require('@/assets/images/icon.png');
 
@@ -29,16 +31,7 @@ const sessions = [
 export default function Mindful() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.header}>
-        <Image source={mindfulBanner} style={styles.logo} />
-        <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
-        <TouchableOpacity>
-          <View style={styles.avatarCircle}>
-            <Image source={mindfulBanner} style={styles.avatarImg} />
-          </View>
-        </TouchableOpacity>
-      </View>
-
+      <Header/>
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View style={styles.bannerContainer}>
           <Image source={mindfulBanner} style={styles.bannerImg} resizeMode="cover" />
@@ -89,44 +82,6 @@ export default function Mindful() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F2F2F2',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#fff',
-  },
-  headerTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#222',
-    flex: 1,
-    textAlign: 'center',
-  },
-  avatarCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarImg: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-  },
   bannerContainer: {
     width: '100%',
     height: 160,

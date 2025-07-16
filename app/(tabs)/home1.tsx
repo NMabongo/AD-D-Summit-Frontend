@@ -1,24 +1,16 @@
-import SummitBg from '@/assets/images/svg/homeBanner'; // SVG as React component
+import SummitBg from '@/assets/images/svg/homeBanner';
 import en from '@/assets/translations/en.json';
+import Header from '@/components/Header';
 import { router } from 'expo-router';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const deloitteLogo = require('@/assets/images/icon.png');
 const micIcon = require('@/assets/images/icon.png');
 
 export default function Home() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.header}>
-        <Image source={deloitteLogo} style={styles.logo} />
-        <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
-        <TouchableOpacity>
-          <View style={styles.avatarCircle}>
-          </View>
-        </TouchableOpacity>
-      </View>
-
+      <Header/>
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
@@ -134,36 +126,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F2F2F2',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#fff',
-  },
-  headerTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#222',
-    flex: 1,
-    textAlign: 'center',
-  },
-  avatarCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#ccc',
-  },
   heroContainer: {
     margin: 16,
     borderRadius: 16,
