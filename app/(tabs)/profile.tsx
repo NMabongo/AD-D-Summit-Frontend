@@ -407,6 +407,9 @@ export default function Profile() {
         onLogin={() => {
           setLoginModalVisible(false);
         }}
+          onRegister={() => {
+            setLoginModalVisible(true);
+         }}
       />
       </KeyboardAvoidingView>
     </View>

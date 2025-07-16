@@ -17,9 +17,10 @@ interface LoginModalProps {
   visible: boolean;
   onClose: () => void;
   onLogin: (email: string, password: string) => void;
+  onRegister?: () => void; 
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin, onRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +83,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
     onClose();
   };
 
+  const handleRegistrationClicked = () => {
+    onClose();
+    router.push('/(tabs)/registrationScreen')
+  }
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.overlay}>
@@ -140,6 +146,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin }) =>
           <TouchableOpacity onPress={handleClose}>
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
+          {onRegister && (
+            <>
+              <View style={styles.divider} />
+              <Text style={styles.registerText}>
+                Don’t have an account?{' '}
+                <Text style={styles.registerLink} onPress={handleRegistrationClicked}>
+                  Register
+                </Text>
+              </Text>
+            </>
+          )}
         </View>
       </View>
 
@@ -213,4 +230,21 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginLeft: 5,
   },
+  registerText: {
+  color: '#444',
+  marginTop: 5,
+  fontSize: 14,
+},
+registerLink: {
+  color: '#8DD22A',
+  fontWeight: 'bold',
+  textDecorationLine: 'underline',
+},
+divider: {
+  width: '100%',
+  height: 1,
+  backgroundColor: '#ccc', 
+  marginVertical: 8, 
+},
+
 });
