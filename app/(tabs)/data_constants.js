@@ -4,3 +4,4 @@ export const serverErrorMessage = "Could not connect to the server. Please try a
 export const serverErrorTitle = "Network Error";
 export const tryDifferentEmail = ". Please try a different email.";
 export const failedRegistration = "Registration failed: ";
+export const successRegistrationFailedLogin = "Failed";

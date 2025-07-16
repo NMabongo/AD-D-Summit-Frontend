@@ -1,5 +1,6 @@
 import ErrorModal from '@/components/ErrorModal';
 import LoginModal from '@/components/LoginModal';
+import { saveToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -64,6 +65,30 @@ export default function RegistrationScreen() {
     return isValid;
   };
 
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('https://localhost:7072/api/AppControllercs/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.token) {
+         await saveToken(data.token);
+      } else {
+          setErrorModalMessage(`${failedRegistration} "Registration was successful, LogIn Failed" || 'Please Log In'}`);
+      }
+
+    } catch (error) {
+        setErrorModalTitle(serverErrorTitle);
+        setErrorModalMessage(serverErrorMessage);
+        setErrorModalVisible(true);
+    } 
+  };
 
 const validateInput = async () => { 
   let isValid = true;
@@ -121,6 +146,7 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
+        handleLogin()
         router.push('/registration/registrationAttendanceConfirmation');
       } else {
         setErrorModalTitle(failedRegistration);
@@ -140,6 +166,7 @@ const validateInput = async () => {
   }}
   return isValid; 
 };
+
 
   const backTrigger = () => {
     clearErrors();
