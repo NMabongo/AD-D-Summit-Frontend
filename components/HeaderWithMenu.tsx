@@ -13,7 +13,6 @@ const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
@@ -23,7 +22,7 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
 
   const handleLogout = async () => {
     await deleteToken();
-    setLogoutConfirmVisible(false);
+    setLogoutModalVisible(false);
     router.replace('/');
   };
 
