@@ -1,4 +1,4 @@
-import { deleteToken } from '@/utils/authToken';
+import { deleteToken, getToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -13,11 +13,13 @@ const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [userLoggedOut, setUserLoggedOut] = useState(false);
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
     useEffect(() => {
     setMenuVisible(false);
+    handleShowLogout();
   }, [resetSignal]);
 
   const handleLogout = async () => {
@@ -26,6 +28,12 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
     router.replace('/');
   };
 
+  const handleShowLogout = async () => {
+    let token = await getToken();
+    if (token === null){
+        setUserLoggedOut(true)
+    }
+  }
   return (
     <View style={styles.header}>
       <Image source={deloitteLogo} style={styles.logo} />
@@ -45,15 +53,14 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
             }}>
             <Text style={styles.menuText}>View Profile</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
+            {userLoggedOut ? null :  <TouchableOpacity
             style={styles.menuItem}
             onPress={() => {
               setMenuVisible(false);
               setLogoutModalVisible(true);
             }}>
             <Text style={styles.menuText}>Log Out</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       )}
 
