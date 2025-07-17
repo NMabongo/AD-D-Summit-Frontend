@@ -12,9 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 const nextScreen = () => {
-  // Logic to navigate to the next screen
-  console.log("Navigating to the next screen...", "home");
-  router.push('/home');
+  router.push('/home1');
 }
 const transportationOptions = [
   { label: 'Need airport pickup', value: 'pickup' },

@@ -1,79 +1,133 @@
 import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
-import { Route, router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
+import { router } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const avatarIcon = require('@/assets/images/icon.png');
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Agenda() {
   const [agendaData, setAgendaData] = useState<any[]>([]);
-  const [selectedDay, setSelectedDay] = useState(0);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [days, setDays] = useState<any[]>([]);
   const [menuResetKey, setMenuResetKey] = useState(0);
-
-  const days = [
-    { label: 'Mon', date: '08', active: true, disabled: false },
-    { label: 'Tue', date: '09', active: false, disabled: false },
-    { label: 'Wed', date: '10', active: false, disabled: false },
-  ];
 
   const handleTabPress = (route: string) => {
     setMenuResetKey((prev) => prev + 1);
-    router.push(route as Route);
+    router.push(route as any);
   };
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch('https://localhost:7072/api/Event', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch('https://localhost:7072/api/Event', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
-        const events = await response.json();
+          const events = await response.json();
 
-        const transformed = events.map((event: {
-          id: number;
-          title: string;
-          description: string;
-          startTime: string;
-          endTime: string;
-          location: string;
-          date: string;
-          category: string;
-        }) => ({
-          id: event.id,
-          icon: <Icon name="calendar-outline" size={22} color="#4FC3F7" />,
-          title: event.title,
-          desc: event.description,
-          time: `${event.startTime} - ${event.endTime}`,
-          location: event.location,
-          color: '#E3F4FD',
-          iconBg: '#B3E5FC',
-          date: event.date,
-          category: event.category,
-        }));
+          const transformed = events.map((event: any) => {
+            let color = '#E4FBE9';
+            let iconBg = '#C2F0D0';
+            let iconColor = '#1E9D4C';
+            let iconSource;
 
-        setAgendaData(transformed);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
+            switch (event.category?.toLowerCase()) {
+              case 'meeting':
+                iconSource = require('@/assets/icons/standup.png');
+                break;
+              case 'presentation':
+                iconSource = require('@/assets/icons/presentation.png');
+                color = '#F3E9FE';
+                iconBg = '#D8BDFB';
+                iconColor = '#9B3BEB';
+                break;
+              case 'boardroom':
+                iconSource = require('@/assets/icons/chart.png');
+                color = '#FFF1E0';
+                iconBg = '#FFD8AE';
+                iconColor = '#F15C00';
+                break;
+              case 'workshop':
+                iconSource = require('@/assets/icons/workshop.png');
+                color = '#E3EAFE';
+                iconBg = '#C5CAE9';
+                iconColor = '#1A237E';
+                break;
+              case 'review':
+                iconSource = require('@/assets/icons/chart.png');
+                color = '#FEEBEB';
+                iconBg = '#FFCDD2';
+                iconColor = '#E53935';
+                break;
+              case 'seminar':
+                iconSource = require('@/assets/icons/seminar.png');
+                iconColor = '#E3F4FD';
+                iconBg = '#B3E5FC';
+                color = '#E8F3FD';
+                break;
+              default:
+                iconSource = require('@/assets/icons/default.png');
+            }
 
-    fetchEvents();
-  }, []);
+            return {
+              id: event.id,
+              icon: (
+                <Image
+                  source={iconSource}
+                  style={{ width: 22, height: 22, resizeMode: 'contain' }}
+                />
+              ),
+              title: event.title,
+              desc: event.description,
+              time: `${event.startTime} - ${event.endTime}`,
+              location: event.location,
+              color,
+              iconBg,
+              iconColor,
+              date: event.date,
+              category: event.category,
+            };
+          });
+
+          setAgendaData(transformed);
+
+          const uniqueDates: string[] = Array.from(new Set(events.map((e: any) => e.date)));
+          const generatedDays = uniqueDates.map((dateStr: string, index: number) => {
+            const dateObj = new Date(dateStr);
+            const options = { weekday: 'short' } as const;
+            return {
+              label: dateObj.toLocaleDateString('en-US', options),
+              date: dateStr,
+              active: index === 0,
+              disabled: false,
+            };
+          });
+
+          setDays(generatedDays);
+          if (generatedDays.length > 0) {
+            setSelectedDate(generatedDays[0].date);
+          }
+        } catch (error) {
+          console.error('Error fetching events:', error);
+        }
+      };
+
+      fetchEvents();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* Header */}
       <View style={styles.headerContainer}>
         <HeaderWithMenu resetSignal={menuResetKey} />
       </View>
 
-      {/* Month Selector */}
       <View style={styles.monthRow}>
         <TouchableOpacity>
           <Icon name="chevron-back-outline" size={24} color="#222" />
@@ -84,46 +138,43 @@ export default function Agenda() {
         </TouchableOpacity>
       </View>
 
-      {/* Days Row */}
       <View style={styles.daysScroll}>
-        {days.map((d, idx) => (
+        {days.map((d) => (
           <TouchableOpacity
-            key={d.label}
+            key={d.date}
             style={[
               styles.dayBtn,
-              d.active && styles.dayBtnActive,
+              selectedDate === d.date && styles.dayBtnActive,
               d.disabled && styles.dayBtnDisabled,
             ]}
             disabled={d.disabled}
-            onPress={() => setSelectedDay(idx)}
+            onPress={() => setSelectedDate(d.date)}
           >
-            <Text style={[
-              styles.dayLabel,
-              d.active && styles.dayLabelActive,
-              d.disabled && styles.dayLabelDisabled
-            ]}>
+            <Text style={[styles.dayLabel, selectedDate === d.date && styles.dayLabelActive]}>
               {d.label}
             </Text>
-            <Text style={[
-              styles.dayDate,
-              d.active && styles.dayDateActive,
-              d.disabled && styles.dayLabelDisabled
-            ]}>
-              {d.date}
+            <Text style={[styles.dayDate, selectedDate === d.date && styles.dayDateActive]}>
+              {new Date(d.date).getDate().toString().padStart(2, '0')}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        {/* Date and Events Count */}
         <View style={styles.dateRow}>
-          <Text style={styles.dateTitle}>Monday, Sep 08</Text>
-          <Text style={styles.eventsCount}>{agendaData.length} events</Text>
+          <Text style={styles.dateTitle}>
+            {selectedDate && new Date(selectedDate).toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </Text>
+          <Text style={styles.eventsCount}>
+            {agendaData.filter(item => item.date === selectedDate).length} events
+          </Text>
         </View>
 
-        {/* Agenda List */}
-        {agendaData.map(item => (
+        {agendaData.filter(item => item.date === selectedDate).map(item => (
           <View key={item.id} style={[styles.agendaCard, { backgroundColor: item.color }]}>
             <View style={[styles.agendaIconWrap, { backgroundColor: item.iconBg }]}>
               {item.icon}
@@ -142,7 +193,6 @@ export default function Agenda() {
         ))}
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home1')}>
           <Icon name="home" size={24} color="#BDBDBD" />
@@ -168,6 +218,7 @@ export default function Agenda() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   headerContainer: {
