@@ -2,7 +2,7 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,6 +17,25 @@ export default function Agenda() {
     setMenuResetKey((prev) => prev + 1);
     router.push(route as any);
   };
+
+  const [months, setMonths] = useState<string[]>([]);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
+
+  const getMonthKey = (dateString: string): string | null => {
+  if (!dateString) return null;
+  const dateObj = new Date(dateString);
+  if (isNaN(dateObj.getTime())) return null;
+
+  return `${dateObj.getFullYear()}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}`;
+};
+
+const extractUniqueMonths = (events: any[]): string[] => {
+  const monthKeys = events
+    .map((e) => getMonthKey(e.date))
+    .filter((val): val is string => val !== null);
+
+  return Array.from(new Set(monthKeys)).sort();
+};
 
   useFocusEffect(
     useCallback(() => {
@@ -97,22 +116,9 @@ export default function Agenda() {
 
           setAgendaData(transformed);
 
-          const uniqueDates: string[] = Array.from(new Set(events.map((e: any) => e.date)));
-          const generatedDays = uniqueDates.map((dateStr: string, index: number) => {
-            const dateObj = new Date(dateStr);
-            const options = { weekday: 'short' } as const;
-            return {
-              label: dateObj.toLocaleDateString('en-US', options),
-              date: dateStr,
-              active: index === 0,
-              disabled: false,
-            };
-          });
-
-          setDays(generatedDays);
-          if (generatedDays.length > 0) {
-            setSelectedDate(generatedDays[0].date);
-          }
+          const uniqueMonths = extractUniqueMonths(events);
+          setMonths(uniqueMonths);
+          setCurrentMonthIndex(0);
         } catch (error) {
           console.error('Error fetching events:', error);
         }
@@ -122,6 +128,41 @@ export default function Agenda() {
     }, [])
   );
 
+  useEffect(() => {
+    if (months.length === 0 || agendaData.length === 0) return;
+
+    const currentMonth = months[currentMonthIndex];
+    const newDays = generateDaysForMonth(currentMonth, agendaData);
+
+    setDays(newDays);
+    if (newDays.length > 0) {
+      setSelectedDate(newDays[0].date);
+    }
+  }, [currentMonthIndex, months, agendaData]);
+
+  const generateDaysForMonth = (month: string, data: typeof agendaData) => {
+    const uniqueDates = Array.from(
+      new Set(
+        data
+          .filter((item) => item.date.startsWith(month))
+          .map((item) => item.date)
+      )
+    );
+
+    return uniqueDates.map((dateStr, index) => {
+      const dateObj = new Date(dateStr);
+      const options = { weekday: 'short' } as const;
+
+      return {
+        label: dateObj.toLocaleDateString('en-US', options),
+        date: dateStr,
+        active: index === 0,
+        disabled: false,
+      };
+    });
+  };
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.headerContainer}>
@@ -129,11 +170,25 @@ export default function Agenda() {
       </View>
 
       <View style={styles.monthRow}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          disabled={currentMonthIndex === 0}
+          onPress={() => setCurrentMonthIndex((prev) => Math.max(0, prev - 1))}
+        >
           <Icon name="chevron-back-outline" size={24} color="#222" />
         </TouchableOpacity>
-        <Text style={styles.monthTitle}>September 2025</Text>
-        <TouchableOpacity>
+        <Text style={styles.monthTitle}>
+          {months.length > 0 &&
+            new Date(months[currentMonthIndex] + '-01').toLocaleDateString('en-US', {
+              month: 'long',
+              year: 'numeric',
+            })}
+        </Text>
+        <TouchableOpacity
+          disabled={currentMonthIndex === months.length - 1}
+          onPress={() =>
+            setCurrentMonthIndex((prev) => Math.min(months.length - 1, prev + 1))
+          }
+        >
           <Icon name="chevron-forward-outline" size={24} color="#222" />
         </TouchableOpacity>
       </View>
@@ -232,6 +287,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#fff',
+    paddingTop: 15,
   },
   monthTitle: {
     fontWeight: 'bold',
