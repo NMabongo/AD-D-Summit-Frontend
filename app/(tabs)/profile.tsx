@@ -108,7 +108,7 @@ export default function Profile() {
  const handleLoadProfile = async (authToken: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7072/api/AppControllercs/getuserprofile?email=${encodeURIComponent(email)}`,
+        `https://localhost:7072/api/User/getuserprofile?email=${encodeURIComponent(email)}`,
         {
           method: 'GET',
           headers: {
@@ -141,7 +141,7 @@ export default function Profile() {
     try {
       setLoading(true);
       const token = await getToken();
-      const response = await fetch('https://localhost:7072/api/AppControllercs/updateprofile', {
+      const response = await fetch('https://localhost:7072/api/User/updateprofile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

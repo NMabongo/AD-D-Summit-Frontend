@@ -49,7 +49,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin, onRe
     setLoading(true);
 
     try {
-      const response = await fetch('https://localhost:7072/api/AppControllercs/login', {
+      const response = await fetch('https://localhost:7072/api/User/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

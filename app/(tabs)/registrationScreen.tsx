@@ -67,7 +67,7 @@ export default function RegistrationScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://localhost:7072/api/AppControllercs/login', {
+      const response = await fetch('https://localhost:7072/api/User/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const validateInput = async () => {
 
   if (isValid) {
     try {
-      const response = await fetch('https://localhost:7072/api/AppControllercs/register', {
+      const response = await fetch('https://localhost:7072/api/User/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
