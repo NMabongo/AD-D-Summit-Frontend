@@ -1,78 +1,77 @@
 import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import { Route, router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 const avatarIcon = require('@/assets/images/icon.png');
 
-const days = [
-  { label: 'Mon', date: '08', active: true, disabled: false },
-  { label: 'Tue', date: '09', active: false, disabled: false },
-  { label: 'Wed', date: '10', active: false,   disabled: false },
-];
-
-const agendaData = [
-  {
-    id: '1',
-    icon: <Icon name="rocket-outline" size={22} color="#4FC3F7" />,
-    title: 'Product Launch Presentation',
-    desc: 'Q4 product roadmap and feature announcements for the upcoming release cycle.',
-    time: '9:00 - 13:30 AM',
-    location: 'Conference Room A',
-    color: '#E3F4FD',
-    iconBg: '#B3E5FC',
-  },
-  {
-    id: '2',
-    icon: <Icon name="people-outline" size={22} color="#43A047" />,
-    title: 'Team Standup Meeting',
-    desc: 'Daily sync with development team to discuss progress and blockers.',
-    time: '11:00 - 11:30 AM',
-    location: 'Meeting Room 2',
-    color: '#E6F7D9',
-    iconBg: '#C8E6C9',
-  },
-  {
-    id: '3',
-    icon: <Icon name="restaurant-outline" size={22} color="#8E24AA" />,
-    title: 'Lunch & Learn Session',
-    desc: 'Guest speaker on emerging technologies and industry trends.',
-    time: '12:30 - 1:30 PM',
-    location: 'Main Auditorium',
-    color: '#F3E6FB',
-    iconBg: '#E1BEE7',
-  },
-  {
-    id: '4',
-    icon: <Icon name="trending-up-outline" size={22} color="#FF9800" />,
-    title: 'Quarterly Review',
-    desc: 'Performance metrics analysis and goal setting for next quarter.',
-    time: '11:00 - 11:30 AM',
-    location: 'Meeting Room 2',
-    color: '#FFF3E0',
-    iconBg: '#FFE0B2',
-  },
-];
-
 export default function Agenda() {
+  const [agendaData, setAgendaData] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState(0);
+  const [menuResetKey, setMenuResetKey] = useState(0);
 
-    const [menuResetKey, setMenuResetKey] = useState(0);
-  
-    const handleTabPress = (route: string) => {
-      setMenuResetKey((prev) => prev + 1); 
-      router.push(route as Route );
+  const days = [
+    { label: 'Mon', date: '08', active: true, disabled: false },
+    { label: 'Tue', date: '09', active: false, disabled: false },
+    { label: 'Wed', date: '10', active: false, disabled: false },
+  ];
+
+  const handleTabPress = (route: string) => {
+    setMenuResetKey((prev) => prev + 1);
+    router.push(route as Route);
+  };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('https://localhost:7072/api/Event', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const events = await response.json();
+
+        const transformed = events.map((event: {
+          id: number;
+          title: string;
+          description: string;
+          startTime: string;
+          endTime: string;
+          location: string;
+          date: string;
+          category: string;
+        }) => ({
+          id: event.id,
+          icon: <Icon name="calendar-outline" size={22} color="#4FC3F7" />,
+          title: event.title,
+          desc: event.description,
+          time: `${event.startTime} - ${event.endTime}`,
+          location: event.location,
+          color: '#E3F4FD',
+          iconBg: '#B3E5FC',
+          date: event.date,
+          category: event.category,
+        }));
+
+        setAgendaData(transformed);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
     };
+
+    fetchEvents();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header */}
-     <View style={styles.headerContainer}>
-        <HeaderWithMenu resetSignal={menuResetKey}/>
-     </View>
+      <View style={styles.headerContainer}>
+        <HeaderWithMenu resetSignal={menuResetKey} />
+      </View>
 
       {/* Month Selector */}
       <View style={styles.monthRow}>
@@ -86,7 +85,7 @@ export default function Agenda() {
       </View>
 
       {/* Days Row */}
-      <View  style={styles.daysScroll}>
+      <View style={styles.daysScroll}>
         {days.map((d, idx) => (
           <TouchableOpacity
             key={d.label}
@@ -98,10 +97,18 @@ export default function Agenda() {
             disabled={d.disabled}
             onPress={() => setSelectedDay(idx)}
           >
-            <Text style={[styles.dayLabel, d.active && styles.dayLabelActive, d.disabled && styles.dayLabelDisabled]}>
+            <Text style={[
+              styles.dayLabel,
+              d.active && styles.dayLabelActive,
+              d.disabled && styles.dayLabelDisabled
+            ]}>
               {d.label}
             </Text>
-            <Text style={[styles.dayDate, d.active && styles.dayDateActive, d.disabled && styles.dayLabelDisabled]}>
+            <Text style={[
+              styles.dayDate,
+              d.active && styles.dayDateActive,
+              d.disabled && styles.dayLabelDisabled
+            ]}>
               {d.date}
             </Text>
           </TouchableOpacity>
@@ -112,7 +119,7 @@ export default function Agenda() {
         {/* Date and Events Count */}
         <View style={styles.dateRow}>
           <Text style={styles.dateTitle}>Monday, Sep 08</Text>
-          <Text style={styles.eventsCount}>6 events</Text>
+          <Text style={styles.eventsCount}>{agendaData.length} events</Text>
         </View>
 
         {/* Agenda List */}
@@ -135,10 +142,11 @@ export default function Agenda() {
         ))}
       </ScrollView>
 
+      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home1')}>
           <Icon name="home" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}  >{en.navigationOptions.home}</Text>
+          <Text style={styles.navLabel}>{en.navigationOptions.home}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/agenda')}>
           <Icon name="calendar" size={24} color="#8DD22A" />
@@ -146,7 +154,7 @@ export default function Agenda() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/featuredSpeakers')}>
           <Icon name="people" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >{en.navigationOptions.featuredSpeakers}</Text>
+          <Text style={styles.navLabel}>{en.navigationOptions.featuredSpeakers}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/mindful')}>
           <Icon name="cloud" size={24} color="#BDBDBD" />
@@ -162,10 +170,10 @@ export default function Agenda() {
 }
 
 const styles = StyleSheet.create({
-    headerContainer:{
-      zIndex: 1000,
-      position: 'relative', 
-  } ,
+  headerContainer: {
+    zIndex: 1000,
+    position: 'relative',
+  },
   monthRow: {
     flexDirection: 'row',
     alignItems: 'center',
