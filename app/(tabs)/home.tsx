@@ -1,6 +1,6 @@
 import SummitBg from '@/assets/images/svg/homeBanner';
 import en from '@/assets/translations/en.json';
-import Header from '@/components/header';
+import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
 import React from 'react';
@@ -64,55 +64,15 @@ const nextEventTime =  () => {
   return localNextEventTime;
 }
 
-const dayDifference = () => {
-  console.log('dayDifference');
-  const nextEventTimeDifference = new Date().getTime() - nextEventTime();
-  const millisecondsInADay = 1000 * 60 * 60 * 24;
-  return Math.floor( Math.abs(nextEventTimeDifference)  / millisecondsInADay);
-}
-
-const hoursDifference = () => {
-  console.log('hoursDifference');
-  const nextEventTimeDifference = new Date().getTime() - nextEventTime();
-  const millisecondsInAnHour = 1000 * 60 * 60;
-  return Math.floor( Math.abs(nextEventTimeDifference) / millisecondsInAnHour);
-}
-
-const minutesDifference = () => {
-  console.log('minutesDifference');
-  const nextEventTimeDifference = new Date().getTime() - nextEventTime();
-  const millisecondsInAMinute = 1000 * 60;
-  return Math.floor( Math.abs(nextEventTimeDifference) / millisecondsInAMinute);
-}
-
-const secondsDifference = () => {
-  console.log('secondsDifference');
-  const nextEventTimeDifference = new Date().getTime() - nextEventTime();
-  const millisecondsInASecond = 1000;
-  return Math.floor( Math.abs(nextEventTimeDifference) / millisecondsInASecond);
-}
-
 export default function Home() {
-  // const [dayDifferenceValue, setDayDifferenceValue] = React.useState(dayDifference());
-  // const [hoursDifferenceValue, setHoursDifferenceValue] = React.useState(hoursDifference());
-  // const [minutesDifferenceValue, setMinutesDifferenceValue] = React.useState(minutesDifference());
-  // const [secondsDifferenceValue, setSecondsDifferenceValue] = React.useState(secondsDifference());
-
-  // React.useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     // setDayDifferenceValue(dayDifference());
-  //     // setHoursDifferenceValue(hoursDifference());
-  //     // setMinutesDifferenceValue(minutesDifference());
-  //     setSecondsDifferenceValue(secondsDifference());
-  //   }, 5000);
-  //   console.log('Interval set for countdown updates');
-  //   return () => clearInterval(interval);
-  // }, [dayDifference, hoursDifference, minutesDifference, secondsDifference]);
+  const [menuResetKey, setMenuResetKey] = React.useState(5);
   const timer = useTimer(nextEventTime());
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header Section */}
-      <Header />
+      <View style={styles.headerContainer}>
+        <HeaderWithMenu resetSignal={menuResetKey}/>
+      </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         <View style={styles.heroContainer}>
@@ -204,6 +164,10 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+   headerContainer:{
+    zIndex: 1000,
+    position: 'relative',
+  },
   header: {
     backgroundColor: '#fff',
     flexDirection: 'row',
