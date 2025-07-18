@@ -5,9 +5,10 @@ import NavigationBar from '@/components/navigationBar';
 import { getToken } from '@/utils/authToken';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import { router } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
+  Alert,
+  Animated,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -20,12 +21,16 @@ import {
 } from 'react-native';
 
 export default function ContactUs() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [menuResetKey, setMenuResetKey] = React.useState(5);
-  const [navigationBarVisible, setNavigationBarVisible] = React.useState(false);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [menuResetKey, setMenuResetKey] = React.useState(5);
+    const [navigationBarVisible, setNavigationBarVisible] = React.useState(true);
+    const [loading, setLoading] = useState(false);
+    const [showCheckmark, setShowCheckmark] = useState(false);
+    
+      const scaleAnim = useRef(new Animated.Value(0)).current;
 
 
     useFocusEffect(
@@ -40,6 +45,60 @@ export default function ContactUs() {
         verifyAuthAndLoad();
       }, [])
     );
+
+    const createContactUsRequest = async () => {
+        // const isValid = validateInput();
+        // if (!isValid) return;
+    
+        try {
+          setLoading(true);
+          const token = await getToken();
+          const response = await fetch('https://localhost:5226/Create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              email,
+              firstName,
+              lastName,
+              message,
+            }),
+          });
+    
+          const data = await response.json();
+          if (data.statusCode === 200) {
+            showAnimatedCheckmark();
+          } else {
+            Alert.alert('Update Failed', data.message || 'Profile update failed.');
+          }
+        } catch (error) {
+          Alert.alert('Update Failed', 'An unexpected error occurred during update.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const showAnimatedCheckmark = () => {
+          setShowCheckmark(true);
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+          }).start(() => {
+            setTimeout(() => {
+              Animated.timing(scaleAnim, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+              }).start(() => {
+                setShowCheckmark(false);
+              });
+            }, 2000);
+          });
+        };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <View style={{ flex: 1 }}>
@@ -107,7 +166,7 @@ export default function ContactUs() {
                 placeholderTextColor="#aaa"
               />
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => {router.push('/(tabs)/home');}}>
+            <TouchableOpacity style={styles.button} onPress={() => createContactUsRequest()}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </ScrollView>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const breakoutBg = require('@/assets/images/react-logo.png'); // Replace with your breakout banner image
+const breakoutBg = require('@/assets/images/kick.jpg'); // Replace with your breakout banner image
 
 const rooms = [
   {
