@@ -38,6 +38,7 @@
         "registrationTransportationConfirmation": "Registration & Transportation Confirmation",
         "profile": "Profile",
         "agenda": "Agenda",
-        "featuredSpeakers": "Speakers"
+        "featuredSpeakers": "Speakers",
+        "contactUs": "contactUs"
     }
 }
