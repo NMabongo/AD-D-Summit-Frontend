@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 const nextScreen = () => {
-  router.push('/home1');
+  router.push('/home');
 }
 const transportationOptions = [
   { label: 'Need airport pickup', value: 'pickup' },
@@ -89,7 +89,7 @@ export default function RegistrationTransportationConfirmation() {
 
             <TouchableOpacity
               style={styles.navButton}
-              onPress={() => router.push('/(tabs)/home1')}
+              onPress={() => router.push('/(tabs)/home')}
             >
               <Text style={styles.backButtonText}>Skip</Text>
             </TouchableOpacity>

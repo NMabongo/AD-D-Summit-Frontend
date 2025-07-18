@@ -89,7 +89,7 @@ export default function Profile() {
 
   const handleHomePress = () => {
     clearData();
-    router.push('/(tabs)/home1');
+    router.push('/(tabs)/home');
   };
   const handleAgendaPress = () => {
     clearData();
@@ -102,6 +102,10 @@ export default function Profile() {
   const handleMindfulPress = () => {
     clearData();
     router.push('/(tabs)/mindful');
+  };
+  const handleProfilePress = () => {
+    clearData();
+    router.push('/(tabs)/profile');
   };
 
 
@@ -173,7 +177,7 @@ export default function Profile() {
       const verifyAuthAndLoad = async () => {
        const token = await getToken();
        if (!token) {
-        router.push('/(tabs)/home1')
+        router.push('/(tabs)/home')
         setLoginModalVisible(true);
        } else {
          handleLoadProfile(token);
@@ -345,7 +349,7 @@ export default function Profile() {
             <Icon name="cloud" size={24} color="#BDBDBD" />
             <Text style={styles.navLabel}>{en.navigationOptions.mindful}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(tabs)/profile')}>
+          <TouchableOpacity style={styles.navItem} onPress={handleProfilePress}>
             <Icon name="person" size={24} color="#8DD22A" />
             <Text style={styles.navLabelActive}>{en.navigationOptions.profile}</Text>
           </TouchableOpacity>

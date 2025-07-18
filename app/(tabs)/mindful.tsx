@@ -1,11 +1,12 @@
+import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
+import NavigationBar from '@/components/navigationBar';
 import { Route, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
-const mindfulBanner = require('@/assets/images/icon.png');
+const mindfulBanner = require('@/assets/images/yoga.jpg');
 
 const sessions = [
   {
@@ -38,9 +39,12 @@ export default function Mindful() {
     
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-     <View style={styles.headerContainer}>
+      
+      {/* Header Section */}
+      <View style={styles.headerContainer}>
         <HeaderWithMenu resetSignal={menuResetKey}/>
-     </View>
+      </View>
+
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View style={styles.bannerContainer}>
           <Image source={mindfulBanner} style={styles.bannerImg} resizeMode="cover" />
@@ -56,7 +60,7 @@ export default function Mindful() {
             <View style={styles.sessionFooter}>
               <Icon name="time-outline" size={18} color="#888" />
               <Text style={styles.sessionDuration}>{session.duration}</Text>
-              <TouchableOpacity style={styles.registerButton}>
+              <TouchableOpacity style={styles.registerButton} onPress={() => router.push('../(tabs)/featuredSpeakers')}>
                 <Text style={styles.registerButtonText}>Register</Text>
               </TouchableOpacity>
             </View>
@@ -64,37 +68,55 @@ export default function Mindful() {
         ))}
       </ScrollView>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home1')}>
-          <Icon name="home" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/agenda')}>
-          <Icon name="calendar" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >Agenda</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/featuredSpeakers')}>
-          <Icon name="people" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel} >Speakers</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/mindful')}>
-          <Icon name="cloud" size={24} color="#8DD22A" />
-          <Text style={styles.navLabelActive} >Mindfulness</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}  onPress={() => handleTabPress('/(tabs)/profile')}>
-          <Icon name="person" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Footer Navigation Bar */}
+      <NavigationBar name={en.navigationOptions.mindful}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    headerContainer:{
-      zIndex: 1000,
-      position: 'relative', 
-  } ,
+  headerContainer:{
+    zIndex: 1000,
+    position: 'relative',
+  },
+  header: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F2',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#fff',
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#222',
+    flex: 1,
+    textAlign: 'center',
+  },
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#ccc',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarImg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
   bannerContainer: {
     width: '100%',
     height: 160,
