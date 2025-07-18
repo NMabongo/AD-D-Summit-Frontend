@@ -1,10 +1,16 @@
 import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
+import en from '@/assets/translations/en.json';
+import HeaderWithMenu from '@/components/HeaderWithMenu';
+import NavigationBar from '@/components/navigationBar';
+import { getToken } from '@/utils/authToken';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,78 +24,99 @@ export default function ContactUs() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [menuResetKey, setMenuResetKey] = React.useState(5);
+  const [navigationBarVisible, setNavigationBarVisible] = React.useState(false);
 
+
+    useFocusEffect(
+      useCallback(() => {
+        const verifyAuthAndLoad = async () => {
+         const token = await getToken();
+         if (token) {
+            setNavigationBarVisible(true);
+         } 
+        };
+  
+        verifyAuthAndLoad();
+      }, [])
+    );
   return (
-    <View style={{ flex: 1 }}>
-      <WelcomePageBackground style={StyleSheet.absoluteFillObject} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
+      <View style={{ flex: 1 }}>
+        <WelcomePageBackground style={StyleSheet.absoluteFillObject} />
+        {/* Header Section */}
+        <HeaderWithMenu resetSignal={menuResetKey}/>
+        
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.heading}>Get in Touch</Text>
+            <Text style={styles.subheading}>
+              Fill in your details we will reach{"\n"}out as soon as possible
+            </Text>
 
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.heading}>Get in Touch</Text>
-          <Text style={styles.subheading}>
-            Fill in your details we will reach{"\n"}out as soon as possible
-          </Text>
+            <View style={styles.row}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>First Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Bheki"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  placeholderTextColor="#aaa"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ntshezi"
+                  value={lastName}
+                  onChangeText={setLastName}
+                  placeholderTextColor="#aaa"
+                />
+              </View>
+            </View>
 
-          <View style={styles.row}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>First Name</Text>
+              <Text style={styles.label}>Email</Text>
+              <View style={styles.emailInputWrapper}>
+                <TextInput
+                  style={[styles.input, { flex: 1, borderWidth: 0 }]}
+                  placeholder="bntshezi@deloitte.com"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  placeholderTextColor="#aaa"
+                />
+                <Ionicons name="mail-outline" size={20} color="#aaa" />
+              </View>
+            </View>
+
+            <View style={styles.inputContainerMessage}>
+              <Text style={styles.label}>Message</Text>
               <TextInput
-                style={styles.input}
-                placeholder="Bheki"
-                value={firstName}
-                onChangeText={setFirstName}
+                style={[styles.input, styles.messageInput]}
+                placeholder="Enter your message"
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                numberOfLines={4}
                 placeholderTextColor="#aaa"
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Last Name</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Ntshezi"
-                value={lastName}
-                onChangeText={setLastName}
-                placeholderTextColor="#aaa"
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.emailInputWrapper}>
-              <TextInput
-                style={[styles.input, { flex: 1, borderWidth: 0 }]}
-                placeholder="bntshezi@deloitte.com"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                placeholderTextColor="#aaa"
-              />
-              <Ionicons name="mail-outline" size={20} color="#aaa" />
-            </View>
-          </View>
-
-          <View style={styles.inputContainerMessage}>
-            <Text style={styles.label}>Message</Text>
-            <TextInput
-              style={[styles.input, styles.messageInput]}
-              placeholder="Enter your message"
-              value={message}
-              onChangeText={setMessage}
-              multiline
-              numberOfLines={4}
-              placeholderTextColor="#aaa"
-            />
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={() => {router.push('/(tabs)/home1');}}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+            <TouchableOpacity style={styles.button} onPress={() => {router.push('/(tabs)/home');}}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+      <View>
+        {navigationBarVisible && <NavigationBar name={en.navigationOptions.contactUs} />}
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -127,11 +154,11 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    marginBottom: 16,
+    marginBottom: 6,
   },
     inputContainerMessage: {
     flex: 1,
-    marginBottom: 200,
+    marginBottom: 16,
   },
   label: {
     color: '#fff',
