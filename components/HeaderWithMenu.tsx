@@ -2,7 +2,6 @@ import { deleteToken, getToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
 interface HeaderWithMenuProps  {
@@ -10,6 +9,7 @@ interface HeaderWithMenuProps  {
 }
 
 const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
+const avatarIcon = require('@/assets/images/portrait-female.jpg');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -39,8 +39,8 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
       <Image source={deloitteLogo} style={styles.logo} />
       <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
 
-      <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)}>
-        <Icon name="person" size={25} color="#BDBDBD" />
+      <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
+        <Image source={avatarIcon} style={styles.avatarImg} />
       </TouchableOpacity>
 
       {menuVisible && (
@@ -76,6 +76,20 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
 export default HeaderWithMenu;
 
 const styles = StyleSheet.create({
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#ccc',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarImg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
   header: {
     backgroundColor: '#fff',
     flexDirection: 'row',
