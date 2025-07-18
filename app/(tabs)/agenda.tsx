@@ -249,7 +249,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
       </ScrollView>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home1')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home')}>
           <Icon name="home" size={24} color="#BDBDBD" />
           <Text style={styles.navLabel}>{en.navigationOptions.home}</Text>
         </TouchableOpacity>
