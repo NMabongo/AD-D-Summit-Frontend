@@ -37,7 +37,18 @@ export default function TabLayout() {
           title: 'Register',
           tabBarStyle: { display: 'none' },
         }} />
-
+      <Tabs.Screen
+        name="registrationAttendanceConfirmation"
+        options={{
+          title: 'registrationAttendanceConfirmation',
+          tabBarStyle: { display: 'none' },
+        }} />
+        <Tabs.Screen
+        name="registrationTransportationConfirmation"
+        options={{
+          title: 'registrationTransportationConfirmation',
+          tabBarStyle: { display: 'none' },
+        }} />
         <Tabs.Screen
         name="contactUs"
         options={{
@@ -51,9 +62,9 @@ export default function TabLayout() {
           tabBarStyle: { display: 'none' },
         }} />
         <Tabs.Screen
-        name="home1"
+        name="home"
         options={{
-          title: 'Home 1',
+          title: 'Home',
           tabBarStyle: { display: 'none' },
         }} />
       <Tabs.Screen
@@ -72,6 +83,18 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="speaker-bio"
+        options={{
+          title: 'Speaker Bio',
+          tabBarStyle: { display: 'none' },
+        }} />
+      <Tabs.Screen
+        name="mindfulnessActivity"
+        options={{
+          title: 'Mindfulness Activity',
           tabBarStyle: { display: 'none' },
         }} />
     </Tabs>
