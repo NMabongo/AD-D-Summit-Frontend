@@ -37,7 +37,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({name}) => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem} onPress={() => router.push('../(tabs)/contactUs')}>
         <Icon name="phone" size={24} color={name===en.navigationOptions.contactUs? "#8DD22A" : "#BDBDBD"} />
-        <Text style={[name===en.navigationOptions.profile? styles.navLabelActive : styles.navLabel]}>{en.navigationOptions.profile}</Text>
+        <Text style={[name===en.navigationOptions.profile? styles.navLabelActive : styles.navLabel]}>{en.navigationOptions.contactUs}</Text>
       </TouchableOpacity>
     </View>
   );
