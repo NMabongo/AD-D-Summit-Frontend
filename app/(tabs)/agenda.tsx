@@ -2,7 +2,7 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import { useFocusEffect } from '@react-navigation/native';
-import { Route, useRouter } from 'expo-router';
+import { Route, router, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -231,6 +231,13 @@ const extractUniqueMonths = (events: any[]): string[] => {
         </View>
 
         {agendaData.filter(item => item.date === selectedDate).map(item => (
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => router.push({
+                pathname: '/(tabs)/breakoutRoom',
+                params: { breakoutroomId: item.id },
+              })}
+            >
           <View key={item.id} style={[styles.agendaCard, { backgroundColor: item.color }]}>
             <View style={[styles.agendaIconWrap, { backgroundColor: item.iconBg }]}>
               {item.icon}
@@ -246,6 +253,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
               </View>
             </View>
           </View>
+            </TouchableOpacity>
         ))}
       </ScrollView>
 

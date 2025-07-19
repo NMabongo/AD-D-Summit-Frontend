@@ -97,6 +97,12 @@ export default function TabLayout() {
           title: 'Mindfulness Activity',
           tabBarStyle: { display: 'none' },
         }} />
+        <Tabs.Screen
+        name="breakoutRoom"
+        options={{
+          title: 'breakoutRoom',
+          tabBarStyle: { display: 'none' },
+        }} />
     </Tabs>
   );
 }

@@ -1,7 +1,9 @@
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const breakoutBg = require('@/assets/images/kick.jpg'); // Replace with your breakout banner image
+
+const breakoutBg = require('@/assets/images/kick.jpg'); 
 
 const rooms = [
   {
@@ -35,14 +37,14 @@ const rooms = [
 ];
 
 export default function BreakoutRooms() {
+    const { breakoutroomId } = useLocalSearchParams();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
       {/* Top Bar */}
       <View style={styles.topBar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=> router.push('/(tabs)/agenda')}>
           <Text style={styles.backArrow}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>Breakout Rooms</Text>
         <View style={{ width: 32 }} />
       </View>
 
