@@ -84,6 +84,7 @@ export default function RegistrationScreen() {
       }
 
     } catch (error) {
+        console.error('Login Error;', error)
         setErrorModalTitle(serverErrorTitle);
         setErrorModalMessage(serverErrorMessage);
         setErrorModalVisible(true);
@@ -160,6 +161,7 @@ const validateInput = async () => {
         setErrorModalVisible(true);
       }
     } catch (error) {
+        console.error('Registration Failed;', error)
         setErrorModalTitle(serverErrorTitle);
         setErrorModalMessage(serverErrorMessage);
         setErrorModalVisible(true);
