@@ -1,9 +1,12 @@
 import { Entypo, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from "react";
 import { Image, Modal, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function SpeakerBio() {
+  console.log('SpeakerBio component loaded');
+  console.log('Local Search Params:', useLocalSearchParams());
+  const {firstName, lastName, expertise, region, rating, talksGiven, yearsExperience, satisfaction, bio, avatar} = useLocalSearchParams();
   const router = useRouter(); 
 
     const [dropdownVisible, setDropdownVisible] = useState(false); 
@@ -49,11 +52,11 @@ export default function SpeakerBio() {
             <MaterialIcons name="check" size={20} color="#fff" />
           </View>
         </View>
-        <Text style={styles.name}>Bheki Ntshezi</Text>
-        <Text style={styles.title}>Keynote Speaker & Tech Innovator</Text>
+        <Text style={styles.name}>{firstName + " " + lastName}</Text>
+        <Text style={styles.title}>{expertise}</Text>
         <View style={styles.locationRow}>
           <Entypo name="location-pin" size={18} color="#888" />
-          <Text style={styles.locationText}>South Africa</Text>
+          <Text style={styles.locationText}>{region}</Text>
           <FontAwesome name="star" size={16} color="#FFD700" style={{ marginLeft: 12 }} />
           <Text style={styles.ratingText}>5.0</Text>
         </View>
@@ -62,15 +65,15 @@ export default function SpeakerBio() {
       {/* Stats */}
       <View style={styles.statsRow}>
         <View style={styles.statBox}>
-          <Text style={styles.statNumber}>150+</Text>
+          <Text style={styles.statNumber}>{talksGiven}</Text>
           <Text style={styles.statLabel}>Talks Given</Text>
         </View>
         <View style={styles.statBox}>
-          <Text style={styles.statNumber}>12</Text>
+          <Text style={styles.statNumber}>{yearsExperience}</Text>
           <Text style={styles.statLabel}>Years Exp</Text>
         </View>
         <View style={styles.statBox}>
-          <Text style={styles.statNumber}>98%</Text>
+          <Text style={styles.statNumber}>{satisfaction}</Text>
           <Text style={styles.statLabel}>Satisfaction</Text>
         </View>
       </View>
@@ -79,7 +82,7 @@ export default function SpeakerBio() {
       <View style={styles.aboutSection}>
         <Text style={styles.aboutHeader}>About</Text>
         <Text style={styles.aboutText}>
-          Lisa Wang is a renowned technology innovator and keynote speaker with over 12 years of experience in artificial intelligence and machine learning. She has delivered transformative presentations at major conferences worldwide.
+          {bio }
         </Text>
         <Text style={styles.aboutText}>
           As the former Chief Technology Officer at TechVision Inc., she led groundbreaking projects that revolutionized how businesses approach digital transformation. Her expertise spans across AI, ethics, and leadership.
