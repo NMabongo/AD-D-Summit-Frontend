@@ -116,41 +116,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
-  // Custom Header and Back Button styles
   customHeader: {
-    flexDirection: 'row', // Align items horizontally
-    alignItems: 'center', // Vertically center items
-    justifyContent: 'space-between', // Space out items
-    paddingTop: 16, // Adjust as needed to clear status bar/notch
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', 
+    paddingTop: 3, 
     paddingHorizontal: 16,
-    height: 60, // Standard header height
-    backgroundColor: '#f8f8f8', // Example background, match your design
+    height: 60, 
+    backgroundColor: '#f8f8f8', 
     borderBottomWidth: 0.5,
     borderColor: '#eee',
   },
   backButton: {
     padding: 5,
-    // Removed absolute positioning as we are using flexbox now
   },
   headerTitleText: {
     fontSize: 17,
     fontWeight: 'bold',
     color: '#333',
-    // flex: 1, // Allow title to take up available space
-    textAlign: 'center', // Center text within its allocated space
-    // No specific margin-left needed if using space-between for justify-content
+    textAlign: 'center', 
   },
   dotsButton: {
     padding: 5,
   },
-  // Styles for the dropdown modal
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    justifyContent: 'flex-start', // Align dropdown to top
-    alignItems: 'flex-end', // Align dropdown to right
-    // Position it relative to the header, adjust padding for exact placement
-    paddingTop: 55, // Estimated height of your custom header
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end', 
+    paddingTop: 55, 
     paddingRight: 10,
   },
   dropdownContainer: {

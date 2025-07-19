@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const breakoutBg = require('@/assets/images/kick.jpg'); 
@@ -37,14 +38,20 @@ const rooms = [
 ];
 
 export default function BreakoutRooms() {
+   //Will use thid Id to pull Data from the endpoint
     const { breakoutroomId } = useLocalSearchParams();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
       {/* Top Bar */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={()=> router.push('/(tabs)/agenda')}>
-          <Text style={styles.backArrow}>{'<'}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => router.push('/(tabs)/agenda')}
+        hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+        style={styles.backButton}
+      >
+        <Ionicons name="arrow-back" size={24} color="#333" />
+      </TouchableOpacity>
+        <Text style={styles.headerTitleText}>Breakout Rooms</Text>
         <View style={{ width: 32 }} />
       </View>
 
@@ -97,6 +104,15 @@ const styles = StyleSheet.create({
     color: '#222',
     width: 32,
     textAlign: 'left',
+  },
+  backButton: {
+    padding: 5,
+  },
+    headerTitleText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center', 
   },
   topBarTitle: {
     fontWeight: 'bold',
