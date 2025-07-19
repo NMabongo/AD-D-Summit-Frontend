@@ -161,6 +161,9 @@ export default function Profile() {
         setEmail(data.profile.email);
         setRegion(data.profile.region);
         setPassword(data.profile.password);
+        // We need to load the image location (local/cloud)
+        const fullImageUrl = `https://localhost:7072${data.profile.avatarPath}`;
+        setSelectedImage(fullImageUrl);
       } else {
         console.error('Error', data.message || 'Failed to load profile.');
         setErrorMessage('User profile cannot be loaded');
