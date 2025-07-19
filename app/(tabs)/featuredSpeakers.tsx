@@ -1,6 +1,6 @@
 import en from '@/assets/translations/en.json';
-import Header from '@/components/header';
-import { router } from 'expo-router';
+import HeaderWithMenu from '@/components/HeaderWithMenu';
+import { Route, useRouter } from 'expo-router';
 import React from 'react';
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import NavigationBar from '../../components/navigationBar';
@@ -65,10 +65,20 @@ const numColumns = 2;
 const cardWidth = (Dimensions.get('window').width - 48) / 2;
 
 export default function FeaturedSpeakers() {
+  const [menuResetKey, setMenuResetKey] = React.useState(0);
+  const router = useRouter(); 
+
+  const handleNavigationAndReset = (route: string) => {
+    setMenuResetKey((prev) => prev + 1);
+    router.push(route as Route);
+  };
+
   return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         {/* Header */}
-        <Header />
+        <View style={styles.headerContainer}>
+          <HeaderWithMenu resetSignal={menuResetKey} />
+        </View>
 
         <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
           {/* Banner */}
@@ -82,24 +92,32 @@ export default function FeaturedSpeakers() {
           {/* Speakers Grid */}
           <View style={styles.speakersGrid}>
             {speakers.map((speaker) => (
-                <TouchableOpacity key={speaker.id} onPress={ () => router.push('../(tabs)/speaker-bio')}>
-                  <View key={speaker.id} style={styles.speakerCard}>
-                    <Image source={speaker.avatar} style={styles.speakerAvatar} />
-                    <Text style={styles.speakerName}>{speaker.name}</Text>
-                    <Text style={styles.speakerTitle}>{speaker.title}</Text>
-                  </View>
-                </TouchableOpacity>
+              <TouchableOpacity
+                key={speaker.id}
+                onPress={() => router.push({ pathname: '/(tabs)/speaker-bio', params: { speakerId: speaker.id } })}
+              >
+                <View style={styles.speakerCard}>
+                  <Image source={speaker.avatar} style={styles.speakerAvatar} />
+                  <Text style={styles.speakerName}>{speaker.name}</Text>
+                  <Text style={styles.speakerTitle}>{speaker.title}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView>
-        <NavigationBar name={en.navigationOptions.featuredSpeakers}/>
-
-
+        <NavigationBar
+          name={en.navigationOptions.featuredSpeakers}
+          onTabPress={handleNavigationAndReset}
+        />
       </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    zIndex: 1000,
+    position: 'relative', 
+  },
   header: {
     backgroundColor: '#fff',
     flexDirection: 'row',
@@ -175,7 +193,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16,
     alignItems: 'center',
-    width: cardWidth,
+    width: cardWidth, // This `cardWidth` needs to be correctly calculated or imported
     marginBottom: 18,
     paddingVertical: 18,
     shadowColor: '#000',

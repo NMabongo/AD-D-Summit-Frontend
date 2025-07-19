@@ -1,7 +1,8 @@
 import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
+import NavigationBar from '@/components/navigationBar';
 import { useFocusEffect } from '@react-navigation/native';
-import { router } from 'expo-router';
+import { Route, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -13,9 +14,9 @@ export default function Agenda() {
   const [days, setDays] = useState<any[]>([]);
   const [menuResetKey, setMenuResetKey] = useState(0);
 
-  const handleTabPress = (route: string) => {
-    setMenuResetKey((prev) => prev + 1);
-    router.push(route as any);
+  const handleNavigationAndReset = (route: string) => {
+    setMenuResetKey((prev) => prev + 1); 
+    useRouter().push(route as Route); 
   };
 
   const [months, setMonths] = useState<string[]>([]);
@@ -248,28 +249,9 @@ const extractUniqueMonths = (events: any[]): string[] => {
         ))}
       </ScrollView>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/home')}>
-          <Icon name="home" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>{en.navigationOptions.home}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/agenda')}>
-          <Icon name="calendar" size={24} color="#8DD22A" />
-          <Text style={styles.navLabelActive}>{en.navigationOptions.agenda}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/featuredSpeakers')}>
-          <Icon name="people" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>{en.navigationOptions.featuredSpeakers}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/mindful')}>
-          <Icon name="cloud" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>{en.navigationOptions.mindful}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/profile')}>
-          <Icon name="person" size={24} color="#BDBDBD" />
-          <Text style={styles.navLabel}>{en.navigationOptions.profile}</Text>
-        </TouchableOpacity>
-      </View>
+        <NavigationBar name={en.navigationOptions.agenda}
+          onTabPress={handleNavigationAndReset} 
+        />
     </SafeAreaView>
   );
 }

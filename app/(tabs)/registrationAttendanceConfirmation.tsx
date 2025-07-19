@@ -1,7 +1,8 @@
-import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,21 +12,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const attendanceOptions = [
   { label: "Wouldn't miss it!", value: 'yes' },
   { label: 'Catch you the next time!', value: 'no' },
   { label: 'Mulling It over', value: 'maybe' },
 ];
+  const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
 export default function RegistrationAttendanceConfirmation() {
   const [selected, setSelected] = useState('yes');
   const [message, setMessage] = useState('');
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
-      <RegistrationScreenBackground />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <ImageBackground
+          source={profileBackground}
+          style={styles.background}
+          resizeMode="cover"
+        >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -70,29 +76,38 @@ export default function RegistrationAttendanceConfirmation() {
             />
 
             <TouchableOpacity style={styles.button}>
-              <Icon name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
 
             <Text style={styles.footerText}>
-              Having problems? <Text style={styles.contactText} onPress={() => {router.push('/(tabs)/contactUs')}}>Contact us</Text>
+              Having problems?{' '}
+              <Text
+                style={styles.contactText}
+                onPress={() => router.push('/(tabs)/contactUs')}
+              >
+                Contact us
+              </Text>
+                        <View style={styles.bottomButtonsContainer}>
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.back()}
+                          >
+                            <Text style={styles.backButtonText}>Back</Text>
+                          </TouchableOpacity>
+              
+                          <TouchableOpacity
+                            style={styles.navButton}
+                            onPress={() => router.push('/registrationTransportationConfirmation')}
+                          >
+                            <Text style={styles.backButtonText}>Skip</Text>
+                          </TouchableOpacity>
+                        </View>
             </Text>
-          </View>
-
-          <View style={styles.bottomButtonsContainer}>
-            <TouchableOpacity style={styles.buttonSecondary} onPress={() => router.back()}>
-              <Text style={styles.buttonSecondaryText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.buttonSecondary}
-              onPress={() => router.push('/(tabs)/registrationTransportationConfirmation')}
-            >
-              <Text style={styles.buttonSecondaryText}>Skip</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
   );
 }
@@ -153,7 +168,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 13,
     marginBottom: 4,
-    left: 0,
   },
   input: {
     backgroundColor: '#fff',
@@ -199,7 +213,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginHorizontal: 24,
   },
-  buttonSecondary: {
+  navButton: {
     backgroundColor: '#000',
     borderRadius: 20,
     paddingVertical: 10,
@@ -208,8 +222,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
   },
-  buttonSecondaryText: {
+  backButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });

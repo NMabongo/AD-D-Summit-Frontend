@@ -1,7 +1,7 @@
-import RegistrationScreenBackground from '@/assets/images/svg/registrationScreenBackground';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -11,20 +11,27 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+const nextScreen = () => {
+  router.push('/home');
+}
 const transportationOptions = [
   { label: 'Need airport pickup', value: 'pickup' },
   { label: 'Will arrange my own', value: 'own' },
   { label: 'Not decided yet', value: 'undecided' },
 ];
+  const profileBackground = require('@/assets/images/confirmTransportation.jpg')
 
 export default function RegistrationTransportationConfirmation() {
   const [selected, setSelected] = useState('pickup');
   const [message, setMessage] = useState('');
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
-      <RegistrationScreenBackground />
+    <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={profileBackground}
+          style={styles.background}
+          resizeMode="cover"
+        >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -62,7 +69,7 @@ export default function RegistrationTransportationConfirmation() {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={nextScreen}>
               <Icon name="car-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
@@ -89,6 +96,7 @@ export default function RegistrationTransportationConfirmation() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      </ImageBackground>
     </View>
   );
 }
@@ -202,5 +210,16 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center', 
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 });

@@ -1,7 +1,7 @@
 import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
-import { Route, router } from 'expo-router';
+import { Route, router, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -31,12 +31,12 @@ const sessions = [
 
 export default function Mindful() {
     const [menuResetKey, setMenuResetKey] = useState(0);
-  
-    const handleTabPress = (route: string) => {
+
+    const handleNavigationAndReset = (route: string) => {
       setMenuResetKey((prev) => prev + 1); 
-      router.push(route as Route );
+      useRouter().push(route as Route); 
     };
-    
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       
@@ -69,7 +69,9 @@ export default function Mindful() {
       </ScrollView>
 
       {/* Footer Navigation Bar */}
-      <NavigationBar name={en.navigationOptions.mindful}/>
+      <NavigationBar name={en.navigationOptions.mindful} 
+         onTabPress={handleNavigationAndReset} 
+      />
     </View>
   );
 }

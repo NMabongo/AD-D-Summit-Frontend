@@ -1,15 +1,42 @@
-import en from '@/assets/translations/en.json';
-import Header from "@/components/header";
-import NavigationBar from "@/components/navigationBar";
-import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
-import React from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Entypo, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from 'expo-router';
+import React, { useState } from "react";
+import { Image, Modal, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function SpeakerBio() {
+  const router = useRouter(); 
+
+    const [dropdownVisible, setDropdownVisible] = useState(false); 
+
+  const dropdownOptions = [
+    { label: 'Contact Us', onPress: () => { setDropdownVisible(false); router.push('/(tabs)/contactUs')} },
+    { label: 'Share', onPress: () => { setDropdownVisible(false); setDropdownVisible(false)}  },
+    { label: 'Subscribe', onPress: () =>{ setDropdownVisible(false); setDropdownVisible(false)} },
+  ];
+
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <Header />
+      <View style={styles.customHeader}>
+        <TouchableOpacity
+          onPress={() => router.push('/(tabs)/featuredSpeakers')} 
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }} 
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back" size={24} color="#333" />
+        </TouchableOpacity>
+
+        <Text style={styles.headerTitleText}>Deloitte Partner Summit 2025</Text>
+
+        <TouchableOpacity
+          onPress={() => setDropdownVisible(true)}
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+          style={styles.dotsButton} 
+        >
+          <Entypo name="dots-three-vertical" size={20} color="#333" />
+        </TouchableOpacity>
+      </View>
+
 
       {/* Profile Section */}
       <View style={styles.profileSection}>
@@ -59,8 +86,27 @@ export default function SpeakerBio() {
         </Text>
       </View>
 
-      {/* Footer */}
-      <NavigationBar name={en.navigationOptions.featuredSpeakers}/>
+   <Modal
+        animationType="fade"
+        transparent={true}
+        visible={dropdownVisible}
+        onRequestClose={() => setDropdownVisible(false)}
+      >
+        <Pressable style={styles.modalOverlay} onPress={() => setDropdownVisible(false)}>
+          <View style={styles.dropdownContainer}>
+            {dropdownOptions.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.dropdownItem}
+                onPress={option.onPress}
+              >
+                <Text style={styles.dropdownItemText}>{option.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </Pressable>
+      </Modal>
+      {/* Speaker bio does Not have a footer as per design */}
     </SafeAreaView>
   );
 }
@@ -70,25 +116,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 16,
-    paddingBottom: 8,
+  // Custom Header and Back Button styles
+  customHeader: {
+    flexDirection: 'row', // Align items horizontally
+    alignItems: 'center', // Vertically center items
+    justifyContent: 'space-between', // Space out items
+    paddingTop: 16, // Adjust as needed to clear status bar/notch
+    paddingHorizontal: 16,
+    height: 60, // Standard header height
+    backgroundColor: '#f8f8f8', // Example background, match your design
     borderBottomWidth: 0.5,
-    borderColor: "#eee",
-    position: "relative",
+    borderColor: '#eee',
   },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#222",
+  backButton: {
+    padding: 5,
+    // Removed absolute positioning as we are using flexbox now
   },
-  menuIcon: {
-    position: "absolute",
-    right: 20,
-    top: 18,
+  headerTitleText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#333',
+    // flex: 1, // Allow title to take up available space
+    textAlign: 'center', // Center text within its allocated space
+    // No specific margin-left needed if using space-between for justify-content
+  },
+  dotsButton: {
+    padding: 5,
+  },
+  // Styles for the dropdown modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'flex-start', // Align dropdown to top
+    alignItems: 'flex-end', // Align dropdown to right
+    // Position it relative to the header, adjust padding for exact placement
+    paddingTop: 55, // Estimated height of your custom header
+    paddingRight: 10,
+  },
+  dropdownContainer: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    paddingVertical: 5,
+    minWidth: 160, // Slightly wider for options
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#333',
   },
   profileSection: {
     alignItems: "center",
@@ -198,5 +280,5 @@ const styles = StyleSheet.create({
     color: "#444",
     marginBottom: 8,
     lineHeight: 20,
-  }  
+  }
 });

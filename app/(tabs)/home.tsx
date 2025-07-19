@@ -3,6 +3,7 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
+import { Route, useRouter } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -67,6 +68,12 @@ const nextEventTime =  () => {
 export default function Home() {
   const [menuResetKey, setMenuResetKey] = React.useState(5);
   const timer = useTimer(nextEventTime());
+
+  const handleNavigationAndReset = (route: string) => {
+    setMenuResetKey((prev) => prev + 1); 
+    useRouter().push(route as Route); 
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header Section */}
@@ -158,7 +165,9 @@ export default function Home() {
       </ScrollView>
 
       {/* Footer Navigation Bar */}
-      <NavigationBar name={en.navigationOptions.home}  />
+      <NavigationBar name={en.navigationOptions.home}  
+          onTabPress={handleNavigationAndReset} 
+         />
     </SafeAreaView>
   );
 }

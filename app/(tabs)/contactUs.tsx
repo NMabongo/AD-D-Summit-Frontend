@@ -1,7 +1,4 @@
 import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
-import en from '@/assets/translations/en.json';
-import HeaderWithMenu from '@/components/HeaderWithMenu';
-import NavigationBar from '@/components/navigationBar';
 import { getToken } from '@/utils/authToken';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -25,7 +22,6 @@ export default function ContactUs() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
-    const [menuResetKey, setMenuResetKey] = React.useState(5);
     const [navigationBarVisible, setNavigationBarVisible] = React.useState(true);
     const [loading, setLoading] = useState(false);
     const [showCheckmark, setShowCheckmark] = useState(false);
@@ -103,8 +99,7 @@ export default function ContactUs() {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
       <View style={{ flex: 1 }}>
         <WelcomePageBackground style={StyleSheet.absoluteFillObject} />
-        {/* Header Section */}
-        <HeaderWithMenu resetSignal={menuResetKey}/>
+        {/* Contact Us page does not have a header as per design */}
         
         <KeyboardAvoidingView
           style={styles.container}
@@ -172,9 +167,7 @@ export default function ContactUs() {
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
-      <View>
-        {navigationBarVisible && <NavigationBar name={en.navigationOptions.contactUs} />}
-      </View>
+      {/* Contact Us does not have a footer*/ }
     </SafeAreaView>
   );
 }
