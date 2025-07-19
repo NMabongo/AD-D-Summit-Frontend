@@ -63,7 +63,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin, onRe
         onLogin(email, password);
         clearData();
          await saveToken(data.token);
-        router.push('/registration/registrationAttendanceConfirmation'); 
+        router.push('/(tabs)/registrationAttendanceConfirmation'); 
       } else {
         setErrorMessage(data.message || 'Login failed. Please try again.');
         setErrorVisible(true);

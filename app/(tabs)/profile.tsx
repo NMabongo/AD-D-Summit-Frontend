@@ -1,4 +1,5 @@
 import en from '@/assets/translations/en.json';
+import HeaderWithMenu from '@/components/HeaderWithMenu';
 import LoginModal from '@/components/LoginModal';
 import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
@@ -213,14 +214,17 @@ export default function Profile() {
 
   return (
       <ImageBackground
-    source={profileBackground}
-    style={styles.background}
-    resizeMode="cover"
-  >
+        source={profileBackground}
+        style={styles.background}
+        resizeMode="cover"
+      >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
+      <View style={styles.headerContainer}>
+        <HeaderWithMenu resetSignal={0}/>
+      </View>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.formContainer}>
             <View style={styles.profileHeader}>
@@ -426,6 +430,10 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer:{
+    zIndex: 1000,
+    position: 'relative',
+  },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
