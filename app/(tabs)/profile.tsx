@@ -3,6 +3,7 @@ import HeaderWithMenu from '@/components/HeaderWithMenu';
 import LoginModal from '@/components/LoginModal';
 import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import {
@@ -41,6 +42,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [showCheckmark, setShowCheckmark] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   const regions = [
     'North America',
@@ -50,6 +53,31 @@ export default function Profile() {
     'Africa',
     'Oceania',
   ];
+
+  //need to fix this
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+      base64: true, // Needed for web
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      const asset = result.assets[0];
+      setSelectedImage(asset.uri);
+
+      if (Platform.OS === 'web' && asset.base64) {
+        const base64Response = await fetch(`data:image/jpeg;base64,${asset.base64}`);
+        const blob = await base64Response.blob();
+        const file = new File([blob], asset.fileName || 'profile.jpg', {
+          type: blob.type,
+        });
+        setSelectedImageFile(file);
+      }
+    }
+  };
 
   const validatePassword = (text: string) => {
     const isValid = text.length >= 8 && /[A-Z]/.test(text) && /[0-9]/.test(text);
@@ -110,7 +138,7 @@ export default function Profile() {
   };
 
 
- const handleLoadProfile = async (authToken: string) => {
+  const handleLoadProfile = async (authToken: string) => {
     try {
       const response = await fetch(
         `https://localhost:7072/api/User/getuserprofile?email=${encodeURIComponent(email)}`,
@@ -146,28 +174,43 @@ export default function Profile() {
     try {
       setLoading(true);
       const token = await getToken();
+
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('lastName', lastName);
+      formData.append('region', region);
+      formData.append('password', password);
+
+      if (Platform.OS === 'web' && selectedImageFile) {
+        formData.append('profilePicture', selectedImageFile);
+      } else if (selectedImage) {
+        const uriParts = selectedImage.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+
+        formData.append('profilePicture', {
+          uri: selectedImage,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        } as any);
+      }
+
+
       const response = await fetch('https://localhost:7072/api/User/updateprofile', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          email,
-          lastName,
-          region,
-          password,
-        }),
+        body: formData,
       });
 
       const data = await response.json();
-      if (data.statusCode === 200) {
+      if (response.ok) {
         showAnimatedCheckmark();
       } else {
         Alert.alert('Update Failed', data.message || 'Profile update failed.');
       }
     } catch (error) {
-      Alert.alert('Update Failed', 'An unexpected error occurred during update.');
+      Alert.alert('Update Failed', 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -176,13 +219,13 @@ export default function Profile() {
   useFocusEffect(
     useCallback(() => {
       const verifyAuthAndLoad = async () => {
-       const token = await getToken();
-       if (!token) {
-        router.push('/(tabs)/home')
-        setLoginModalVisible(true);
-       } else {
-         handleLoadProfile(token);
-       }
+        const token = await getToken();
+        if (!token) {
+          router.push('/(tabs)/home')
+          setLoginModalVisible(true);
+        } else {
+          handleLoadProfile(token);
+        }
       };
 
       verifyAuthAndLoad();
@@ -213,26 +256,31 @@ export default function Profile() {
   const profileBackground = require('@/assets/images/profilebackground.png')
 
   return (
-      <ImageBackground
-        source={profileBackground}
-        style={styles.background}
-        resizeMode="cover"
-      >
+    <ImageBackground
+      source={profileBackground}
+      style={styles.background}
+      resizeMode="cover"
+    >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <View style={styles.headerContainer}>
-        <HeaderWithMenu hideProfileIcon={true}/>
-      </View>
+        <View style={styles.headerContainer}>
+          <HeaderWithMenu hideProfileIcon={true} />
+        </View>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.formContainer}>
             <View style={styles.profileHeader}>
               <View style={styles.avatarContainer}>
-                <Image source={profileAvatar} style={styles.avatarImg} />
-                <View style={styles.avatarCheck}>
-                  <Icon name="checkmark" size={28} color="#fff" />
-                </View>
+                <Image
+                  source={selectedImage ? { uri: selectedImage } : profileAvatar}
+                  style={styles.avatarImg}
+                />
+                <TouchableOpacity style={styles.avatarOverlay} onPress={pickImage}>
+                  <View style={styles.avatarCheck}>
+                    <Icon name="camera-outline" size={26} color="#fff" />
+                  </View>
+                </TouchableOpacity>
               </View>
               <Text style={styles.profileName}>{`${firstName} ${lastName}`}</Text>
               <Text style={styles.profileSubtitle}>Update and save your profile</Text>
@@ -303,7 +351,7 @@ export default function Profile() {
                   value={password}
                   onChangeText={(text) => {
                     setPassword(text);
-                    validatePassword(text); 
+                    validatePassword(text);
                   }}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
@@ -323,7 +371,7 @@ export default function Profile() {
                 <Text style={styles.warningText}>⚠️ Do not use your Deloitte password</Text>
               )}
             </View>
-  
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleUpdateProfile}
@@ -390,7 +438,7 @@ export default function Profile() {
             </View>
           </TouchableOpacity>
         </Modal>
-              {showCheckmark && (
+        {showCheckmark && (
           <Animated.View
             style={{
               position: 'absolute',
@@ -414,23 +462,23 @@ export default function Profile() {
             <Icon name="checkmark" size={42} color="#fff" />
           </Animated.View>
         )}
-      <LoginModal
-        visible={loginModalVisible}
-        onClose={() => setLoginModalVisible(false)}
-        onLogin={() => {
-          setLoginModalVisible(false);
-        }}
+        <LoginModal
+          visible={loginModalVisible}
+          onClose={() => setLoginModalVisible(false)}
+          onLogin={() => {
+            setLoginModalVisible(false);
+          }}
           onRegister={() => {
             setLoginModalVisible(true);
-         }}
-      />
+          }}
+        />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContainer:{
+  headerContainer: {
     zIndex: 1000,
     position: 'relative',
   },
@@ -451,6 +499,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
+  },
+  avatarOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+
+  overlayText: {
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 4,
   },
   title: {
     color: '#fff',
@@ -677,7 +743,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     marginHorizontal: 15,
   },
-    background: {
+  background: {
     flex: 1,
     width: '100%',
     height: '100%',
