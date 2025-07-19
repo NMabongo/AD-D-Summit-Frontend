@@ -1,4 +1,5 @@
 import en from '@/assets/translations/en.json';
+import ErrorModal from '@/components/ErrorModal';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import LoginModal from '@/components/LoginModal';
 import { getToken } from '@/utils/authToken';
@@ -7,7 +8,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import {
-  Alert,
   Animated,
   FlatList,
   Image,
@@ -35,6 +35,8 @@ export default function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false)
+  const[errorVisible, setErrorVisible] = useState(false);
+  const[errorMessage, setErrorMessage] = useState('');
 
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -54,14 +56,14 @@ export default function Profile() {
     'Oceania',
   ];
 
-  //need to fix this
+  //need to fix this; deprecated version
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-      base64: true, // Needed for web
+      base64: true, // Needed for  sending images over the web
     });
 
     if (!result.canceled && result.assets.length > 0) {
@@ -160,10 +162,14 @@ export default function Profile() {
         setRegion(data.profile.region);
         setPassword(data.profile.password);
       } else {
-        Alert.alert('Error', data.message || 'Failed to load profile.');
+        console.error('Error', data.message || 'Failed to load profile.');
+        setErrorMessage('User profile cannot be loaded');
+        setErrorVisible(true);
       }
     } catch (error) {
-      Alert.alert('Error', 'An unexpected error occurred.');
+        console.error('Error',error);
+        setErrorMessage('An unexpected error occurred.');
+        setErrorVisible(true);
     }
   };
 
@@ -207,10 +213,14 @@ export default function Profile() {
       if (response.ok) {
         showAnimatedCheckmark();
       } else {
-        Alert.alert('Update Failed', data.message || 'Profile update failed.');
+        console.error('Error', data.message || 'Profile update failed.');
+        setErrorMessage('Profile update failed.');
+        setErrorVisible(true);
       }
     } catch (error) {
-      Alert.alert('Update Failed', 'An unexpected error occurred.');
+        console.error('Error',error);
+        setErrorMessage('An unexpected error occurred.');
+        setErrorVisible(true);
     } finally {
       setLoading(false);
     }
@@ -472,6 +482,12 @@ export default function Profile() {
             setLoginModalVisible(true);
           }}
         />
+        <ErrorModal
+            visible={errorVisible}
+            title="Profile Error"
+            message={errorMessage}
+            onClose={() => {setErrorVisible(false), router.push('/(tabs)/home')}}
+          />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
