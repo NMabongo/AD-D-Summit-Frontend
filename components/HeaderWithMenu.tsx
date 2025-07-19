@@ -6,12 +6,14 @@ import LogoutConfirmModal from './LogoutConfirmModal';
 
 interface HeaderWithMenuProps  {
   resetSignal?: number;
+  hideProfileIcon?: boolean;
+
 }
 
 const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
 const avatarIcon = require('@/assets/images/portrait-female.jpg');
 
-const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
+const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfileIcon }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [userLoggedOut, setUserLoggedOut] = useState(false);
 
@@ -37,11 +39,17 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal }) => {
   return (
     <View style={styles.header}>
       <Image source={deloitteLogo} style={styles.logo} />
+      {hideProfileIcon ? 
+      <Text style={styles.headerTitleUser}>User Details</Text> :
       <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
+      }
+      
 
-      <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
-        <Image source={avatarIcon} style={styles.avatarImg} />
-      </TouchableOpacity>
+        {!hideProfileIcon && (
+          <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
+            <Image source={avatarIcon} style={styles.avatarImg} />
+          </TouchableOpacity>
+        )}
 
       {menuVisible && (
         <View style={styles.dropdownMenu}>
@@ -113,6 +121,14 @@ const styles = StyleSheet.create({
     color: '#222',
     flex: 1,
     textAlign: 'center',
+  },
+  headerTitleUser:{
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#222',
+    flex: 1,
+    textAlign: 'center',
+    paddingRight: 30,
   },
   dropdownMenu: {
     position: 'absolute',

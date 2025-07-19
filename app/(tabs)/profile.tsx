@@ -223,7 +223,7 @@ export default function Profile() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
       <View style={styles.headerContainer}>
-        <HeaderWithMenu resetSignal={0}/>
+        <HeaderWithMenu hideProfileIcon={true}/>
       </View>
         <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
           <View style={styles.formContainer}>
