@@ -1,4 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
+import { getToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -10,16 +11,50 @@ interface HeaderWithMenuProps {
 }
 
 const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
-const avatarIcon = require('@/assets/images/portrait-female.jpg');
+const defaultAvatar = require('@/assets/images/portrait-female.jpg');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfileIcon }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const { isAuthenticated, logout } = useAuth();
 
     useEffect(() => {
     setMenuVisible(false);
   }, [resetSignal]);
-  const { isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      try {
+        const token = await getToken();
+        if (!token) return;
+
+        const response = await fetch('https://localhost:7072/api/User/getuserprofile', {
+          
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.warn('Failed to fetch profile');
+          return;
+        }
+
+        const data = await response.json();
+        if (data?.profile?.avatarPath) {
+          const fullImageUrl = `https://localhost:7072${data.profile.avatarPath}`;
+          setAvatarUrl(fullImageUrl);
+        }
+      } catch (err) {
+        console.error('Error loading profile picture:', err);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchAvatar();
+    }
+  }, [isAuthenticated]);
 
   const handleLogout = async () => {
     await logout();
@@ -38,7 +73,10 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfil
 
       {!hideProfileIcon && (
         <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
-          <Image source={avatarIcon} style={styles.avatarImg} />
+          <Image
+            source={avatarUrl ? { uri: avatarUrl } : defaultAvatar}
+            style={styles.avatarImg}
+          />
         </TouchableOpacity>
       )}
 
