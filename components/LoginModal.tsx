@@ -1,4 +1,4 @@
-import { saveToken } from '@/utils/authToken';
+import { useAuth } from '@/context/AuthContext';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -16,11 +16,11 @@ import ErrorModal from './ErrorModal';
 interface LoginModalProps {
   visible: boolean;
   onClose: () => void;
-  onLogin: (email: string, password: string) => void;
   onRegister?: () => void; 
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin, onRegister }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onRegister }) => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -51,25 +51,22 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onLogin, onRe
     try {
       const response = await fetch('https://localhost:7072/api/User/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.token) {
-        onLogin(email, password);
+        await login(data.token); 
         clearData();
-         await saveToken(data.token);
-        router.push('/(tabs)/registrationAttendanceConfirmation'); 
+        onClose();
+        router.push('/(tabs)/registrationAttendanceConfirmation');
       } else {
         setErrorMessage(data.message || 'Login failed. Please try again.');
         setErrorVisible(true);
       }
 
-      clearData();
     } catch (error) {
       setErrorMessage('An unexpected error occurred. Please check your connection.');
       setErrorVisible(true);

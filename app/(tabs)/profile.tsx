@@ -499,9 +499,6 @@ export default function Profile() {
         <LoginModal
           visible={loginModalVisible}
           onClose={() => setLoginModalVisible(false)}
-          onLogin={() => {
-            setLoginModalVisible(false);
-          }}
           onRegister={() => {
             setLoginModalVisible(true);
           }}

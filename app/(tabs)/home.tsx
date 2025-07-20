@@ -75,7 +75,7 @@ const eventDays = [
 ]
 
 export default function Home() {
-  const [menuResetKey, setMenuResetKey] = React.useState(5);
+  const [menuResetKey, setMenuResetKey] = React.useState(0);
   const [agendaData, setAgendaData] = React.useState([testAgendaData]);
 
   const nextEventTime =  (agendaData: any[]) => {

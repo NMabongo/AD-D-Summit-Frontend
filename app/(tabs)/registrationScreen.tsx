@@ -412,10 +412,6 @@ const validateInput = async () => {
       <LoginModal
         visible={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
-        onLogin={(email, password) => {
-          setLoginModalVisible(false);
-          clearErrors();  
-        }}
       />
 </ImageBackground>
     </View>

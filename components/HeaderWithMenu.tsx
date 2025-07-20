@@ -1,13 +1,12 @@
-import { deleteToken, getToken } from '@/utils/authToken';
+import { useAuth } from '@/context/AuthContext';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
-interface HeaderWithMenuProps  {
+interface HeaderWithMenuProps {
   resetSignal?: number;
   hideProfileIcon?: boolean;
-
 }
 
 const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
@@ -15,41 +14,33 @@ const avatarIcon = require('@/assets/images/portrait-female.jpg');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfileIcon }) => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [userLoggedOut, setUserLoggedOut] = useState(false);
-
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
     useEffect(() => {
     setMenuVisible(false);
-    handleShowLogout();
   }, [resetSignal]);
+  const { isAuthenticated, logout } = useAuth();
 
   const handleLogout = async () => {
-    await deleteToken();
+    await logout();
     setLogoutModalVisible(false);
     router.replace('/');
   };
 
-  const handleShowLogout = async () => {
-    let token = await getToken();
-    if (token === null){
-        setUserLoggedOut(true)
-    }
-  }
   return (
     <View style={styles.header}>
       <Image source={deloitteLogo} style={styles.logo} />
-      {hideProfileIcon ? 
-      <Text style={styles.headerTitleUser}>User Details</Text> :
-      <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
-      }
-      
+      {hideProfileIcon ? (
+        <Text style={styles.headerTitleUser}>User Details</Text>
+      ) : (
+        <Text style={styles.headerTitle}>Leadership Summit 2025</Text>
+      )}
 
-        {!hideProfileIcon && (
-          <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
-            <Image source={avatarIcon} style={styles.avatarImg} />
-          </TouchableOpacity>
-        )}
+      {!hideProfileIcon && (
+        <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.avatarCircle}>
+          <Image source={avatarIcon} style={styles.avatarImg} />
+        </TouchableOpacity>
+      )}
 
       {menuVisible && (
         <View style={styles.dropdownMenu}>
@@ -58,17 +49,22 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfil
             onPress={() => {
               setMenuVisible(false);
               router.push('/(tabs)/profile');
-            }}>
+            }}
+          >
             <Text style={styles.menuText}>View Profile</Text>
           </TouchableOpacity>
-            {userLoggedOut ? null :  <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => {
-              setMenuVisible(false);
-              setLogoutModalVisible(true);
-            }}>
-            <Text style={styles.menuText}>Log Out</Text>
-          </TouchableOpacity>}
+
+          {isAuthenticated && (
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                setMenuVisible(false);
+                setLogoutModalVisible(true);
+              }}
+            >
+              <Text style={styles.menuText}>Log Out</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
