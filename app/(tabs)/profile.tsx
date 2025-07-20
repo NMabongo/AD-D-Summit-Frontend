@@ -37,6 +37,7 @@ export default function Profile() {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const[errorVisible, setErrorVisible] = useState(false);
   const[errorMessage, setErrorMessage] = useState('');
+  const[errorModalTitle, setErrorModalTitle] = useState('');
 
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -58,6 +59,14 @@ export default function Profile() {
 
   //need to fix this; deprecated version
   const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+        setErrorModalTitle('Permission denied');
+        setErrorMessage('We need access to your media library to select a profile picture.');
+        setErrorVisible(true);
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -166,11 +175,13 @@ export default function Profile() {
         setSelectedImage(fullImageUrl);
       } else {
         console.error('Error', data.message || 'Failed to load profile.');
+        setErrorModalTitle('Profile Error');
         setErrorMessage('User profile cannot be loaded');
         setErrorVisible(true);
       }
     } catch (error) {
         console.error('Error',error);
+        setErrorModalTitle('Server Error');
         setErrorMessage('An unexpected error occurred.');
         setErrorVisible(true);
     }
@@ -194,8 +205,7 @@ export default function Profile() {
         formData.append('profilePicture', selectedImageFile);
       } else if (selectedImage) {
         const uriParts = selectedImage.split('.');
-        const fileType = uriParts[uriParts.length - 1];
-
+        const fileType = uriParts[uriParts.length - 1].split('?')[0]; 
         formData.append('profilePicture', {
           uri: selectedImage,
           name: `photo.${fileType}`,
@@ -212,18 +222,28 @@ export default function Profile() {
         body: formData,
       });
 
-      const data = await response.json();
+      let data;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = null;
+      }
+
       if (response.ok) {
         showAnimatedCheckmark();
       } else {
-        console.error('Error', data.message || 'Profile update failed.');
-        setErrorMessage('Profile update failed.');
+        const errorMsg = data?.message || response.statusText || 'Profile update failed.';
+        console.error('Server responded with an error:', errorMsg);
+        setErrorModalTitle('Profile Error');
+        setErrorMessage(errorMsg);
         setErrorVisible(true);
       }
     } catch (error) {
-        console.error('Error',error);
-        setErrorMessage('An unexpected error occurred.');
-        setErrorVisible(true);
+      console.error('Request failed:', error);
+      setErrorModalTitle('Server Error');
+      setErrorMessage('An unexpected error occurred. Please try again.');
+      setErrorVisible(true);
     } finally {
       setLoading(false);
     }
@@ -242,6 +262,7 @@ export default function Profile() {
       };
 
       verifyAuthAndLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   );
 
@@ -487,8 +508,9 @@ export default function Profile() {
         />
         <ErrorModal
             visible={errorVisible}
-            title="Profile Error"
+            title={errorModalTitle}
             message={errorMessage}
+            // eslint-disable-next-line no-unused-expressions
             onClose={() => {setErrorVisible(false), router.push('/(tabs)/home')}}
           />
       </KeyboardAvoidingView>
