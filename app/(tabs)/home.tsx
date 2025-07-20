@@ -226,7 +226,7 @@ export default function Home() {
         <View style={styles.countdownCard}>
           <View style={styles.countdownHeader}>
             <Text style={styles.countdownTitle}>Event Starts In</Text>
-            <Icon name="time-outline" size={20} color="#fff" />
+            <Icon name="time-sharp" size={20} color="#fff" />
           </View>
           <View style={styles.countdownRow}>
             <View style={styles.countdownItem}>
@@ -275,7 +275,7 @@ export default function Home() {
                     <Text style={styles.agendaSessionTitle}>{item.title}</Text>
                     <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
                     <View style={styles.agendaSessionInfoRow}>
-                      <Text style={styles.agendaSessionTime}>{item.startTime}</Text>
+                      <Text style={styles.agendaSessionTime}>{new Date(item.startTime).getHours().toLocaleString('en-Us', {minimumIntegerDigits: 2}) + ':' + new Date(item.startTime).getMinutes().toLocaleString('en-Us', {minimumIntegerDigits: 2})}</Text>
                       <Text style={styles.agendaSessionLocation}>{item.location}</Text>
                     </View>
                   </View>

@@ -166,7 +166,7 @@ export default function FeaturedSpeakersGrid({horizontal = false, fromHome = fal
     );
 
   return (
-        <ScrollView contentContainerStyle={{ paddingBottom: 80 } } horizontal={horizontal}>
+        <ScrollView contentContainerStyle={{  } } horizontal={horizontal}>
           {/* Speakers Grid */}
           <View style={styles.speakersGrid}>
             {speakers.map((speaker) => (
