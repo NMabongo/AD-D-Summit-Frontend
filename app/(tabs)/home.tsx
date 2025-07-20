@@ -3,14 +3,14 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
-import { Route, useRouter } from 'expo-router';
-import React from 'react';
+import { Route, router, useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const deloitteLogo = require('@/assets/images/icon.png');
 const micIcon = require('@/assets/images/favicon.png');
-const agendaData = [
+const testAgendaData = [
   {
     id: '1',
     icon: <Icon name="rocket-outline" size={22} color="#4FC3F7" />,
@@ -49,7 +49,7 @@ const agendaData = [
     icon: <Icon name="trending-up-outline" size={22} color="#FF9800" />,
     title: 'Quarterly Review',
     desc: 'Performance metrics analysis and goal setting for next quarter.',
-    startTime: '2025-09-11T09:00:00',
+    startTime: '2025-09-08T09:00:00',
     endTime: '2025-09-11T13:00:00',
     location: 'Meeting Room 2',
     color: '#FFF3E0',
@@ -57,7 +57,7 @@ const agendaData = [
   },
 ];
 
-const nextEventTime =  () => {
+const nextEventTime =  (agendaData) => {
   var localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
   agendaData.forEach(event => {
     localNextEventTime = Math.min(localNextEventTime, new Date (event.startTime).getTime());
@@ -65,14 +65,131 @@ const nextEventTime =  () => {
   return localNextEventTime;
 }
 
+const eventDays = [
+  {
+    Date: '2025-09-08T00:00:00',
+    DayNumber: 1,
+    DayName: 'Monday',
+  },
+  {
+    Date: '2025-09-09T00:00:00',
+    DayNumber: 2,
+    DayName: 'Tuesday',
+  }, 
+  {
+    Date: '2025-09-10T00:00:00',
+    DayNumber: 3,
+    DayName: 'Wednesday',
+  },
+]
+
 export default function Home() {
   const [menuResetKey, setMenuResetKey] = React.useState(5);
-  const timer = useTimer(nextEventTime());
+  const [agendaData, setAgendaData] = React.useState([testAgendaData]);
 
+  const nextEventTime =  (agendaData) => {
+  var localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
+  agendaData.forEach(event => {
+    localNextEventTime = Math.min(localNextEventTime, new Date (event.startTime).getTime());
+  });
+  return localNextEventTime;
+}
+  console.log('user timer', nextEventTime(agendaData));
+  const timer = useTimer(nextEventTime(agendaData));
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1); 
     useRouter().push(route as Route); 
   };
+
+     useFocusEffect(
+    useCallback(() => {
+      const fetchEvents = async () => {
+        try {
+          const response = await fetch('https://localhost:7072/api/Event', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const events = await response.json();
+          const transformed = events.map((event: any) => {
+            let color = '#E4FBE9';
+            let iconBg = '#C2F0D0';
+            let iconColor = '#1E9D4C';
+            let iconSource;
+            
+            const transformedDate = event.date.split('T')[0];
+            switch (event.category?.toLowerCase()) {
+              case 'meeting':
+                iconSource = require('@/assets/icons/standup.png');
+                break;
+              case 'presentation':
+                iconSource = require('@/assets/icons/presentation.png');
+                color = '#F3E9FE';
+                iconBg = '#D8BDFB';
+                iconColor = '#9B3BEB';
+                break;
+              case 'boardroom':
+                iconSource = require('@/assets/icons/chart.png');
+                color = '#FFF1E0';
+                iconBg = '#FFD8AE';
+                iconColor = '#F15C00';
+                break;
+              case 'workshop':
+                iconSource = require('@/assets/icons/workshop.png');
+                color = '#E3EAFE';
+                iconBg = '#C5CAE9';
+                iconColor = '#1A237E';
+                break;
+              case 'review':
+                iconSource = require('@/assets/icons/chart.png');
+                color = '#FEEBEB';
+                iconBg = '#FFCDD2';
+                iconColor = '#E53935';
+                break;
+              case 'seminar':
+                iconSource = require('@/assets/icons/seminar.png');
+                iconColor = '#E3F4FD';
+                iconBg = '#B3E5FC';
+                color = '#E8F3FD';
+                break;
+              default:
+                iconSource = require('@/assets/icons/default.png');
+            }
+
+            return {
+              id: event.id,
+              icon: (
+                <Image
+                  source={iconSource}
+                  style={{ width: 22, height: 22, resizeMode: 'contain' }}
+                />
+              ),
+              title: event.title,
+              desc: event.description,
+              time: `${event.startTime} - ${event.endTime}`,
+              startTime: event.date.split('T')[0]+'T'+event.startTime,
+              endTime: event.date.split('T')[0]+'T'+event.endTime,
+              location: event.location,
+              color,
+              iconBg,
+              iconColor,
+              date: new Date(transformedDate).toDateString() ,
+              category: event.category,
+            };
+          });
+          console.log('Fetched and transformed events:', transformed);
+          setAgendaData(transformed);
+
+        } catch (error) {
+          console.error('Error fetching events:', error);
+        }
+      };
+
+      fetchEvents();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -81,24 +198,25 @@ export default function Home() {
         <HeaderWithMenu resetSignal={menuResetKey}/>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        <View style={styles.heroContainer}>
-          <View style={styles.heroBg}>
-            <SummitBg width="100%" height="100%" />
-          </View>
-          <View style={styles.heroOverlay}>
-            <Text style={styles.heroOrg}>Africa Consulting Services</Text>
-            <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
-            <Text style={styles.heroTagline}>Energy • Synergy • Thrive</Text>
-            <View style={styles.heroInfoRow}>
-              <Icon name="calendar-outline" size={18} color="#fff" />
-              <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
-              <Icon name="location-outline" size={18} color="#fff" />
-              <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
-            </View>
+      {/* Banner Section */}
+      <View style={styles.heroContainer}>
+        <View style={styles.heroBg}>
+          <SummitBg width="100%" height="100%" />
+        </View>
+        <View style={styles.heroOverlay}>
+          <Text style={styles.heroOrg}>Africa Consulting Services</Text>
+          <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
+          <Text style={styles.heroTagline}>Energy • Synergy • Thrive</Text>
+          <View style={styles.heroInfoRow}>
+            <Icon name="calendar-outline" size={18} color="#fff" />
+            <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
+            <Icon name="location-outline" size={18} color="#fff" />
+            <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
           </View>
         </View>
-
+      </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+        
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>160+</Text>
@@ -139,29 +257,42 @@ export default function Home() {
           </View>
         </View>
 
-        <View style={styles.agendaHeaderRow}>
-          <Text style={styles.agendaTitle}>Day 1 Agenda</Text>
-          <TouchableOpacity>
-            <Text style={styles.fullSchedule}>Full Schedule</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Agenda List */}
-        {agendaData.map(item => (
-          <View style={styles.agendaCard}>
-
-            <View style={styles.iconBox}>
-              <Icon name="mic" color='#8DD22A' size={24} style={styles.agendaIcon} />
+        {eventDays.map((day, index) => (
+          <View>
+            <View key={index} style={styles.agendaHeaderRow}>
+              <Text style={styles.agendaTitle}>Day {day.DayNumber} - {day.DayName}</Text>
+              <TouchableOpacity onPress={() => router.push({
+                              pathname: '/(tabs)/agenda',
+                              params: { initialDate: day.Date },
+                            })}>
+                <Text style={styles.fullSchedule}>Full Schedule</Text>
+              </TouchableOpacity>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.agendaSessionTitle}>{item.title}</Text>
-              <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
-              <View style={styles.agendaSessionInfoRow}>
-                <Text style={styles.agendaSessionTime}>{item.startTime}</Text>
-                <Text style={styles.agendaSessionLocation}>{item.location}</Text>
-              </View>
-            </View>
+            {agendaData.map(item => (
+              (new Date(item.startTime).toLocaleDateString().startsWith(new Date(day.Date).toLocaleDateString())))? (
+                <TouchableOpacity onPress={() => router.push({
+                                pathname: '/(tabs)/breakoutRoom',
+                                params: { breakoutroomId: item.id,
+                                  fromHome: true,
+                                 },
+                              })}>
+                <View style={styles.agendaCard}>
+                  <View style={styles.iconBox}>
+                    <Icon name="mic" color='#8DD22A' size={24} style={styles.agendaIcon} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.agendaSessionTitle}>{item.title}</Text>
+                    <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
+                    <View style={styles.agendaSessionInfoRow}>
+                      <Text style={styles.agendaSessionTime}>{item.startTime}</Text>
+                      <Text style={styles.agendaSessionLocation}>{item.location}</Text>
+                    </View>
+                  </View>
+                </View>
+            </TouchableOpacity>
+            ) : null)}
           </View>
-        ))}
+          ))}
       </ScrollView>
 
       {/* Footer Navigation Bar */}

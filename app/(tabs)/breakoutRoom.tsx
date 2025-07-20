@@ -39,13 +39,13 @@ const rooms = [
 
 export default function BreakoutRooms() {
    //Will use thid Id to pull Data from the endpoint
-    const { breakoutroomId } = useLocalSearchParams();
+    const { breakoutroomId, fromHome } = useLocalSearchParams();
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
       {/* Top Bar */}
       <View style={styles.topBar}>
       <TouchableOpacity
-        onPress={() => router.push('/(tabs)/agenda')}
+        onPress={() => fromHome? router.push('/(tabs)/home'): router.push('/(tabs)/agenda')}
         hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
         style={styles.backButton}
       >

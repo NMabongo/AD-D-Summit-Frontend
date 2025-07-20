@@ -2,13 +2,15 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import { useFocusEffect } from '@react-navigation/native';
-import { Route, router, useRouter } from 'expo-router';
+import { Route, router, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Agenda() {
+  
+  const {initialDate} = useLocalSearchParams();
   const [agendaData, setAgendaData] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [days, setDays] = useState<any[]>([]);
@@ -137,6 +139,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
 
     setDays(newDays);
     if (newDays.length > 0) {
+      initialDate? setSelectedDate(new Date(initialDate as string).toLocaleDateString('en-US')) :
       setSelectedDate(newDays[0].date);
     }
   }, [currentMonthIndex, months, agendaData]);
@@ -149,7 +152,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
           .map((item) => item.date)
       )
     );
-
+ 
     return uniqueDates.map((dateStr, index) => {
       const dateObj = new Date(dateStr);
       const options = { weekday: 'short' } as const;
@@ -200,16 +203,16 @@ const extractUniqueMonths = (events: any[]): string[] => {
             key={d.date}
             style={[
               styles.dayBtn,
-              selectedDate === d.date && styles.dayBtnActive,
+              new Date(d.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString()) && styles.dayBtnActive,
               d.disabled && styles.dayBtnDisabled,
             ]}
             disabled={d.disabled}
             onPress={() => setSelectedDate(d.date)}
           >
-            <Text style={[styles.dayLabel, selectedDate === d.date && styles.dayLabelActive]}>
+            <Text style={[styles.dayLabel, new Date(d.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString()) && styles.dayLabelActive]}>
               {d.label}
             </Text>
-            <Text style={[styles.dayDate, selectedDate === d.date && styles.dayDateActive]}>
+            <Text style={[styles.dayDate, new Date(d.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString()) && styles.dayDateActive]}>
               {new Date(d.date).getDate().toString().padStart(2, '0')}
             </Text>
           </TouchableOpacity>
@@ -229,8 +232,8 @@ const extractUniqueMonths = (events: any[]): string[] => {
             {agendaData.filter(item => item.date === selectedDate).length} events
           </Text>
         </View>
-
-        {agendaData.filter(item => item.date === selectedDate).map(item => (
+        {/* {agendaData.filter(item => item.date === selectedDate).map(item => ( */}
+        {agendaData.filter(item => new Date(item.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString())).map(item => (
             <TouchableOpacity
               key={item.id}
               onPress={() => router.push({

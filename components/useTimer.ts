@@ -35,11 +35,10 @@ const getTimeDiff = (diffInMSec: number): TUseTimer => {
 
 const useTimer = (targetTime: number): TUseTimer => {
   const [timeLeft, setTimeLeft] = useState(targetTime - Date.now());
-
   useEffect(() => {
     const id = setTimeout(() => {
       // We can set conditions here like timeLeft > 0
-      setTimeLeft((prev) => prev - 1000);
+      timeLeft? setTimeLeft((prev) => prev - 1000) : setTimeLeft(targetTime - Date.now());
     }, 1000);
 
     return () => {
