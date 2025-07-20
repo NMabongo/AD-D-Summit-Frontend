@@ -1,11 +1,8 @@
-import en from '@/assets/translations/en.json';
-import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
-import HeaderWithMenu from '@/components/HeaderWithMenu';
+
 import { useFocusEffect } from '@react-navigation/native';
-import { Route, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
-import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import NavigationBar from '../../components/navigationBar';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 const deloitteLogo = require('@/assets/images/icon.png');
@@ -138,15 +135,10 @@ const demoSpeakers = [
 const numColumns = 2;
 const cardWidth = (Dimensions.get('window').width - 48) / 2;
 
-export default function FeaturedSpeakers() {
+export default function FeaturedSpeakersGrid({horizontal = false, fromHome = false}) {
   const [menuResetKey, setMenuResetKey] = React.useState(0);
   const [speakers, setSpeakers] = React.useState(demoSpeakers);
   const router = useRouter(); 
-
-  const handleNavigationAndReset = (route: string) => {
-    setMenuResetKey((prev) => prev + 1);
-    router.push(route as Route);
-  };
 
   useFocusEffect(
       useCallback(() => {
@@ -174,31 +166,23 @@ export default function FeaturedSpeakers() {
     );
 
   return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        {/* Header */}
-        <View style={styles.headerContainer}>
-          <HeaderWithMenu resetSignal={menuResetKey} />
-        </View>
-
-        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-          {/* Banner */}
-          <View style={styles.bannerContainer}>
-            <Image source={micBg} style={styles.bannerImg} resizeMode="cover" />
-            <View style={styles.bannerOverlay}>
-              <Text style={styles.bannerTitle}>Featured Speakers</Text>
-            </View>
-          </View>
-
+        <ScrollView contentContainerStyle={{ paddingBottom: 80 } } horizontal={horizontal}>
           {/* Speakers Grid */}
-          <FeaturedSpeakersGrid horizontal={false} fromHome={false} />
-
-          {/* Footer */}
+          <View style={styles.speakersGrid}>
+            {speakers.map((speaker) => (
+              <TouchableOpacity
+                key={speaker.id}
+                onPress={() => router.push({ pathname: '/(tabs)/speaker-bio', params: { ...speaker, fromHome} })}
+              >
+                <View style={styles.speakerCard}>
+                  <Image source={speaker.avatar} style={styles.speakerAvatar} />
+                  <Text style={styles.speakerName}>{speaker.firstName + " " + speaker.lastName}</Text>
+                  <Text style={styles.speakerTitle}>{speaker.expertise}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </ScrollView>
-        <NavigationBar
-          name={en.navigationOptions.featuredSpeakers}
-          onTabPress={handleNavigationAndReset}
-        />
-      </SafeAreaView>
   );
 }
 

@@ -1,5 +1,6 @@
 import SummitBg from '@/assets/images/svg/homeBanner';
 import en from '@/assets/translations/en.json';
+import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
@@ -8,8 +9,6 @@ import React, { useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const deloitteLogo = require('@/assets/images/icon.png');
-const micIcon = require('@/assets/images/favicon.png');
 const testAgendaData = [
   {
     id: '1',
@@ -57,14 +56,6 @@ const testAgendaData = [
   },
 ];
 
-const nextEventTime =  (agendaData) => {
-  var localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
-  agendaData.forEach(event => {
-    localNextEventTime = Math.min(localNextEventTime, new Date (event.startTime).getTime());
-  });
-  return localNextEventTime;
-}
-
 const eventDays = [
   {
     Date: '2025-09-08T00:00:00',
@@ -87,14 +78,13 @@ export default function Home() {
   const [menuResetKey, setMenuResetKey] = React.useState(5);
   const [agendaData, setAgendaData] = React.useState([testAgendaData]);
 
-  const nextEventTime =  (agendaData) => {
-  var localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
+  const nextEventTime =  (agendaData: any[]) => {
+    let localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
   agendaData.forEach(event => {
     localNextEventTime = Math.min(localNextEventTime, new Date (event.startTime).getTime());
   });
   return localNextEventTime;
 }
-  console.log('user timer', nextEventTime(agendaData));
   const timer = useTimer(nextEventTime(agendaData));
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1); 
@@ -158,6 +148,7 @@ export default function Home() {
                 iconSource = require('@/assets/icons/default.png');
             }
 
+            // @ts-ignore
             return {
               id: event.id,
               icon: (
@@ -198,25 +189,25 @@ export default function Home() {
         <HeaderWithMenu resetSignal={menuResetKey}/>
       </View>
 
-      {/* Banner Section */}
-      <View style={styles.heroContainer}>
-        <View style={styles.heroBg}>
-          <SummitBg width="100%" height="100%" />
-        </View>
-        <View style={styles.heroOverlay}>
-          <Text style={styles.heroOrg}>Africa Consulting Services</Text>
-          <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
-          <Text style={styles.heroTagline}>Energy • Synergy • Thrive</Text>
-          <View style={styles.heroInfoRow}>
-            <Icon name="calendar-outline" size={18} color="#fff" />
-            <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
-            <Icon name="location-outline" size={18} color="#fff" />
-            <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
+      
+      <ScrollView contentContainerStyle={{ paddingBottom: 80, zIndex: 100 }}>
+        {/* Banner Section */}
+        <View style={styles.heroContainer}>
+          <View style={styles.heroBg}>
+            <SummitBg width="100%" height="100%" />
+          </View>
+          <View style={styles.heroOverlay}>
+            <Text style={styles.heroOrg}>Africa Consulting Services</Text>
+            <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
+            <Text style={styles.heroTagline}>Energy • Synergy • Thrive</Text>
+            <View style={styles.heroInfoRow}>
+              <Icon name="calendar-outline" size={18} color="#fff" />
+              <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
+              <Icon name="location-outline" size={18} color="#fff" />
+              <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>160+</Text>
@@ -293,8 +284,19 @@ export default function Home() {
             ) : null)}
           </View>
           ))}
+          
+      <View>
+        <View style={styles.agendaHeaderRow}>
+              <Text style={styles.agendaTitle}>Featured Speakers</Text>
+              <TouchableOpacity onPress={() => router.push({
+                              pathname: '/(tabs)/featuredSpeakers',
+                            })}>
+                <Text style={styles.fullSchedule}>View All</Text>
+              </TouchableOpacity>
+            </View>
+        <FeaturedSpeakersGrid horizontal={true} fromHome={true}/>
+      </View>
       </ScrollView>
-
       {/* Footer Navigation Bar */}
       <NavigationBar name={en.navigationOptions.home}  
           onTabPress={handleNavigationAndReset} 
@@ -305,7 +307,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
    headerContainer:{
-    zIndex: 1000,
+    zIndex: -1,
     position: 'relative',
   },
   header: {
@@ -339,6 +341,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
   },
   heroContainer: {
+    zIndex: -1,
     overflow: 'hidden',
     position: 'relative',
     alignItems: 'center',

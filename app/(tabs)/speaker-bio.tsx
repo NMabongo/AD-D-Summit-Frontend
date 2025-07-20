@@ -6,7 +6,7 @@ import { Image, Modal, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpaci
 export default function SpeakerBio() {
   console.log('SpeakerBio component loaded');
   console.log('Local Search Params:', useLocalSearchParams());
-  const {firstName, lastName, expertise, region, rating, talksGiven, yearsExperience, satisfaction, bio, avatar} = useLocalSearchParams();
+  const {firstName, lastName, expertise, region, rating, talksGiven, yearsExperience, satisfaction, bio, avatar, fromHome} = useLocalSearchParams();
   const router = useRouter(); 
 
     const [dropdownVisible, setDropdownVisible] = useState(false); 
@@ -22,7 +22,7 @@ export default function SpeakerBio() {
     <SafeAreaView style={styles.container}>
       <View style={styles.customHeader}>
         <TouchableOpacity
-          onPress={() => router.push('/(tabs)/featuredSpeakers')} 
+          onPress={() => fromHome?  router.push('/(tabs)/home'): router.push('/(tabs)/featuredSpeakers')} 
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }} 
           style={styles.backButton}
         >
