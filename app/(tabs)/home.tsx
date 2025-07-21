@@ -4,57 +4,12 @@ import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
+import { AgendaItem } from '@/constants/AgendaItem';
 import { Route, router, useFocusEffect, useRouter } from 'expo-router';
-import React, { useCallback } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const testAgendaData = [
-  {
-    id: '1',
-    icon: <Icon name="rocket-outline" size={22} color="#4FC3F7" />,
-    title: 'Product Launch Presentation',
-    desc: 'Q4 product roadmap and feature announcements for the upcoming release cycle.',
-    startTime: '2025-09-08T09:00:00',
-    endTime: '2025-09-08T13:00:00',
-    location: 'Conference Room A',
-    color: '#E3F4FD',
-    iconBg: '#B3E5FC',
-  },
-  {
-    id: '2',
-    icon: <Icon name="people-outline" size={22} color="#43A047" />,
-    title: 'Team Standup Meeting',
-    desc: 'Daily sync with development team to discuss progress and blockers.',
-    startTime: '2025-09-09T09:00:00',
-    endTime: '2025-09-09T13:00:00',
-    location: 'Meeting Room 2',
-    color: '#E6F7D9',
-    iconBg: '#C8E6C9',
-  },
-  {
-    id: '3',
-    icon: <Icon name="restaurant-outline" size={22} color="#8E24AA" />,
-    title: 'Lunch & Learn Session',
-    desc: 'Guest speaker on emerging technologies and industry trends.',
-    startTime: '2025-09-10T09:00:00',
-    endTime: '2025-09-10T13:00:00',
-    location: 'Main Auditorium',
-    color: '#F3E6FB',
-    iconBg: '#E1BEE7',
-  },
-  {
-    id: '4',
-    icon: <Icon name="trending-up-outline" size={22} color="#FF9800" />,
-    title: 'Quarterly Review',
-    desc: 'Performance metrics analysis and goal setting for next quarter.',
-    startTime: '2025-09-08T09:00:00',
-    endTime: '2025-09-11T13:00:00',
-    location: 'Meeting Room 2',
-    color: '#FFF3E0',
-    iconBg: '#FFE0B2',
-  },
-];
 
 const eventDays = [
   {
@@ -76,7 +31,9 @@ const eventDays = [
 
 export default function Home() {
   const [menuResetKey, setMenuResetKey] = React.useState(0);
-  const [agendaData, setAgendaData] = React.useState([testAgendaData]);
+  //const [agendaData, setAgendaData] = React.useState([testAgendaData]);
+  const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
+
 
   const nextEventTime =  (agendaData: any[]) => {
     let localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
@@ -264,7 +221,7 @@ export default function Home() {
                 <TouchableOpacity onPress={() => router.push({
                                 pathname: '/(tabs)/breakoutRoom',
                                 params: { breakoutroomId: item.id,
-                                  fromHome: true,
+                                  fromHome: 'true',
                                  },
                               })}>
                 <View style={styles.agendaCard}>
