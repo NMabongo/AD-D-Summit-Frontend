@@ -132,6 +132,29 @@ const extractUniqueMonths = (events: any[]): string[] => {
           setErrorModalTitle('Loading Error');
           setErrorMessage('Agenda data cannot be loaded at this time');
           setErrorVisible(true);
+
+          const fallbackAgenda = [
+            {
+              id: 'default',
+              icon: (
+                <Image
+                  source={require('@/assets/icons/default.png')}
+                  style={{ width: 22, height: 22, resizeMode: 'contain' }}
+                />
+              ),
+              title: 'No Events Available',
+              desc: 'Please check back later for agenda updates.',
+              time: '',
+              location: '',
+              color: '#E4FBE9',
+              iconBg: '#C2F0D0',
+              iconColor: '#1E9D4C',
+              date: '',
+              category: 'default',
+            },
+          ];
+
+          setAgendaData(fallbackAgenda);
         }
       };
 
