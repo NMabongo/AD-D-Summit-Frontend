@@ -307,7 +307,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
    headerContainer:{
-    zIndex: -1,
+    zIndex: 1000,
     position: 'relative',
   },
   header: {
