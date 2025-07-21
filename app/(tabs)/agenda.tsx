@@ -1,4 +1,5 @@
 import en from '@/assets/translations/en.json';
+import ErrorModal from '@/components/ErrorModal';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import { useFocusEffect } from '@react-navigation/native';
@@ -15,6 +16,10 @@ export default function Agenda() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [days, setDays] = useState<any[]>([]);
   const [menuResetKey, setMenuResetKey] = useState(0);
+
+  const[errorVisible, setErrorVisible] = useState(false);
+  const[errorMessage, setErrorMessage] = useState('');
+  const[errorModalTitle, setErrorModalTitle] = useState('');  
 
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1); 
@@ -124,6 +129,9 @@ const extractUniqueMonths = (events: any[]): string[] => {
           setCurrentMonthIndex(0);
         } catch (error) {
           console.error('Error fetching events:', error);
+          setErrorModalTitle('Loading Error');
+          setErrorMessage('Agenda data cannot be loaded at this time');
+          setErrorVisible(true);
         }
       };
 
@@ -262,6 +270,13 @@ const extractUniqueMonths = (events: any[]): string[] => {
 
         <NavigationBar name={en.navigationOptions.agenda}
           onTabPress={handleNavigationAndReset} 
+        />
+        <ErrorModal
+          visible={errorVisible}
+          title={errorModalTitle}
+          message={errorMessage}
+          // eslint-disable-next-line no-unused-expressions
+          onClose={() => {setErrorVisible(false)}}
         />
     </SafeAreaView>
   );
