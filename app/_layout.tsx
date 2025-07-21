@@ -6,6 +6,15 @@ import 'react-native-reanimated';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import React, { createContext, useState } from 'react';
+
+export const ResetSignalContext = createContext<{
+  resetSignal: number;
+  triggerReset: () => void;
+}>({
+  resetSignal: 0,
+  triggerReset: () => {},
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -13,19 +22,24 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  const [resetSignal, setResetSignal] = useState(0);
+  const triggerReset = () => setResetSignal((prev) => prev + 1);
+
   if (!loaded) {
     return null;
   }
 
   return (
     <AuthProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <ResetSignalContext.Provider value={{ resetSignal, triggerReset }}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </ResetSignalContext.Provider>
     </AuthProvider>
   );
 }

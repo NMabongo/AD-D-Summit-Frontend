@@ -1,7 +1,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { getToken } from '@/utils/authToken';
-import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LogoutConfirmModal from './LogoutConfirmModal';
 
@@ -11,7 +11,7 @@ interface HeaderWithMenuProps {
 }
 
 const deloitteLogo = require('@/assets/images/deloitteLogo.jpg');
-const defaultAvatar = require('@/assets/images/portrait-female.jpg');
+const defaultAvatar = require('@/assets/icons/profile-icon.png');
 
 const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfileIcon }) => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -19,18 +19,21 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfil
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const { isAuthenticated, logout } = useAuth();
 
-    useEffect(() => {
-    setMenuVisible(false);
-  }, [resetSignal]);
+useEffect(() => {
+  setMenuVisible(false);
+  if (!isAuthenticated) {
+    setAvatarUrl(null);
+  }
+}, [isAuthenticated, resetSignal]);
 
-  useEffect(() => {
+useFocusEffect(
+  useCallback(() => {
     const fetchAvatar = async () => {
       try {
         const token = await getToken();
         if (!token) return;
 
         const response = await fetch('https://localhost:7072/api/User/getuserprofile', {
-          
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,10 +57,12 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({ resetSignal, hideProfil
     if (isAuthenticated) {
       fetchAvatar();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated])
+);
 
   const handleLogout = async () => {
     await logout();
+    setAvatarUrl(null);
     setLogoutModalVisible(false);
     router.replace('/');
   };
