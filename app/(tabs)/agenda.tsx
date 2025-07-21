@@ -58,6 +58,36 @@ const extractUniqueMonths = (events: any[]): string[] => {
 
           const events = await response.json();
 
+          if (!Array.isArray(events) || events.length === 0) {
+            const today = new Date().toISOString().split('T')[0];
+
+            const emptyAgenda = [
+              {
+                id: 'empty',
+                icon: (
+                  <Image
+                    source={require('@/assets/icons/default.png')}
+                    style={{ width: 22, height: 22, resizeMode: 'contain' }}
+                  />
+                ),
+                title: 'You’re all caught up!',
+                desc: 'No events scheduled for today.',
+                time: '',
+                location: '',
+                color: '#E0E0E0',
+                iconBg: '#BDBDBD',
+                iconColor: '#757575',
+                date: today,
+                category: 'none',
+              },
+            ];
+
+            setAgendaData(emptyAgenda);
+            setMonths([today.slice(0, 7)]);
+            setCurrentMonthIndex(0);
+            return;
+          }
+
           const transformed = events.map((event: any) => {
             let color = '#E4FBE9';
             let iconBg = '#C2F0D0';
@@ -132,6 +162,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
           setErrorModalTitle('Loading Error');
           setErrorMessage('Agenda data cannot be loaded at this time');
           setErrorVisible(true);
+          const today = new Date().toISOString().split('T')[0];
 
           const fallbackAgenda = [
             {
@@ -143,18 +174,20 @@ const extractUniqueMonths = (events: any[]): string[] => {
                 />
               ),
               title: 'No Events Available',
-              desc: 'Please check back later for agenda updates.',
+              desc: 'Could not load data. Please check your connection or try again later.',
               time: '',
               location: '',
               color: '#E4FBE9',
               iconBg: '#C2F0D0',
               iconColor: '#1E9D4C',
-              date: '',
+              date: today,
               category: 'default',
             },
           ];
 
           setAgendaData(fallbackAgenda);
+          setMonths([today.slice(0, 7)]);
+          setCurrentMonthIndex(0);
         }
       };
 
@@ -263,16 +296,21 @@ const extractUniqueMonths = (events: any[]): string[] => {
             {agendaData.filter(item => item.date === selectedDate).length} events
           </Text>
         </View>
-        {/* {agendaData.filter(item => item.date === selectedDate).map(item => ( */}
-        {agendaData.filter(item => new Date(item.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString())).map(item => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={() => router.push({
+     {agendaData
+        .filter(item => new Date(item.date).toLocaleDateString().startsWith(new Date(String(selectedDate)).toLocaleDateString()))
+        .map(item => (
+          <TouchableOpacity
+            key={item.id}
+            disabled={item.id === 'default' || item.id === 'empty'}
+            onPress={() => {
+              if (item.id === 'default' || item.id === 'empty') return;
+              router.push({
                 pathname: '/(tabs)/breakoutRoom',
                 params: { breakoutroomId: item.id },
-              })}
-            >
-          <View key={item.id} style={[styles.agendaCard, { backgroundColor: item.color }]}>
+              });
+            }}
+          >
+          <View style={[styles.agendaCard, { backgroundColor: item.color }]}>
             <View style={[styles.agendaIconWrap, { backgroundColor: item.iconBg }]}>
               {item.icon}
             </View>
