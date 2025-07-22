@@ -1,5 +1,6 @@
 import SummitBg from '@/assets/images/svg/homeBanner';
 import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
+import FullScreenLoader from '@/components/FullScreenLoader';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
@@ -10,6 +11,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 import { default as Icon, default as Ionicons } from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const [menuResetKey, setMenuResetKey] = useState(0);
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
   const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
@@ -17,7 +19,7 @@ export default function Home() {
   const router = useRouter();
 
   const nextEventTime = (agendaData: AgendaItem[]) => {
-    if (agendaData.length === 0) return new Date().getTime() + 10000;
+    if (agendaData.length === 0) return new Date().getTime();
     return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
   };
 
@@ -31,6 +33,7 @@ export default function Home() {
     useCallback(() => {
       const fetchEvents = async () => {
         try {
+          setLoading(true); 
           const response = await fetch('https://localhost:7072/api/Event', {
             method: 'GET',
             headers: {
@@ -59,6 +62,8 @@ export default function Home() {
           setAgendaData(transformed);
         } catch (error) {
           console.error('Error fetching events:', error);
+        } finally {
+          setLoading(false); 
         }
       };
       fetchEvents();
@@ -87,10 +92,11 @@ export default function Home() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      { loading ?   <FullScreenLoader/> : (
+        <>
       <View style={styles.headerContainer}>
         <HeaderWithMenu resetSignal={menuResetKey} />
       </View>
-
       <ScrollView contentContainerStyle={{ paddingBottom: 80, zIndex: 100 }}>
         {/* Hero */}
         <View style={styles.heroContainer}>
@@ -224,6 +230,8 @@ export default function Home() {
       </View>
       </ScrollView>
       <NavigationBar name="Home" onTabPress={handleNavigationAndReset} />
+      </>
+    )}
     </SafeAreaView>
   );
 }
