@@ -206,6 +206,22 @@ export default function Home() {
           </View>
           <FeaturedSpeakersGrid horizontal={true} fromHome={true} />
         </View>
+
+      <View style={styles.quickActionsContainer}>
+          <Text style={styles.contactTitle}>Contact Us</Text>
+        <TouchableOpacity 
+          style={styles.card}
+          onPress={() => router.push('/(tabs)/contactUs')}
+        >
+          <View style={styles.iconContainer}>
+            <Ionicons name="chatbubble" size={24} color="green" />
+          </View>
+          <View>
+            <Text style={styles.cardTitle}>Contact us</Text>
+            <Text style={styles.cardSubtitle}>Send us a message</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       </ScrollView>
       <NavigationBar name="Home" onTabPress={handleNavigationAndReset} />
     </SafeAreaView>
@@ -369,6 +385,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 22,
   },
+  quickActionsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+  },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  iconContainer: {
+    backgroundColor: '#E6F5D6',
+    borderRadius: 12,
+    padding: 8,
+    marginRight: 12,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: '#64748B',
+    marginTop: 2,
+  },
   countdownLabel: {
     color: '#fff',
     fontSize: 12,
@@ -385,6 +432,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     color: '#222',
+  },
+    contactTitle: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#222',
+    paddingBottom: 5,
+  },
+  agendaSubtext:{
+    fontWeight: 'normal',
   },
   fullSchedule: {
     color: '#8DD22A',
