@@ -1,253 +1,208 @@
-import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
-import { getToken } from '@/utils/authToken';
-import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useRef, useState } from 'react';
-import {
-  Alert,
-  Animated,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-
-export default function ContactUs() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [navigationBarVisible, setNavigationBarVisible] = React.useState(true);
-    const [loading, setLoading] = useState(false);
-    const [showCheckmark, setShowCheckmark] = useState(false);
-    
-      const scaleAnim = useRef(new Animated.Value(0)).current;
+import { router } from 'expo-router';
+import React from 'react';
+import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
-    useFocusEffect(
-      useCallback(() => {
-        const verifyAuthAndLoad = async () => {
-         const token = await getToken();
-         if (token) {
-            setNavigationBarVisible(true);
-         } 
-        };
-  
-        verifyAuthAndLoad();
-      }, [])
-    );
-
-    const createContactUsRequest = async () => {
-        // const isValid = validateInput();
-        // if (!isValid) return;
-    
-        try {
-          setLoading(true);
-          const token = await getToken();
-          const response = await fetch('https://localhost:5226/Create', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              email,
-              firstName,
-              lastName,
-              message,
-            }),
-          });
-    
-          const data = await response.json();
-          if (data.statusCode === 200) {
-            showAnimatedCheckmark();
-          } else {
-            Alert.alert('Update Failed', data.message || 'Profile update failed.');
-          }
-        } catch (error) {
-          Alert.alert('Update Failed', 'An unexpected error occurred during update.');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      const showAnimatedCheckmark = () => {
-          setShowCheckmark(true);
-          Animated.timing(scaleAnim, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }).start(() => {
-            setTimeout(() => {
-              Animated.timing(scaleAnim, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: true,
-              }).start(() => {
-                setShowCheckmark(false);
-              });
-            }, 2000);
-          });
-        };
+const ContactUs: React.FC = () => {
+  const profileBackground = require('@/assets/images/ContactUs.jpg')
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
-      <View style={{ flex: 1 }}>
-        <WelcomePageBackground style={StyleSheet.absoluteFillObject} />
-        {/* Contact Us page does not have a header as per design */}
-        
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-          <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.heading}>Get in Touch</Text>
-            <Text style={styles.subheading}>
-              Fill in your details we will reach{"\n"}out as soon as possible
-            </Text>
+    <View style={{ flex: 1 }}>
 
-            <View style={styles.row}>
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>First Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Bheki"
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  placeholderTextColor="#aaa"
-                />
-              </View>
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Last Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Ntshezi"
-                  value={lastName}
-                  onChangeText={setLastName}
-                  placeholderTextColor="#aaa"
-                />
-              </View>
-            </View>
+<ImageBackground
+  source={profileBackground}
+  style={styles.background}
+  resizeMode="cover"
+>
+  <View style={styles.overlay} />
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email</Text>
-              <View style={styles.emailInputWrapper}>
-                <TextInput
-                  style={[styles.input, { flex: 1, borderWidth: 0 }]}
-                  placeholder="bntshezi@deloitte.com"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  placeholderTextColor="#aaa"
-                />
-                <Ionicons name="mail-outline" size={20} color="#aaa" />
-              </View>
-            </View>
+  {/* Top bar should be separate and always visible */}
+  <View style={styles.topBar}>
+    <TouchableOpacity
+      onPress={() => router.push('/(tabs)/home')}
+      hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+      style={styles.backButton}
+    >
+      <Ionicons name="arrow-back" size={24} color="#333" />
+    </TouchableOpacity>
+    <Text style={styles.headerTitleText}>Contact Us</Text>
+    <View style={{ width: 32 }} />
+  </View>
 
-            <View style={styles.inputContainerMessage}>
-              <Text style={styles.label}>Message</Text>
-              <TextInput
-                style={[styles.input, styles.messageInput]}
-                placeholder="Enter your message"
-                value={message}
-                onChangeText={setMessage}
-                multiline
-                numberOfLines={4}
-                placeholderTextColor="#aaa"
-              />
-            </View>
-            <TouchableOpacity style={styles.button} onPress={() => createContactUsRequest()}>
-              <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </KeyboardAvoidingView>
+  {/* Scrollable content below the top bar */}
+  <View style={styles.content}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Get in Touch</Text>
+        <Text style={styles.subtitle}>
+          Fill in your details we will reach{'\n'}out as soon as possible
+        </Text>
+
+        {/* Form Fields */}
+        <View style={styles.row}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>First Name</Text>
+            <TextInput
+              style={[styles.input, styles.textInput]}
+              placeholder="Bheki"
+            />
+          </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>First Name</Text>
+            <TextInput
+              style={[styles.input, styles.textInput]}
+              placeholder="Ntshezi"
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={[styles.input, styles.textInput]}
+            placeholder="bntshezi@deloitte.com"
+          />
+        </View>
+
+        <View style={[styles.inputGroup, styles.messageGroup]}>
+          <Text style={styles.label}>Message</Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="Enter your message"
+            multiline
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
       </View>
-      {/* Contact Us does not have a footer*/ }
-    </SafeAreaView>
-  );
-}
+    </ScrollView>
+  </View>
+</ImageBackground>
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: '100%',
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 24,
-    marginTop:150,
+    </View>
+  );
+};
+
+export default ContactUs;
+
+export const styles = StyleSheet.create({
+  scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
-  heading: {
-    fontSize: 28,
+  container: {
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 15,
     color: 'white',
     textAlign: 'center',
-    marginBottom: 12,
-  },
-  subheading: {
-    fontSize: 16,
-    color: '#f0f0f0',
-    textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   row: {
     flexDirection: 'row',
-    gap: 12,
     justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 10,
   },
-  inputContainer: {
+  inputGroup: {
     flex: 1,
-    marginBottom: 6,
+    marginBottom: 10,
   },
-    inputContainerMessage: {
-    flex: 1,
-    marginBottom: 16,
+  messageGroup: {
+    marginBottom: 14,
   },
   label: {
-    color: '#fff',
-    marginBottom: 6,
+    fontSize: 14,
+    color: 'white',
+    marginBottom: 5,
   },
   input: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    color: '#333',
-  },
-  messageInput: {
-    height: 100,
-    textAlignVertical: 'top',
-    marginTop: 0,
-  },
-  emailInputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
+    fontSize: 14,
+  },
+  textInput: {
+    height: 44,
+  },
+  textArea: {
+    height: 140,
+    textAlignVertical: 'top',
+    paddingTop: 10,
   },
   button: {
-    backgroundColor: '#8DD22A',
-    borderRadius: 30,
-    paddingVertical: 16,
+    backgroundColor: '#7ED957',
+    paddingVertical: 14,
+    borderRadius: 25,
     alignItems: 'center',
-    marginBottom: 30,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  topBar: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F2F2F2',
+    justifyContent: 'space-between',
+    zIndex: 2,
+  },
+  backArrow: {
+    fontSize: 24,
+    color: '#222',
+    width: 32,
+    textAlign: 'left',
+  },
+  backButton: {
+    padding: 5,
+  },
+  headerTitleText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+  },
+  topBarTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#222',
+    textAlign: 'center',
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1,
+  },
+  content: {
+    flex: 1,
+    zIndex: 2, 
+    paddingHorizontal: 20,
   },
 });
