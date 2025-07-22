@@ -42,6 +42,7 @@ const ContactUs: React.FC = () => {
                   <TextInput
                     style={[styles.input, styles.textInput]}
                     placeholder="Bheki"
+                    placeholderTextColor="#ccc"
                   />
                 </View>
                 <View style={styles.inputGroup}>
@@ -49,6 +50,8 @@ const ContactUs: React.FC = () => {
                   <TextInput
                     style={[styles.input, styles.textInput]}
                     placeholder="Ntshezi"
+                    placeholderTextColor="#ccc"
+
                   />
                 </View>
               </View>
@@ -58,6 +61,7 @@ const ContactUs: React.FC = () => {
                 <TextInput
                   style={[styles.input, styles.textInput]}
                   placeholder="bntshezi@deloitte.com"
+                  placeholderTextColor="#ccc"
                 />
               </View>
 
@@ -66,6 +70,7 @@ const ContactUs: React.FC = () => {
                 <TextInput
                   style={[styles.input, styles.textArea]}
                   placeholder="Enter your message"
+                  placeholderTextColor="#ccc"
                   multiline
                 />
               </View>
