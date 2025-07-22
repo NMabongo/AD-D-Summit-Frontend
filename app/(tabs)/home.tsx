@@ -1,54 +1,33 @@
 import SummitBg from '@/assets/images/svg/homeBanner';
-import en from '@/assets/translations/en.json';
 import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
-import { Route, router, useFocusEffect, useRouter } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-
-
-const eventDays = [
-  {
-    Date: '2025-09-08T00:00:00',
-    DayNumber: 1,
-    DayName: 'Monday',
-  },
-  {
-    Date: '2025-09-09T00:00:00',
-    DayNumber: 2,
-    DayName: 'Tuesday',
-  }, 
-  {
-    Date: '2025-09-10T00:00:00',
-    DayNumber: 3,
-    DayName: 'Wednesday',
-  },
-]
+import { Route, useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useMemo, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { default as Icon, default as Ionicons } from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
-  const [menuResetKey, setMenuResetKey] = React.useState(0);
-  //const [agendaData, setAgendaData] = React.useState([testAgendaData]);
+  const [menuResetKey, setMenuResetKey] = useState(0);
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
+  const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
 
+  const router = useRouter();
 
-  const nextEventTime =  (agendaData: any[]) => {
-    let localNextEventTime = new Date('2026-09-08T13:00:00').getTime();
-  agendaData.forEach(event => {
-    localNextEventTime = Math.min(localNextEventTime, new Date (event.startTime).getTime());
-  });
-  return localNextEventTime;
-}
-  const timer = useTimer(nextEventTime(agendaData));
-  const handleNavigationAndReset = (route: string) => {
-    setMenuResetKey((prev) => prev + 1); 
-    useRouter().push(route as Route); 
+  const nextEventTime = (agendaData: AgendaItem[]) => {
+    if (agendaData.length === 0) return new Date().getTime() + 10000;
+    return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
   };
 
-     useFocusEffect(
+  const timer = useTimer(nextEventTime(agendaData));
+  const handleNavigationAndReset = (route: string) => {
+    setMenuResetKey((prev) => prev + 1);
+    router.push(route as Route);
+  };
+
+  useFocusEffect(
     useCallback(() => {
       const fetchEvents = async () => {
         try {
@@ -61,94 +40,59 @@ export default function Home() {
 
           const events = await response.json();
           const transformed = events.map((event: any) => {
-            let color = '#E4FBE9';
-            let iconBg = '#C2F0D0';
-            let iconColor = '#1E9D4C';
-            let iconSource;
-            
             const transformedDate = event.date.split('T')[0];
-            switch (event.category?.toLowerCase()) {
-              case 'meeting':
-                iconSource = require('@/assets/icons/standup.png');
-                break;
-              case 'presentation':
-                iconSource = require('@/assets/icons/presentation.png');
-                color = '#F3E9FE';
-                iconBg = '#D8BDFB';
-                iconColor = '#9B3BEB';
-                break;
-              case 'boardroom':
-                iconSource = require('@/assets/icons/chart.png');
-                color = '#FFF1E0';
-                iconBg = '#FFD8AE';
-                iconColor = '#F15C00';
-                break;
-              case 'workshop':
-                iconSource = require('@/assets/icons/workshop.png');
-                color = '#E3EAFE';
-                iconBg = '#C5CAE9';
-                iconColor = '#1A237E';
-                break;
-              case 'review':
-                iconSource = require('@/assets/icons/chart.png');
-                color = '#FEEBEB';
-                iconBg = '#FFCDD2';
-                iconColor = '#E53935';
-                break;
-              case 'seminar':
-                iconSource = require('@/assets/icons/seminar.png');
-                iconColor = '#E3F4FD';
-                iconBg = '#B3E5FC';
-                color = '#E8F3FD';
-                break;
-              default:
-                iconSource = require('@/assets/icons/default.png');
-            }
-
-            // @ts-ignore
             return {
               id: event.id,
               icon: (
-                <Image
-                  source={iconSource}
-                  style={{ width: 22, height: 22, resizeMode: 'contain' }}
-                />
+                  <Ionicons name="mic" size={20}  color= '#8DD22A' />
               ),
               title: event.title,
               desc: event.description,
               time: `${event.startTime} - ${event.endTime}`,
-              startTime: event.date.split('T')[0]+'T'+event.startTime,
-              endTime: event.date.split('T')[0]+'T'+event.endTime,
+              startTime: `${event.date.split('T')[0]}T${event.startTime}`,
+              endTime: `${event.date.split('T')[0]}T${event.endTime}`,
               location: event.location,
-              color,
-              iconBg,
-              iconColor,
-              date: new Date(transformedDate).toDateString() ,
+              date: new Date(transformedDate).toDateString(),
               category: event.category,
             };
           });
-          console.log('Fetched and transformed events:', transformed);
           setAgendaData(transformed);
-
         } catch (error) {
           console.error('Error fetching events:', error);
         }
       };
-
       fetchEvents();
     }, [])
   );
 
+  const days = useMemo(() => {
+    const grouped: { [key: string]: AgendaItem[] } = {};
+    agendaData.forEach((item) => {
+      const dayKey = new Date(item.startTime).toDateString();
+      if (!grouped[dayKey]) grouped[dayKey] = [];
+      grouped[dayKey].push(item);
+    });
+
+    const sortedKeys = Object.keys(grouped).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    );
+
+    return sortedKeys.map((key, index) => ({
+      date: key,
+      dayNumber: index + 1,
+      dayName: new Date(key).toLocaleDateString("en-US", { weekday: "long" }),
+      agendaItems: grouped[key],
+    }));
+  }, [agendaData]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* Header Section */}
       <View style={styles.headerContainer}>
-        <HeaderWithMenu resetSignal={menuResetKey}/>
+        <HeaderWithMenu resetSignal={menuResetKey} />
       </View>
 
-      
       <ScrollView contentContainerStyle={{ paddingBottom: 80, zIndex: 100 }}>
-        {/* Banner Section */}
+        {/* Hero */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
             <SummitBg width="100%" height="100%" />
@@ -205,59 +149,65 @@ export default function Home() {
           </View>
         </View>
 
-        {eventDays.map((day, index) => (
-          <View>
-            <View key={index} style={styles.agendaHeaderRow}>
-              <Text style={styles.agendaTitle}>Day {day.DayNumber} - {day.DayName}</Text>
-              <TouchableOpacity onPress={() => router.push({
-                              pathname: '/(tabs)/agenda',
-                              params: { initialDate: day.Date },
-                            })}>
+        {days.map((day, index) => (
+          <View key={index}>
+            <View style={styles.agendaHeaderRow}>
+              <Text style={styles.agendaTitle}>
+                Day {day.dayNumber} - Agenda
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/(tabs)/agenda',
+                    params: { initialDate: day.date },
+                  })
+                }
+              >
                 <Text style={styles.fullSchedule}>Full Schedule</Text>
               </TouchableOpacity>
             </View>
-            {agendaData.map(item => (
-              (new Date(item.startTime).toLocaleDateString().startsWith(new Date(day.Date).toLocaleDateString())))? (
-                <TouchableOpacity onPress={() => router.push({
-                                pathname: '/(tabs)/breakoutRoom',
-                                params: { breakoutroomId: item.id,
-                                  fromHome: 'true',
-                                 },
-                              })}>
+
+            {day.agendaItems.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(tabs)/agenda',
+                    params: { initialDate: day.date },
+                  })
+                }
+              >
                 <View style={styles.agendaCard}>
-                  <View style={styles.iconBox}>
-                    <Icon name="mic" color='#8DD22A' size={24} style={styles.agendaIcon} />
-                  </View>
+                  <View style={styles.iconBox}>{item.icon}</View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.agendaSessionTitle}>{item.title}</Text>
                     <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
                     <View style={styles.agendaSessionInfoRow}>
-                      <Text style={styles.agendaSessionTime}>{new Date(item.startTime).getHours().toLocaleString('en-Us', {minimumIntegerDigits: 2}) + ':' + new Date(item.startTime).getMinutes().toLocaleString('en-Us', {minimumIntegerDigits: 2})}</Text>
+                      <Text style={styles.agendaSessionTime}>
+                        {new Date(item.startTime).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </Text>
                       <Text style={styles.agendaSessionLocation}>{item.location}</Text>
                     </View>
                   </View>
                 </View>
-            </TouchableOpacity>
-            ) : null)}
-          </View>
-          ))}
-          
-      <View>
-        <View style={styles.agendaHeaderRow}>
-              <Text style={styles.agendaTitle}>Featured Speakers</Text>
-              <TouchableOpacity onPress={() => router.push({
-                              pathname: '/(tabs)/featuredSpeakers',
-                            })}>
-                <Text style={styles.fullSchedule}>View All</Text>
               </TouchableOpacity>
-            </View>
-        <FeaturedSpeakersGrid horizontal={true} fromHome={true}/>
-      </View>
+            ))}
+          </View>
+        ))}
+        <View>
+          <View style={styles.agendaHeaderRow}>
+            <Text style={styles.agendaTitle}>Featured Speakers</Text>
+            <TouchableOpacity onPress={() => router.push('/(tabs)/featuredSpeakers')}>
+              <Text style={styles.fullSchedule}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          <FeaturedSpeakersGrid horizontal={true} fromHome={true} />
+        </View>
       </ScrollView>
-      {/* Footer Navigation Bar */}
-      <NavigationBar name={en.navigationOptions.home}  
-          onTabPress={handleNavigationAndReset} 
-         />
+      <NavigationBar name="Home" onTabPress={handleNavigationAndReset} />
     </SafeAreaView>
   );
 }
@@ -438,8 +388,8 @@ const styles = StyleSheet.create({
   },
   fullSchedule: {
     color: '#8DD22A',
-    fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: '400',
   },
   agendaCard: {
     backgroundColor: '#fff',
@@ -457,12 +407,12 @@ const styles = StyleSheet.create({
   },
   iconBox: {
     width: 32,
-    height: 40,
+    height: 50,
     backgroundColor: '#F2F2F2',
     alignItems: 'center',
-    borderRadius: 4,
+    borderRadius: 10,
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 15,
   },
   agendaIcon: {
   },
@@ -482,9 +432,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   agendaSessionTime: {
-    backgroundColor: '#E6F7D9',
+    backgroundColor: '#F2F2F2',
     color: '#8DD22A',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 12,
     borderRadius: 4,
     paddingHorizontal: 6,
