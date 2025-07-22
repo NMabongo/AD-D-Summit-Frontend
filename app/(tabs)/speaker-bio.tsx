@@ -1,29 +1,71 @@
 import { Entypo, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from "react";
-import { Image, Modal, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+const placeholderAvatar = require('@/assets/images/icon.png');
 
 export default function SpeakerBio() {
-  console.log('SpeakerBio component loaded');
-  console.log('Local Search Params:', useLocalSearchParams());
-  const {firstName, lastName, expertise, region, rating, talksGiven, yearsExperience, satisfaction, bio, avatar, fromHome} = useLocalSearchParams();
-  const router = useRouter(); 
+  const {
+    firstName,
+    lastName,
+    expertise,
+    region,
+    rating,
+    talksGiven,
+    yearsExperience,
+    satisfaction,
+    bio,
+    imageUrl,
+    fromHome,
+  } = useLocalSearchParams();
 
-    const [dropdownVisible, setDropdownVisible] = useState(false); 
+  const router = useRouter();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const dropdownOptions = [
-    { label: 'Contact Us', onPress: () => { setDropdownVisible(false); router.push('/(tabs)/contactUs')} },
-    { label: 'Share', onPress: () => { setDropdownVisible(false); setDropdownVisible(false)}  },
-    { label: 'Subscribe', onPress: () =>{ setDropdownVisible(false); setDropdownVisible(false)} },
+    {
+      label: 'Contact Us',
+      onPress: () => {
+        setDropdownVisible(false);
+        router.push('/(tabs)/contactUs');
+      },
+    },
+    {
+      label: 'Share',
+      onPress: () => {
+        setDropdownVisible(false);
+        // To confirm
+      },
+    },
+    {
+      label: 'Subscribe',
+      onPress: () => {
+        setDropdownVisible(false);
+        // To confirm
+      },
+    },
   ];
-
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.customHeader}>
         <TouchableOpacity
-          onPress={() => fromHome?  router.push('/(tabs)/home'): router.push('/(tabs)/featuredSpeakers')} 
-          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }} 
+          onPress={() =>
+            fromHome === 'true'
+              ? router.push('/(tabs)/home')
+              : router.push('/(tabs)/featuredSpeakers')
+          }
+          hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
           style={styles.backButton}
         >
           <Ionicons name="arrow-back" size={24} color="#333" />
@@ -34,35 +76,37 @@ export default function SpeakerBio() {
         <TouchableOpacity
           onPress={() => setDropdownVisible(true)}
           hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          style={styles.dotsButton} 
+          style={styles.dotsButton}
         >
           <Entypo name="dots-three-vertical" size={20} color="#333" />
         </TouchableOpacity>
       </View>
 
-
       {/* Profile Section */}
       <View style={styles.profileSection}>
         <View style={styles.avatarWrapper}>
           <Image
-            source={{ uri: "https://randomuser.me/api/portraits/women/44.jpg" }}
+            source={
+              imageUrl
+                ? { uri: `https://localhost:7072${imageUrl}` }
+                : placeholderAvatar
+            }
             style={styles.avatar}
           />
           <View style={styles.checkCircle}>
             <MaterialIcons name="check" size={20} color="#fff" />
           </View>
         </View>
-        <Text style={styles.name}>{firstName + " " + lastName}</Text>
+        <Text style={styles.name}>{firstName} {lastName}</Text>
         <Text style={styles.title}>{expertise}</Text>
         <View style={styles.locationRow}>
           <Entypo name="location-pin" size={18} color="#888" />
           <Text style={styles.locationText}>{region}</Text>
           <FontAwesome name="star" size={16} color="#FFD700" style={{ marginLeft: 12 }} />
-          <Text style={styles.ratingText}>5.0</Text>
+          <Text style={styles.ratingText}>{rating}</Text>
         </View>
       </View>
 
-      {/* Stats */}
       <View style={styles.statsRow}>
         <View style={styles.statBox}>
           <Text style={styles.statNumber}>{talksGiven}</Text>
@@ -81,12 +125,7 @@ export default function SpeakerBio() {
       {/* About */}
       <View style={styles.aboutSection}>
         <Text style={styles.aboutHeader}>About</Text>
-        <Text style={styles.aboutText}>
-          {bio }
-        </Text>
-        <Text style={styles.aboutText}>
-          As the former Chief Technology Officer at TechVision Inc., she led groundbreaking projects that revolutionized how businesses approach digital transformation. Her expertise spans across AI, ethics, and leadership.
-        </Text>
+        <Text style={styles.aboutText}>{bio}</Text>
       </View>
 
    <Modal
@@ -109,7 +148,6 @@ export default function SpeakerBio() {
           </View>
         </Pressable>
       </Modal>
-      {/* Speaker bio does Not have a footer as per design */}
     </SafeAreaView>
   );
 }
@@ -122,11 +160,11 @@ const styles = StyleSheet.create({
   customHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', 
-    paddingTop: 3, 
+    justifyContent: 'space-between',
+    paddingTop: 3,
     paddingHorizontal: 16,
-    height: 60, 
-    backgroundColor: '#f8f8f8', 
+    height: 60,
+    backgroundColor: '#f8f8f8',
     borderBottomWidth: 0.5,
     borderColor: '#eee',
   },
@@ -137,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: '#333',
-    textAlign: 'center', 
+    textAlign: 'center',
   },
   dotsButton: {
     padding: 5,
@@ -146,15 +184,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     justifyContent: 'flex-start',
-    alignItems: 'flex-end', 
-    paddingTop: 55, 
+    alignItems: 'flex-end',
+    paddingTop: 55,
     paddingRight: 10,
   },
   dropdownContainer: {
     backgroundColor: 'white',
     borderRadius: 8,
     paddingVertical: 5,
-    minWidth: 160, // Slightly wider for options
+    minWidth: 160,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -277,5 +315,5 @@ const styles = StyleSheet.create({
     color: "#444",
     marginBottom: 8,
     lineHeight: 20,
-  }
+  },
 });
