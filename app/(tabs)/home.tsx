@@ -1,7 +1,7 @@
-import SummitBg from '@/assets/images/svg/homeBanner';
 import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import FullScreenLoader from '@/components/FullScreenLoader';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
+import ImageSlider from '@/components/imageSlider';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
@@ -16,6 +16,14 @@ export default function Home() {
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
 
   const router = useRouter();
+
+  const bannerImages: any[] = [
+    require('@/assets/images/kick.jpg'),
+    require('@/assets/images/yoga.jpg'),
+    require('@/assets/images/lazorSparks.jpg'),
+    require('@/assets/images/lazorSparks-1.jpg'),
+  ]
+
 
   const nextEventTime = (agendaData: AgendaItem[]) => {
     if (agendaData.length === 0) return new Date().getTime();
@@ -100,7 +108,7 @@ export default function Home() {
         {/* Hero */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
-            <SummitBg width="100%" height="100%" />
+            <ImageSlider images={bannerImages} />
           </View>
           <View style={styles.heroOverlay}>
             <Text style={styles.heroOrg}>Africa Consulting Services</Text>
