@@ -14,7 +14,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [menuResetKey, setMenuResetKey] = useState(0);
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
-  const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
 
   const router = useRouter();
 
