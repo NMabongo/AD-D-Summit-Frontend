@@ -10,77 +10,73 @@ const ContactUs: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
 
-<ImageBackground
-  source={profileBackground}
-  style={styles.background}
-  resizeMode="cover"
->
-  <View style={styles.overlay} />
-
-  {/* Top bar should be separate and always visible */}
-  <View style={styles.topBar}>
-    <TouchableOpacity
-      onPress={() => router.push('/(tabs)/home')}
-      hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-      style={styles.backButton}
-    >
-      <Ionicons name="arrow-back" size={24} color="#333" />
-    </TouchableOpacity>
-    <Text style={styles.headerTitleText}>Contact Us</Text>
-    <View style={{ width: 32 }} />
-  </View>
-
-  {/* Scrollable content below the top bar */}
-  <View style={styles.content}>
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Get in Touch</Text>
-        <Text style={styles.subtitle}>
-          Fill in your details we will reach{'\n'}out as soon as possible
-        </Text>
-
-        {/* Form Fields */}
-        <View style={styles.row}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>First Name</Text>
-            <TextInput
-              style={[styles.input, styles.textInput]}
-              placeholder="Bheki"
-            />
-          </View>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>First Name</Text>
-            <TextInput
-              style={[styles.input, styles.textInput]}
-              placeholder="Ntshezi"
-            />
-          </View>
+      <ImageBackground
+        source={profileBackground}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay} />
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            onPress={() => router.push('/(tabs)/home')}
+            hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            style={styles.backButton}
+          >
+            <Ionicons name="arrow-back" size={24} color="#333" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitleText}>Contact Us</Text>
+          <View style={{ width: 32 }} />
         </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={[styles.input, styles.textInput]}
-            placeholder="bntshezi@deloitte.com"
-          />
-        </View>
+        <View style={styles.content}>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
+              <Text style={styles.title}>Get in Touch</Text>
+              <Text style={styles.subtitle}>
+                Fill in your details we will reach{'\n'}out as soon as possible
+              </Text>
 
-        <View style={[styles.inputGroup, styles.messageGroup]}>
-          <Text style={styles.label}>Message</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="Enter your message"
-            multiline
-          />
-        </View>
+              <View style={styles.row}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>First Name</Text>
+                  <TextInput
+                    style={[styles.input, styles.textInput]}
+                    placeholder="Bheki"
+                  />
+                </View>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>First Name</Text>
+                  <TextInput
+                    style={[styles.input, styles.textInput]}
+                    placeholder="Ntshezi"
+                  />
+                </View>
+              </View>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  </View>
-</ImageBackground>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={[styles.input, styles.textInput]}
+                  placeholder="bntshezi@deloitte.com"
+                />
+              </View>
+
+              <View style={[styles.inputGroup, styles.messageGroup]}>
+                <Text style={styles.label}>Message</Text>
+                <TextInput
+                  style={[styles.input, styles.textArea]}
+                  placeholder="Enter your message"
+                  multiline
+                />
+              </View>
+
+              <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </ImageBackground>
 
     </View>
   );
@@ -202,7 +198,7 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    zIndex: 2, 
+    zIndex: 2,
     paddingHorizontal: 20,
   },
 });
