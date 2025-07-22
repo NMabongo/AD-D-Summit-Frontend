@@ -31,6 +31,7 @@ export default function SpeakerBio() {
 
   const router = useRouter();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const fromHomeBoolean = fromHome === 'true';
 
   const dropdownOptions = [
     {
@@ -61,7 +62,7 @@ export default function SpeakerBio() {
       <View style={styles.customHeader}>
         <TouchableOpacity
           onPress={() =>
-            fromHome === 'true'
+            fromHomeBoolean
               ? router.push('/(tabs)/home')
               : router.push('/(tabs)/featuredSpeakers')
           }
@@ -82,7 +83,6 @@ export default function SpeakerBio() {
         </TouchableOpacity>
       </View>
 
-      {/* Profile Section */}
       <View style={styles.profileSection}>
         <View style={styles.avatarWrapper}>
           <Image
@@ -122,7 +122,6 @@ export default function SpeakerBio() {
         </View>
       </View>
 
-      {/* About */}
       <View style={styles.aboutSection}>
         <Text style={styles.aboutHeader}>About</Text>
         <Text style={styles.aboutText}>{bio}</Text>
