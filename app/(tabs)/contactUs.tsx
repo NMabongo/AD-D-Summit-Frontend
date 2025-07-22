@@ -1,11 +1,82 @@
+import ErrorModal from '@/components/ErrorModal';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const ContactUs: React.FC = () => {
-  const profileBackground = require('@/assets/images/ContactUs.jpg')
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+
+    const[errorVisible, setErrorVisible] = useState(false);
+    const[errorMessage, setErrorMessage] = useState('');
+    const[errorModalTitle, setErrorModalTitle] = useState(''); 
+    
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const profileBackground = require('@/assets/images/ContactUs.jpg')
+
+    const clearData = () => {
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setMessage('');
+    }
+    const handleSubmit = async () => {
+      const newErrors: { [key: string]: string } = {};
+
+      if (!firstName.trim()) {
+        newErrors.firstName = 'First name is required.';
+      }
+
+      if (!email.trim()) {
+        newErrors.email = 'Email is required.';
+      } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+        newErrors.email = 'Email format is invalid.';
+      }
+
+      if (!message.trim()) {
+        newErrors.message = 'Message is required.';
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      try {
+        const response = await fetch('https://localhost:7072/api/contactUs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            message,
+          }),
+        });
+
+        if (response.ok) {
+          setErrorMessage("Message sent!");
+          setErrorModalTitle("Success");
+          setErrorVisible(true);
+          clearData();
+        } else {
+          setErrorModalTitle('Error');
+          setErrorMessage('Failed to send message. Please try again.');
+          setErrorVisible(true);
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setErrorModalTitle('Internal Error');
+        setErrorMessage('Message cannot be sent at this time, try again later.');
+        setErrorVisible(true);
+      }
+    };
 
   return (
     <View style={{ flex: 1 }}>
@@ -43,7 +114,10 @@ const ContactUs: React.FC = () => {
                     style={[styles.input, styles.textInput]}
                     placeholder="Bheki"
                     placeholderTextColor="#ccc"
-                  />
+                    value={firstName}
+                    onChangeText={setFirstName}
+                  />       
+                  {errors.firstName && <Text style={{ color: 'red', marginTop: 4 }}>{errors.firstName}</Text>}
                 </View>
                 <View style={styles.inputGroup}>
                   <Text style={styles.label}>First Name</Text>
@@ -51,7 +125,8 @@ const ContactUs: React.FC = () => {
                     style={[styles.input, styles.textInput]}
                     placeholder="Ntshezi"
                     placeholderTextColor="#ccc"
-
+                    value={lastName}
+                    onChangeText={setLastName}
                   />
                 </View>
               </View>
@@ -62,7 +137,10 @@ const ContactUs: React.FC = () => {
                   style={[styles.input, styles.textInput]}
                   placeholder="bntshezi@deloitte.com"
                   placeholderTextColor="#ccc"
+                  value={email}
+                  onChangeText={setEmail}
                 />
+                {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email}</Text>}
               </View>
 
               <View style={[styles.inputGroup, styles.messageGroup]}>
@@ -72,17 +150,24 @@ const ContactUs: React.FC = () => {
                   placeholder="Enter your message"
                   placeholderTextColor="#ccc"
                   multiline
-                />
+                  value={message}
+                  onChangeText={setMessage}
+                />           
+                {errors.message && <Text style={{ color: 'red', marginTop: 4 }}>{errors.message}</Text>}
               </View>
-
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
       </ImageBackground>
-
+      <ErrorModal
+        visible={errorVisible}
+        title={errorModalTitle}
+        message={errorMessage}
+        onClose={() => {setErrorVisible(false)}}
+      />
     </View>
   );
 };
