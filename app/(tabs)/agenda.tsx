@@ -306,7 +306,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
               if (item.id === 'default' || item.id === 'empty') return;
               router.push({
                 pathname: '/(tabs)/breakoutRoom',
-                params: { breakoutroomId: item.id },
+                params: { eventId: item.id },
               });
             }}
           >

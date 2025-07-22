@@ -1,48 +1,35 @@
+import ErrorModal from '@/components/ErrorModal';
+import { Room } from '@/constants/BreakroomItem';
 import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 const breakoutBg = require('@/assets/images/kick.jpg'); 
 
-const rooms = [
-  {
-    id: '1',
-    title: 'Team A Discussion',
-    desc: 'Discuss project updates and next steps.',
-    location: 'Conference Room A',
-    participants: 5,
-  },
-  {
-    id: '2',
-    title: 'Team B Brainstorming',
-    desc: 'Generate ideas for the new marketing campaign.',
-    location: 'Conference Room A',
-    participants: 8,
-  },
-  {
-    id: '3',
-    title: 'Team C Review',
-    desc: 'Evaluate the latest design mockups.',
-    location: '',
-    participants: 4,
-  },
-  {
-    id: '4',
-    title: 'Team D Strategy Session',
-    desc: 'Plan for the upcoming product launch.',
-    location: '',
-    participants: undefined,
-  },
-];
-
 export default function BreakoutRooms() {
-   //Will use thid Id to pull Data from the endpoint
-    const { breakoutroomId, fromHome } = useLocalSearchParams();
+  const { eventId, fromHome } = useLocalSearchParams();
+const [errorVisible, setErrorVisible] = useState(false);
+const [errorMessage, setErrorMessage] = useState('');
+const [errorModalTitle, setErrorModalTitle] = useState('');
+const [rooms, setRooms] = useState<Room[]>([]);
+
+useEffect(() => {
+  if (!eventId) return;
+
+  fetch(`https://localhost:7072/api/BreakoutRoom?eventId=${eventId}`)
+    .then(res => res.json())
+    .then(data => setRooms(data))
+    .catch(err => {
+      setErrorModalTitle('Loading Error');
+      setErrorMessage('Breakout Rooms cannot be loaded at this time');
+      setErrorVisible(true);
+      console.error('Failed to fetch breakout rooms:', err);
+    });
+}, [eventId]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
-      {/* Top Bar */}
       <View style={styles.topBar}>
       <TouchableOpacity
         onPress={() => fromHome? router.push('/(tabs)/home'): router.push('/(tabs)/agenda')}
@@ -56,7 +43,6 @@ export default function BreakoutRooms() {
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-        {/* Banner */}
         <View style={styles.bannerContainer}>
           <Image source={breakoutBg} style={styles.bannerImg} resizeMode="cover" />
           <View style={styles.bannerOverlay}>
@@ -64,25 +50,27 @@ export default function BreakoutRooms() {
           </View>
         </View>
 
-        {/* Room Cards */}
         {rooms.map(room => (
           <View key={room.id} style={styles.roomCard}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.roomTitle}>{room.title}</Text>
-              <Text style={styles.roomDesc}>{room.desc}</Text>
-              {room.location ? (
-                <Text style={styles.roomLocation}>{room.location}</Text>
-              ) : null}
+              <Text style={styles.roomTitle}>{room.breakoutRoomTitle }</Text>
+              <Text style={styles.roomSubtitle}>{room.topic}</Text>
+              <Text style={styles.roomDesc}>{room.roomName}</Text>
               {room.participants !== undefined ? (
-                <Text style={styles.roomParticipants}>Participants: <Text style={{ color: '#8DD22A' }}>{room.participants}</Text></Text>
+                <Text style={styles.roomParticipants}>
+                  Participants: <Text >{room.participants}</Text>
+                </Text>
               ) : null}
             </View>
-            <TouchableOpacity style={styles.joinBtn}>
-              <Text style={styles.joinBtnText}>Join</Text>
-            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
+      <ErrorModal
+          visible={errorVisible}
+          title={errorModalTitle}
+          message={errorMessage}
+          onClose={() => {setErrorVisible(false)}}
+        />
     </SafeAreaView>
   );
 }
@@ -167,9 +155,14 @@ const styles = StyleSheet.create({
   },
   roomTitle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 17,
     color: '#222',
     marginBottom: 2,
+  },
+  roomSubtitle: {
+    fontSize: 17,
+    color: 'grey',
+    marginBottom: 5,
   },
   roomDesc: {
     color: '#888',
@@ -182,9 +175,9 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   roomParticipants: {
-    color: '#888',
     fontSize: 12,
     marginBottom: 2,
+    color: '#8DD22A' ,
   },
   joinBtn: {
     backgroundColor: '#8DD22A',
