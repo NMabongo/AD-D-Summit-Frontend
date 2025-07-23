@@ -2,7 +2,7 @@ import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import { Route, useFocusEffect, useRouter } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -74,6 +74,27 @@ export default function Mindful() {
       return minutes;
     }
 
+    const days = useMemo(() => {
+        const grouped: { [key: string]: any[] } = {};
+        mindfulnessActivities.forEach((item) => {
+          const dayKey = new Date(item.startTime).toDateString();
+          if (!grouped[dayKey]) grouped[dayKey] = [];
+          grouped[dayKey].push(item);
+        });
+    
+        const sortedKeys = Object.keys(grouped).sort(
+          (a, b) => new Date(a).getTime() - new Date(b).getTime()
+        );
+    
+        return sortedKeys.map((key, index) => ({
+          date: key,
+          dayNumber: index + 1,
+          dayName: new Date(key).toLocaleDateString("en-US", { weekday: "long" }),
+          mindfulnessActivities: grouped[key],
+        }));
+      }, [mindfulnessActivities]);
+    
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       
@@ -89,22 +110,39 @@ export default function Mindful() {
             <Text style={styles.bannerTitle}>Mindfulness</Text>
           </View>
         </View>
+        
+        {days.map((day, index) => {
+          const isPastDate = new Date(day.date).getTime() <= new Date().getTime();
 
-        {mindfulnessActivities? mindfulnessActivities.map((session) => (
+          if (isPastDate) return null;
 
-          <View key={session.id} style={styles.sessionCard}>
-            <Text style={styles.sessionTitle}>{session.title}</Text>
-            <Text style={styles.sessionDescription}>{session.description}</Text>
-            <View style={styles.sessionFooter}>
-              <Icon name="time-outline" size={18} color="#888" />
-            <Text style={styles.sessionDuration}>{hourDifference(session.startTime, session.endTime) + 'h' + minuteDifference(session.startTime, session.endTime) }</Text>
-            <Icon name="time-outline" size={15} color="#888" style={{ marginRight: 2 }} />
-            <Text style={styles.sessionDuration}>{session.time}</Text>
-            <Icon name="location-outline" size={15} color="#888" style={{ marginLeft: 10, marginRight: 2 }} />
-            <Text style={styles.sessionDuration}>{session.location}</Text>
+          return (
+            <View key={index}>
+              <View style={styles.activityHeaderRow}>
+                <Text style={styles.activityTitle}>
+                  Day {day.dayNumber} - Activities
+                </Text>
+              </View>
+
+              {day.mindfulnessActivities.map((session) => (
+                <View key={session.id} style={styles.sessionCard}>
+                  <Text style={styles.sessionTitle}>{session.title}</Text>
+                  <Text style={styles.sessionDescription}>{session.description}</Text>
+                  <View style={styles.sessionFooter}>
+                    <Icon name="time-outline" size={18} color="#888" />
+                    <Text style={styles.sessionDuration}>
+                      {hourDifference(session.startTime, session.endTime) + 'h' + minuteDifference(session.startTime, session.endTime)}
+                    </Text>
+                    <Icon name="time-outline" size={15} color="#888" style={{ marginRight: 2 }} />
+                    <Text style={styles.sessionDuration}>{session.time}</Text>
+                    <Icon name="location-outline" size={15} color="#888" style={{ marginLeft: 10, marginRight: 2 }} />
+                    <Text style={styles.sessionDuration}>{session.location}</Text>
+                  </View>
+                </View>
+              ))}
             </View>
-          </View> 
-        )) : <Text style={{ textAlign: 'center', marginTop: 20 }}>No mindfulness activities available</Text>}
+          );
+        })}
       </ScrollView>
 
       {/* Footer Navigation Bar */}
@@ -259,4 +297,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+  activityHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 8,
+  },
+  activityTitle: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#222',
+  }
 });
