@@ -50,7 +50,7 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
             <TouchableOpacity onPress={onClose} style={styles.backButton}>
               <Ionicons name="arrow-back" size={24} color="#333" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Kievits Kroon Gauteng</Text>
+            <Text style={styles.headerTitleText}>Venue Location</Text>
           </View>
         </ImageBackground>
 
@@ -98,10 +98,11 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 5,
   },
-  headerTitle: {
-    fontSize: 20,
-    color: '#fff',
+  headerTitleText: {
+    fontSize: 17,
     fontWeight: 'bold',
+    color: '#333',
+    paddingRight: 135,
   },
   mapContainer: {
     flex: 1,
