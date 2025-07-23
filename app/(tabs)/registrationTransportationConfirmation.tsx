@@ -1,3 +1,4 @@
+import MapModal from '@/components/MapModal';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -22,6 +23,7 @@ const transportationOptions = [
 
 export default function RegistrationTransportationConfirmation() {
   const [selected, setSelected] = useState('office');
+    const [showMap, setShowMap] = useState(false);
 
   const { email } = useLocalSearchParams();
   
@@ -74,8 +76,16 @@ export default function RegistrationTransportationConfirmation() {
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm your transportation</Text>
-            <Text style={styles.subtitle}>Let us know your preference</Text>
-
+            <Text style={styles.title}>Let us know your preference</Text>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <TouchableOpacity
+                  style={styles.mapButton}
+                  onPress={() => setShowMap(true)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.radioLabel}>View Map Location</Text>
+                </TouchableOpacity>
+            </View>
             <View style={{ marginTop: 16, marginBottom: 18 }}>
               {transportationOptions.map((option) => (
                 <TouchableOpacity
@@ -120,7 +130,12 @@ export default function RegistrationTransportationConfirmation() {
         </View>
       </KeyboardAvoidingView>
       </ImageBackground>
+      <MapModal
+              visible={showMap}
+              onClose={() => setShowMap(false)}
+            />
     </View>
+    
   );
 }
 
@@ -244,5 +259,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     paddingHorizontal: 20,
     paddingBottom: 40,
+  },
+  mapButton: {
+    marginBottom: 20,
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: 'transparent',
+    cursor: 'pointer',
+    borderRadius: 20,
+    alignItems: 'center',
+    borderColor: '#ffffff',
+    borderWidth: 1,
   },
 });
