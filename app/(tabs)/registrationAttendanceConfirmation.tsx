@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
   ImageBackground,
@@ -21,9 +21,61 @@ const attendanceOptions = [
 ];
   const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
+
+  
 export default function RegistrationAttendanceConfirmation() {
   const [selected, setSelected] = useState('yes');
   const [message, setMessage] = useState('');
+  
+  
+    const { email } = useLocalSearchParams();
+
+  const nextScreen = () => {
+  router.push({
+    pathname: '/registrationTransportationConfirmation', 
+    params: { email: email }} );
+}
+
+const handleUpdateAttendance = async () => {
+
+    try {
+    
+      const response = await fetch('https://localhost:7072/api/User/ConfirmAttendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuQG4uZHNoZmoiLCJqdGkiOiI4MGY1YjQ2ZC00Zjk0LTRhM2EtOWQ4Yi1hNWQ3NDE1MzhkMTQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJuQG4uZHNoZmoiLCJleHAiOjE3NTMzMzk5MzAsImlzcyI6IkFEX0RfU3VtbWl0IiwiYXVkIjoiQURfRF9TdW1taXRfVXNlcnMifQ.q0Ty1aZ6hWSPYO8G7hc5T3jw7iz9E2W-Ro35RWcCrbE`
+        },
+        body:JSON.stringify({
+          attending: selected,
+          email: 'n@n.dshfj',
+        }),
+
+        
+      });
+
+      let data;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+        console.log('Response data:', data);
+        // Check if the response indicates success  
+        if (data.statusCode === 200) {
+          nextScreen();
+        }else{
+          console.error('Error updating travel:', data.message);
+          alert('Failed to update travel preference. Please try again.');
+        }
+      } else {
+        data = null;
+      }
+
+    } catch (error) {
+      console.error('Request failed:', error);
+    }
+  };
+
+
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -75,7 +127,7 @@ export default function RegistrationAttendanceConfirmation() {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleUpdateAttendance}>
               <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>

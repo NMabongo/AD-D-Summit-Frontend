@@ -147,8 +147,11 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
-        handleLogin()
-        router.push('/(tabs)/registrationAttendanceConfirmation');
+        await handleLogin()
+        router.push({
+          pathname: '/(tabs)/registrationAttendanceConfirmation',
+          params: { email: email }
+        });
       } else {
         setErrorModalTitle(failedRegistration);
         if (data.message === userExists) {
