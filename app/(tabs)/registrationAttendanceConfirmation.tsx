@@ -25,7 +25,7 @@ const attendanceOptions = [
   
 export default function RegistrationAttendanceConfirmation() {
   const [selected, setSelected] = useState('yes');
-  const [message, setMessage] = useState('');
+  const [funFact, setFunFact] = useState('');
   
   
     const { email } = useLocalSearchParams();
@@ -33,7 +33,9 @@ export default function RegistrationAttendanceConfirmation() {
   const nextScreen = () => {
   router.push({
     pathname: '/registrationTransportationConfirmation', 
-    params: { email: email }} );
+    params: { 
+      email: email,
+    }} );
 }
 
 const handleUpdateAttendance = async () => {
@@ -48,7 +50,8 @@ const handleUpdateAttendance = async () => {
         },
         body:JSON.stringify({
           attending: selected,
-          email: 'n@n.dshfj',
+          email: email,
+          funFact: funFact,
         }),
 
         
@@ -113,15 +116,15 @@ const handleUpdateAttendance = async () => {
             </View>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 18 }}>
-              <Text style={[styles.label, { marginRight: 12, marginBottom: 0 }]}>Message</Text>
+              <Text style={[styles.label, { marginRight: 12, marginBottom: 0 }]}>Tell us about you</Text>
             </View>
 
             <TextInput
               style={styles.input}
-              placeholder="Enter your message"
+              placeholder="Fun Fact, hidden talent, or anything else you'd like us to know"
               placeholderTextColor="#bdbdbd"
-              value={message}
-              onChangeText={setMessage}
+              value={funFact}
+              onChangeText={setFunFact}
               multiline
               numberOfLines={4}
               textAlignVertical="top"

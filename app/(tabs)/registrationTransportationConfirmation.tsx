@@ -6,24 +6,22 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 const nextScreen = () => {
   router.push('/home');
 }
 const transportationOptions = [
-  { label: 'Need airport pickup', value: 'pickup' },
-  { label: 'Will arrange my own', value: 'own' },
-  { label: 'Not decided yet', value: 'undecided' },
+  { label: 'Hook me up with a lift from the Waterfall', value: 'office' },
+  { label: 'Hook me up with a lift from the airport', value: 'pickup' },
+  { label: "I'l be driving there", value: 'own' },
 ];
   const profileBackground = require('@/assets/images/confirmTransportation.jpg')
 
 export default function RegistrationTransportationConfirmation() {
-  const [selected, setSelected] = useState('pickup');
-  const [message, setMessage] = useState('');
+  const [selected, setSelected] = useState('office');
 
   const { email } = useLocalSearchParams();
   
@@ -93,18 +91,6 @@ export default function RegistrationTransportationConfirmation() {
                 </TouchableOpacity>
               ))}
             </View>
-
-            <Text style={styles.label}>Message</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your message"
-              placeholderTextColor="#bdbdbd"
-              value={message}
-              onChangeText={setMessage}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
 
             <TouchableOpacity style={styles.button} onPress={handleUpdateTravel}>
               <Icon name="car-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
