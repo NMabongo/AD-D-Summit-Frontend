@@ -1,41 +1,78 @@
 import en from '@/assets/translations/en.json';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
-import { Route, router, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Route, useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const mindfulBanner = require('@/assets/images/yoga.jpg');
 
-const sessions = [
-  {
-    id: '1',
-    title: 'Deloitte Partner Summit 2025',
-    description: 'Start your day with a 10-minute guided meditation session focusing on breath awareness and intention setting.',
-    duration: '5hr 30min',
-  },
-  {
-    id: '2',
-    title: 'Deloitte Partner Summit 2025',
-    description: 'Practice mindful movement with a guided walking meditation in nature, focusing on each step and breath.',
-    duration: '5hr 30min',
-  },
-  {
-    id: '3',
-    title: 'Deloitte Partner Summit 2025',
-    description: 'Deep relaxation technique that guides you through releasing tension from every part of your body.',
-    duration: '5hr 30min',
-  },
-];
-
 export default function Mindful() {
     const [menuResetKey, setMenuResetKey] = useState(0);
+    const [mindfulnessActivities, setMindfulnessActivities] = useState<any[]>([]);
 
+    useFocusEffect(
+          useCallback(() => {
+            const fetchEvents = async () => {
+              try {
+                const response = await fetch('https://localhost:7072/mindfulness/getAll', {
+                  method: 'GET', 
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                });
+      
+                const mindfulnessActivities = await response.json();
+                if (!Array.isArray(mindfulnessActivities.mindfulnessAcitivity)) {
+                  throw new Error('Invalid data format');
+                }
+                // Update state with the fetched mindfulness activities 
+                 const transformedActivities = mindfulnessActivities.mindfulnessAcitivity.map((activity: any) => {
+                            return {
+                              id: activity.id,
+                              title: activity.title,
+                              description: activity.description,
+                              time: activity.startTime,
+                              startTime: `${activity.date.split('T')[0]}T${activity.startTime}`,
+                              endTime: `${activity.date.split('T')[0]}T${activity.endTime}`,
+                              location: activity.location,
+                              date: activity.date,
+                            };
+                          });
+                setMindfulnessActivities(transformedActivities);
+                
+      
+              } catch (error) {
+                console.error('Error fetching events:', error);
+              }
+            };
+      
+            fetchEvents();
+          }, [])
+        );
     const handleNavigationAndReset = (route: string) => {
       setMenuResetKey((prev) => prev + 1); 
       useRouter().push(route as Route); 
     };
+
+    const diffMs = (startTime: string, endTime: string) => {
+      const start = new Date(startTime).getTime();
+      const end = new Date(endTime).getTime();
+      return end - start;
+    }
+
+    const hourDifference = (startTime: string, endTime: string) => {
+      const diff = diffMs(startTime, endTime);  
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      return hours;
+    }
+
+    const minuteDifference = (startTime: string, endTime: string) => {
+      const diff = diffMs(startTime, endTime);  
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      return minutes;
+    }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -53,19 +90,21 @@ export default function Mindful() {
           </View>
         </View>
 
-        {sessions.map((session) => (
+        {mindfulnessActivities? mindfulnessActivities.map((session) => (
+
           <View key={session.id} style={styles.sessionCard}>
             <Text style={styles.sessionTitle}>{session.title}</Text>
             <Text style={styles.sessionDescription}>{session.description}</Text>
             <View style={styles.sessionFooter}>
               <Icon name="time-outline" size={18} color="#888" />
-              <Text style={styles.sessionDuration}>{session.duration}</Text>
-              <TouchableOpacity style={styles.registerButton} onPress={() => router.push('../(tabs)/featuredSpeakers')}>
-                <Text style={styles.registerButtonText}>Register</Text>
-              </TouchableOpacity>
+            <Text style={styles.sessionDuration}>{hourDifference(session.startTime, session.endTime) + 'h' + minuteDifference(session.startTime, session.endTime) }</Text>
+            <Icon name="time-outline" size={15} color="#888" style={{ marginRight: 2 }} />
+            <Text style={styles.sessionDuration}>{session.time}</Text>
+            <Icon name="location-outline" size={15} color="#888" style={{ marginLeft: 10, marginRight: 2 }} />
+            <Text style={styles.sessionDuration}>{session.location}</Text>
             </View>
-          </View>
-        ))}
+          </View> 
+        )) : <Text style={{ textAlign: 'center', marginTop: 20 }}>No mindfulness activities available</Text>}
       </ScrollView>
 
       {/* Footer Navigation Bar */}
