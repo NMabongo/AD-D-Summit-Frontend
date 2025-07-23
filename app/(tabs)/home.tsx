@@ -2,6 +2,7 @@ import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import FullScreenLoader from '@/components/FullScreenLoader';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import ImageSlider from '@/components/imageSlider';
+import MapModal from '@/components/MapModal';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
@@ -14,6 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [menuResetKey, setMenuResetKey] = useState(0);
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
+  const [showMap, setShowMap] = useState(false);
 
   const router = useRouter();
 
@@ -117,8 +119,10 @@ export default function Home() {
             <View style={styles.heroInfoRow}>
               <Icon name="calendar-outline" size={18} color="#fff" />
               <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
-              <Icon name="location-outline" size={18} color="#fff" />
-              <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
+              <TouchableOpacity onPress={() => setShowMap(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Icon name="location-outline" size={18} color="#fff" />
+                <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -237,6 +241,10 @@ export default function Home() {
       </View>
       </ScrollView>
       <NavigationBar name="Home" onTabPress={handleNavigationAndReset} />
+      <MapModal
+        visible={showMap}
+        onClose={() => setShowMap(false)}
+      />
       </>
     )}
     </SafeAreaView>
