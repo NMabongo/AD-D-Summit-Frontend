@@ -1,50 +1,48 @@
-# Welcome to your Expo app 👋
+# Deloitte Partner Summit App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile-first React Native app built with Expo for the **Deloitte Partner Summit 2025**, enabling attendees to register, explore event information, and engage with content like speaker bios, location maps, and mindfulness activities.
 
-## Get started
+---
 
-1. Install dependencies
+## 🎯 Purpose
 
-   ```bash
-   npm install
-   ```
+This app serves as the digital companion for summit attendees, offering a seamless experience to:
 
-2. Start the app
+- Confirm event attendance.
+- Access up-to-date event schedules and session info.
+- View a curated list of featured speakers.
+- Locate the venue with integrated maps.
+- Participate in wellness and mindfulness activities.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ✨ Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **RSVP & Registration**  
+  Users can confirm attendance directly from the app.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Event Details**  
+  View summit theme, dates, venue, and high-level agenda.
 
-## Get a fresh project
+- **Speakers Grid**  
+  See keynote speakers with photos, bios, and expertise.
 
-When you're ready, run:
+- **Google Maps Integration**  
+  Access venue location with a modal map view (web-only support).
 
-```bash
-npm run reset-project
-```
+- **Mindfulness Activities**  
+  Engage with wellness tips, session guides, and relaxation tools.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📱 Tech Stack
 
-To learn more about developing your project with Expo, look at the following resources:
+- **React Native** (with Expo SDK 53+)
+- **React Navigation**
+- **TypeScript**
+- **react-native-maps** (for mobile, fallback iframe on web)
+- **Expo Router**
+- **Modular Component Structure**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
