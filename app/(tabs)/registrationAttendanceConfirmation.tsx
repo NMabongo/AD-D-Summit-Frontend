@@ -46,7 +46,7 @@ const handleUpdateAttendance = async () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuQG4uZHNoZmoiLCJqdGkiOiI4MGY1YjQ2ZC00Zjk0LTRhM2EtOWQ4Yi1hNWQ3NDE1MzhkMTQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJuQG4uZHNoZmoiLCJleHAiOjE3NTMzMzk5MzAsImlzcyI6IkFEX0RfU3VtbWl0IiwiYXVkIjoiQURfRF9TdW1taXRfVXNlcnMifQ.q0Ty1aZ6hWSPYO8G7hc5T3jw7iz9E2W-Ro35RWcCrbE`
+         // Authorization: ``
         },
         body:JSON.stringify({
           attending: selected,
@@ -143,21 +143,6 @@ const handleUpdateAttendance = async () => {
               >
                 Contact us
               </Text>
-                        <View style={styles.bottomButtonsContainer}>
-                          <TouchableOpacity
-                            style={styles.navButton}
-                            onPress={() => router.back()}
-                          >
-                            <Text style={styles.backButtonText}>Back</Text>
-                          </TouchableOpacity>
-              
-                          <TouchableOpacity
-                            style={styles.navButton}
-                            onPress={() => router.push('/registrationTransportationConfirmation')}
-                          >
-                            <Text style={styles.backButtonText}>Skip</Text>
-                          </TouchableOpacity>
-                        </View>
             </Text>
           </View>
         </ScrollView>

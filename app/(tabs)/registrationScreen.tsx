@@ -65,9 +65,10 @@ export default function RegistrationScreen() {
     return isValid;
   };
 
+  // This not used for V1
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://localhost:7072/api/User/login', {
+      const response = await fetch('', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,7 +148,6 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
-        await handleLogin()
         router.push({
           pathname: '/(tabs)/registrationAttendanceConfirmation',
           params: { email: email }
@@ -173,11 +173,6 @@ const validateInput = async () => {
 };
 
 
-  const backTrigger = () => {
-    clearErrors();
-    router.back();
-  };
-
   const clearErrors = () => {
     setFirstName('');
     setLastName('');
@@ -196,7 +191,7 @@ const validateInput = async () => {
 
   return (
     <View style={{ flex: 1}}>
-            <ImageBackground
+        <ImageBackground
           source={profileBackground}
           style={styles.background}
           resizeMode="cover"
@@ -338,28 +333,8 @@ const validateInput = async () => {
           }}>
             Contact us
           </Text>
-          {'  |  '}
-          <Text style={styles.contactText} onPress={() => setLoginModalVisible(true)}>
-            Login
-          </Text>
         </Text>
-          </View>
-
-          <View style={styles.bottomButtonsContainer}>
-            <TouchableOpacity style={styles.secondaryButton} onPress={backTrigger}>
-              <Text style={styles.secondaryButtonText}>Back</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={() => {
-                clearErrors();
-                router.push('/(tabs)/registrationAttendanceConfirmation');
-              }}
-            >
-              <Text style={styles.secondaryButtonText}>Skip</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
