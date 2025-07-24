@@ -262,7 +262,7 @@ export default function Profile() {
         if (!token) {
           Toast.show({
             type: 'info',
-            text1: 'Redirecting...',
+            text1: 'Feature not available... Redirecting',
             position: 'bottom',
             visibilityTime: 1500,
           });
@@ -531,7 +531,7 @@ export default function Profile() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)', // Adjust opacity as needed
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
           zIndex: 999,
         }}
       />

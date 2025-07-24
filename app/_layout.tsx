@@ -1,3 +1,4 @@
+import { toastConfig } from '@/components/toastConfig';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -41,7 +42,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
         </ThemeProvider>
       </ResetSignalContext.Provider>    
-      <Toast />
+      <Toast config={toastConfig}  bottomOffset={70}/>
     </AuthProvider>
   );
 }
