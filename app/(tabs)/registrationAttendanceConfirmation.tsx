@@ -1,3 +1,4 @@
+import ErrorModal from '@/components/ErrorModal';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
@@ -19,16 +20,18 @@ const attendanceOptions = [
   { label: 'Catch you the next time!', value: 'no' },
   { label: 'Mulling It over', value: 'maybe' },
 ];
-  const profileBackground = require('@/assets/images/confirmAttendance.jpg')
+const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
 
   
 export default function RegistrationAttendanceConfirmation() {
   const [selected, setSelected] = useState('yes');
   const [funFact, setFunFact] = useState('');
-  
-  
-    const { email } = useLocalSearchParams();
+  const { email } = useLocalSearchParams();
+
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorModalTitle, setErrorModalTitle] = useState('');
+  const [errorModalMessage, setErrorModalMessage] = useState('');
 
   const nextScreen = () => {
   router.push({
@@ -62,19 +65,27 @@ const handleUpdateAttendance = async () => {
       if (contentType.includes('application/json')) {
         data = await response.json();
         console.log('Response data:', data);
-        // Check if the response indicates success  
         if (data.statusCode === 200) {
           nextScreen();
         }else{
-          console.error('Error updating travel:', data.message);
-          alert('Failed to update travel preference. Please try again.');
+          console.error('Confirm attandance Failed;', {response})
+          setErrorModalTitle('Error');            
+          setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+          setErrorModalVisible(true);
         }
       } else {
         data = null;
+          console.error('Confirm attandance Failed;', {response})
+          setErrorModalTitle('Error');            
+          setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+          setErrorModalVisible(true);
       }
 
     } catch (error) {
-      console.error('Request failed:', error);
+      console.error('Confirm attandance Failed;', {error})
+      setErrorModalTitle('Error');            
+      setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+      setErrorModalVisible(true);
     }
   };
 
@@ -147,7 +158,18 @@ const handleUpdateAttendance = async () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      </ImageBackground>
+      </ImageBackground>  
+      <ErrorModal
+        visible={errorModalVisible}
+        title={errorModalTitle}
+        message={errorModalMessage}
+        onClose={() => {
+          setErrorModalVisible(false);
+        }}
+        onLoginPress={() => {
+          setErrorModalVisible(false);
+        }}
+      />
     </View>
   );
 }

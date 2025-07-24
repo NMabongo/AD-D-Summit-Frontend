@@ -1,3 +1,4 @@
+import ErrorModal from '@/components/ErrorModal';
 import MapModal from '@/components/MapModal';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -23,10 +24,13 @@ const transportationOptions = [
 
 export default function RegistrationTransportationConfirmation() {
   const [selected, setSelected] = useState('office');
-    const [showMap, setShowMap] = useState(false);
-
+  const [showMap, setShowMap] = useState(false);
   const { email } = useLocalSearchParams();
   
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorModalTitle, setErrorModalTitle] = useState('');
+  const [errorModalMessage, setErrorModalMessage] = useState('');
+
   const handleUpdateTravel = async () => {
 
     try {
@@ -51,14 +55,23 @@ export default function RegistrationTransportationConfirmation() {
           nextScreen();
         }else{
           console.error('Error updating travel:', data.message);
-          alert('Failed to update travel preference. Please try again.');
+          setErrorModalTitle('Error');            
+          setErrorModalMessage(`Failed to update travel preference. Please try again later`);     
+          setErrorModalVisible(true);
         }
       } else {
         data = null;
+        console.error('Error updating travel: data is null', data);
+        setErrorModalTitle('Error');            
+        setErrorModalMessage(`Failed to update travel preference. Please try again later`);     
+        setErrorModalVisible(true);
       }
 
     } catch (error) {
       console.error('Request failed:', error);
+      setErrorModalTitle('Error');            
+      setErrorModalMessage(`Failed to update travel preference. Please try again later`);     
+      setErrorModalVisible(true);
     }
   };
 
@@ -115,6 +128,17 @@ export default function RegistrationTransportationConfirmation() {
         </View>
       </KeyboardAvoidingView>
       </ImageBackground>
+      <ErrorModal
+        visible={errorModalVisible}
+        title={errorModalTitle}
+        message={errorModalMessage}
+        onClose={() => {
+          setErrorModalVisible(false);
+        }}
+        onLoginPress={() => {
+          setErrorModalVisible(false);
+        }}
+      />
       <MapModal
         visible={showMap}
         onClose={() => setShowMap(false)}

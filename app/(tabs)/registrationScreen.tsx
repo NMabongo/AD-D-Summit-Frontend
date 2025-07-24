@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from './data_constants';
+import { failedRegistration, serverErrorMessage, serverErrorTitle } from './data_constants';
 
 export default function RegistrationScreen() {
   const [firstName, setFirstName] = useState('');
@@ -153,14 +153,9 @@ const validateInput = async () => {
           params: { email: email }
         });
       } else {
-        setErrorModalTitle(failedRegistration);
-        if (data.message === userExists) {
-          setErrorModalTitle(userExistsTitle);
-          setErrorModalMessage(`${userExists} ${tryDifferentEmail} or Login to your account.`);
-          setUserExistsError(true);
-        } else {
-          setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
-        }
+        console.error('Registration Failed;', {response})
+        setErrorModalTitle(failedRegistration);            
+        setErrorModalMessage(`Could not complete registration at this time. Please try again later.`);     
         setErrorModalVisible(true);
       }
     } catch (error) {
@@ -379,7 +374,6 @@ const validateInput = async () => {
           setErrorModalVisible(false);
           setUserExistsError(false);
         }}
-        userExists={userExistsError}
         onLoginPress={() => {
           setErrorModalVisible(false);
           setUserExistsError(false);
