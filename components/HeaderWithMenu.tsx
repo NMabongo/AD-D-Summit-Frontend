@@ -87,16 +87,22 @@ useFocusEffect(
 
       {menuVisible && (
         <View style={styles.dropdownMenu}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => {
-              setMenuVisible(false);
-              router.push('/(tabs)/profile');
-            }}
-          >
+          {/*
+           * 
+           *  This will not be used for the current version hence it being hidden
+           * 
+          */}
+          { false &&
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => {
+                  setMenuVisible(false);
+                  router.push('/(tabs)/profile');
+                }}
+              >
             <Text style={styles.menuText}>View Profile</Text>
           </TouchableOpacity>
-
+          }
           {isAuthenticated && (
             <TouchableOpacity
               style={styles.menuItem}
@@ -110,7 +116,10 @@ useFocusEffect(
           )}
         </View>
       )}
-
+      {/** 
+       *  This will not be used for the current version hence it being hidden
+       * 
+      */}
       <LogoutConfirmModal
         visible={logoutModalVisible}
         onCancel={() => setLogoutModalVisible(false)}
