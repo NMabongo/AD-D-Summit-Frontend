@@ -90,7 +90,7 @@ export default function RegistrationTransportationConfirmation() {
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm your transportation</Text>
             <Text style={styles.title}>Let us know your preference</Text>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'center' }}>
               <TouchableOpacity
                   style={styles.mapButton}
                   onPress={() => setShowMap(true)}
@@ -99,7 +99,7 @@ export default function RegistrationTransportationConfirmation() {
                   <Text style={styles.radioLabel}>View Map Location</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ marginTop: 16, marginBottom: 18 }}>
+            <View style={{ marginBottom: 18 }}>
               {transportationOptions.map((option) => (
                 <TouchableOpacity
                   key={option.value}

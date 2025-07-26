@@ -89,7 +89,7 @@ const ContactUs: React.FC = () => {
         <View style={styles.overlay} />
         <View style={styles.topBar}>
           <TouchableOpacity
-            onPress={() => router.push('/(tabs)/home')}
+            onPress={() => router.back()}
             hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
             style={styles.backButton}
           >
