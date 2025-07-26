@@ -16,7 +16,7 @@ export default function Mindful() {
           useCallback(() => {
             const fetchEvents = async () => {
               try {
-                const response = await fetch('https://localhost:7072/mindfulness/getAll', {
+                const response = await fetch('https://deloittesummitbe.azurewebsites.net/mindfulness/getAll', {
                   method: 'GET', 
                   headers: {
                     'Content-Type': 'application/json',

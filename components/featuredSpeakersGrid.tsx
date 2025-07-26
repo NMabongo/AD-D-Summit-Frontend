@@ -33,7 +33,7 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
     useCallback(() => {
       const fetchSpeakers = async () => {
         try {
-          const response = await fetch('https://localhost:7072/api/Speaker/getAll', {
+          const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/Speaker/getAll', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
               <Image
                 source={
                   speaker.imageUrl
-                    ? { uri: `https://localhost:7072${speaker.imageUrl}` }
+                    ? { uri: `https://deloittesummitbe.azurewebsites.net${speaker.imageUrl}` }
                     : placeholderAvatar
                 }
                 style={styles.speakerAvatar}

@@ -47,7 +47,7 @@ const ContactUs: React.FC = () => {
       }
 
       try {
-        const response = await fetch('https://localhost:7072/api/contactUs', {
+        const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/contactUs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

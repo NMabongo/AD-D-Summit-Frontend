@@ -17,7 +17,7 @@ const [rooms, setRooms] = useState<Room[]>([]);
 useEffect(() => {
   if (!eventId) return;
 
-  fetch(`https://localhost:7072/api/BreakoutRoom?eventId=${eventId}`)
+  fetch(`https://deloittesummitbe.azurewebsites.net/api/BreakoutRoom?eventId=${eventId}`)
     .then(res => res.json())
     .then(data => setRooms(data))
     .catch(err => {

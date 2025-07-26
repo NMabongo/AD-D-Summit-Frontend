@@ -39,7 +39,7 @@ const login = async (token: string) => {
     const token = await getToken();
     if (token) {
       try {
-        await fetch('https://localhost:7072/api/User/logout', {
+        await fetch('https://deloittesummitbe.azurewebsites.net/api/User/logout', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,

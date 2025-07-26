@@ -33,7 +33,7 @@ useFocusEffect(
         const token = await getToken();
         if (!token) return;
 
-        const response = await fetch('https://localhost:7072/api/User/getuserprofile', {
+        const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/getuserprofile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,7 +46,7 @@ useFocusEffect(
 
         const data = await response.json();
         if (data?.profile?.avatarPath) {
-          const fullImageUrl = `https://localhost:7072${data.profile.avatarPath}`;
+          const fullImageUrl = `https://deloittesummitbe.azurewebsites.net${data.profile.avatarPath}`;
           setAvatarUrl(fullImageUrl);
         }
       } catch (err) {

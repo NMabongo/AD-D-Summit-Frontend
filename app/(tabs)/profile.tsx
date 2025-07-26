@@ -157,7 +157,7 @@ export default function Profile() {
   const handleLoadProfile = async (authToken: string) => {
     try {
       const response = await fetch(
-        `https://localhost:7072/api/User/getuserprofile?email=${encodeURIComponent(email)}`,
+        `https://deloittesummitbe.azurewebsites.net/api/User/getuserprofile?email=${encodeURIComponent(email)}`,
         {
           method: 'GET',
           headers: {
@@ -176,7 +176,7 @@ export default function Profile() {
         setRegion(data.profile.region);
         setPassword(data.profile.password);
         // We need to load the image location (local/cloud)
-        const fullImageUrl = `https://localhost:7072${data.profile.avatarPath}`;
+        const fullImageUrl = `https://deloittesummitbe.azurewebsites.net${data.profile.avatarPath}`;
         setSelectedImage(fullImageUrl);
       } else {
         console.error('Error', data.message || 'Failed to load profile.');
@@ -219,7 +219,7 @@ export default function Profile() {
       }
 
 
-      const response = await fetch('https://localhost:7072/api/User/updateprofile', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/updateprofile', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

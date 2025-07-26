@@ -131,7 +131,7 @@ const validateInput = async () => {
 
   if (isValid) {
     try {
-      const response = await fetch('https://localhost:7072/api/User/register', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

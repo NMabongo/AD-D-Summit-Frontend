@@ -88,7 +88,7 @@ export default function SpeakerBio() {
           <Image
             source={
               imageUrl
-                ? { uri: `https://localhost:7072${imageUrl}` }
+                ? { uri: `https://deloittesummitbe.azurewebsites.net${imageUrl}` }
                 : placeholderAvatar
             }
             style={styles.avatar}

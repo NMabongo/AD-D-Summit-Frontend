@@ -49,7 +49,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onRegister })
     setLoading(true);
 
     try {
-      const response = await fetch('https://localhost:7072/api/User/login', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

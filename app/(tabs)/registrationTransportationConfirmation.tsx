@@ -35,7 +35,7 @@ export default function RegistrationTransportationConfirmation() {
 
     try {
     
-      const response = await fetch('https://localhost:7072/api/User/ConfirmTravel', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/ConfirmTravel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

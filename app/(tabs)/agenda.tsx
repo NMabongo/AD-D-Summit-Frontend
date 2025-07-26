@@ -49,7 +49,7 @@ const extractUniqueMonths = (events: any[]): string[] => {
     useCallback(() => {
       const fetchEvents = async () => {
         try {
-          const response = await fetch('https://localhost:7072/api/Event', {
+          const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/Event', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

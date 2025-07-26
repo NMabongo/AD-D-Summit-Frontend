@@ -45,7 +45,7 @@ const handleUpdateAttendance = async () => {
 
     try {
     
-      const response = await fetch('https://localhost:7072/api/User/ConfirmAttendance', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/ConfirmAttendance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
