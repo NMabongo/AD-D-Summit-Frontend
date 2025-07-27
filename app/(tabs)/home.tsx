@@ -8,7 +8,7 @@ import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
 import { Route, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { default as Icon, default as Ionicons } from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
@@ -51,23 +51,26 @@ export default function Home() {
           });
 
           const events = await response.json();
-          const transformed = events.map((event: any) => {
-            const transformedDate = event.date.split('T')[0];
-            return {
-              id: event.id,
-              icon: (
-                  <Ionicons name="mic" size={20}  color= '#8DD22A' />
-              ),
-              title: event.title,
-              desc: event.description,
-              time: `${event.startTime} - ${event.endTime}`,
-              startTime: `${event.date.split('T')[0]}T${event.startTime}`,
-              endTime: `${event.date.split('T')[0]}T${event.endTime}`,
-              location: event.location,
-              date: new Date(transformedDate).toDateString(),
-              category: event.category,
-            };
-          });
+const transformed = events
+  .filter((event: any) => event?.date && event?.startTime && event?.endTime)
+  .map((event: any) => {
+    const transformedDate = event.date.split('T')[0];
+    return {
+      id: event.id,
+      icon: (
+        <Ionicons name="mic" size={20} color="#8DD22A" />
+      ),
+      title: event.title,
+      desc: event.description,
+      time: `${event.startTime} - ${event.endTime}`,
+      startTime: `${transformedDate}T${event.startTime}`,
+      endTime: `${transformedDate}T${event.endTime}`,
+      location: event.location,
+      date: new Date(transformedDate).toDateString(),
+      category: event.category,
+    };
+  });
+
           setAgendaData(transformed);
         } catch (error) {
           console.error('Error fetching events:', error);
@@ -98,6 +101,92 @@ export default function Home() {
       agendaItems: grouped[key],
     }));
   }, [agendaData]);
+
+const renderAgendaSection = () => {
+  if (days.length === 0) {
+    return (
+      <View>
+        {/* Agenda Header with Full Schedule link */}
+        <View style={styles.agendaHeaderRow}>
+          <Text style={styles.agendaTitle}>Agenda</Text>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: '/(tabs)/agenda',
+              })
+            }
+          >
+            <Text style={styles.fullSchedule}>Full Schedule</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Empty Agenda Card */}
+        <View style={[styles.agendaCard, { backgroundColor: '#E0E0E0' }]}>
+          <View style={[styles.iconBox, { backgroundColor: '#BDBDBD' }]}>
+            <Image
+              source={require('@/assets/icons/default.png')}
+              style={{ width: 22, height: 22, resizeMode: 'contain' }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.agendaSessionTitle}>You’re all caught up!</Text>
+            <Text style={styles.agendaSessionDesc}>No scheduled events yet.</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  // Agenda exists
+  return days.map((day, index) => (
+    <View key={index}>
+      <View style={styles.agendaHeaderRow}>
+        <Text style={styles.agendaTitle}>Day {day.dayNumber} - Agenda</Text>
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: '/(tabs)/agenda',
+              params: { initialDate: day.date },
+            })
+          }
+        >
+          <Text style={styles.fullSchedule}>Full Schedule</Text>
+        </TouchableOpacity>
+      </View>
+
+      {day.agendaItems.map((item) => (
+        <TouchableOpacity
+          key={item.id}
+          onPress={() =>
+            router.push({
+              pathname: '/(tabs)/agenda',
+              params: { initialDate: day.date },
+            })
+          }
+        >
+          <View style={styles.agendaCard}>
+            <View style={styles.iconBox}>{item.icon}</View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.agendaSessionTitle}>{item.title}</Text>
+              <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
+              <View style={styles.agendaSessionInfoRow}>
+                <Text style={styles.agendaSessionTime}>
+                  {new Date(item.startTime).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Text>
+                <Text style={styles.agendaSessionLocation}>{item.location}</Text>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ))}
+    </View>
+  ));
+};
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -166,54 +255,8 @@ export default function Home() {
           </View>
         </View>
 
-        {days.map((day, index) => (
-          <View key={index}>
-            <View style={styles.agendaHeaderRow}>
-              <Text style={styles.agendaTitle}>
-                Day {day.dayNumber} - Agenda
-              </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  router.push({
-                    pathname: '/(tabs)/agenda',
-                    params: { initialDate: day.date },
-                  })
-                }
-              >
-                <Text style={styles.fullSchedule}>Full Schedule</Text>
-              </TouchableOpacity>
-            </View>
-
-            {day.agendaItems.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(tabs)/agenda',
-                    params: { initialDate: day.date },
-                  })
-                }
-              >
-                <View style={styles.agendaCard}>
-                  <View style={styles.iconBox}>{item.icon}</View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.agendaSessionTitle}>{item.title}</Text>
-                    <Text style={styles.agendaSessionDesc}>{item.desc}</Text>
-                    <View style={styles.agendaSessionInfoRow}>
-                      <Text style={styles.agendaSessionTime}>
-                        {new Date(item.startTime).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </Text>
-                      <Text style={styles.agendaSessionLocation}>{item.location}</Text>
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        ))}
+          {/* Agenda Section */}
+          {renderAgendaSection()}
         <View>
           <View style={styles.agendaHeaderRow}>
             <Text style={styles.agendaTitle}>Featured Speakers</Text>
