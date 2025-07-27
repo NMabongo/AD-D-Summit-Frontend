@@ -11,9 +11,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ErrorModal from './ErrorModal';
 
-const placeholderAvatar = require('@/assets/images/icon.png');
+const placeholderAvatar = require('@/assets/icons/profile-icon.png');
 
 export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = false }) {
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
@@ -23,7 +24,6 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
 
   const router = useRouter();
 
-  //This is for fitting the two cards as per design
   const screenWidth = Dimensions.get('window').width;
   const horizontalPadding = 16 * 2;
   const spacingBetweenCards = 16; 
@@ -59,10 +59,11 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
     }, [])
   );
 
-  return (
-    <ScrollView contentContainerStyle={{}} horizontal={horizontal}>
-      <View style={styles.speakersGrid}>
-        {speakers.map((speaker) => (
+return (
+  <ScrollView contentContainerStyle={{}} horizontal={horizontal}>
+    <View style={styles.speakersGrid}>
+      {speakers.length > 0 ? (
+        speakers.map((speaker) => (
           <TouchableOpacity
             key={speaker.id}
             onPress={() =>
@@ -90,16 +91,23 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
               <Text style={styles.speakerTitle}>{speaker.expertise}</Text>
             </View>
           </TouchableOpacity>
-        ))}
-      </View>
-      <ErrorModal
-          visible={errorVisible}
-          title={errorModalTitle}
-          message={errorMessage}
-          onClose={() => {setErrorVisible(false)}}
-        />
-    </ScrollView>
-  );
+        ))
+      ) : (
+        <View style={[styles.speakerCard, { width: cardWidth, alignItems: 'center', justifyContent: 'center' }]}>
+          <Ionicons name="person" size={40} color="#BDBDBD" />
+          <Text style={styles.speakerName}>No speakers yet</Text>
+          <Text style={styles.speakerTitle}>Check back later</Text>
+        </View>
+      )}
+    </View> 
+    <ErrorModal
+      visible={errorVisible}
+      title={errorModalTitle}
+      message={errorMessage}
+      onClose={() => setErrorVisible(false)}
+    />
+  </ScrollView>
+);
 }
 
 const styles = StyleSheet.create({
