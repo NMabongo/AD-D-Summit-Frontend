@@ -15,6 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [menuResetKey, setMenuResetKey] = useState(0);
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
+  const [attendeeCount, setAttendeeCount] = useState<number | null>(null);
   const [showMap, setShowMap] = useState(false);
 
   const router = useRouter();
@@ -42,15 +43,21 @@ const timer = nextTime !== null ? useTimer(nextTime) : null;
     useCallback(() => {
       const fetchEvents = async () => {
         try {
-          setLoading(true); 
-          const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/Event', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+          setLoading(true);
 
-          const events = await response.json();
+          const [eventRes, countRes] = await Promise.all([
+            fetch('https://deloittesummitbe.azurewebsites.net/api/Event', {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            }),
+            fetch('https://deloittesummitbe.azurewebsites.net/api/User/AttendeeCount', {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            }),
+          ]);
+
+          // Set Agenda Events
+          const events = await eventRes.json();
           const transformed = events
             .filter((event: any) => event?.date && event?.startTime && event?.endTime)
             .map((event: any) => {
@@ -70,13 +77,20 @@ const timer = nextTime !== null ? useTimer(nextTime) : null;
                 category: event.category,
               };
             });
-
           setAgendaData(transformed);
+
+          // Set Attendee Count
+          const countJson = await countRes.json();
+          if (countJson && typeof countJson.count === 'number') {
+            setAttendeeCount(countJson.count);
+          } else {
+            setAttendeeCount(null);
+          }
+
         } catch (error) {
-          //This error is handled byt the agenda component
-          console.log('Error fetching events:', error);
+          console.log('Error fetching events or count:', error);
         } finally {
-          setLoading(false); 
+          setLoading(false);
         }
       };
       fetchEvents();
@@ -215,10 +229,12 @@ const renderAgendaSection = () => {
           </View>
         </View>
         <View style={styles.statsRow}>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>160+</Text>
-            <Text style={styles.statLabel}>Attendees</Text>
-          </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>
+            {attendeeCount !== null ? `${attendeeCount}` : '...'}
+          </Text>
+          <Text style={styles.statLabel}>Attendees</Text>
+        </View>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>10+</Text>
             <Text style={styles.statLabel}>Global Guests &{'\n'}Speakers</Text>
