@@ -27,12 +27,12 @@ export default function Home() {
   ]
 
 
-  const nextEventTime = (agendaData: AgendaItem[]) => {
-    if (agendaData.length === 0) return new Date().getTime();
-    return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
-  };
+const nextTime = useMemo(() => {
+  if (agendaData.length === 0) return null;
+  return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
+}, [agendaData]);
+const timer = nextTime !== null ? useTimer(nextTime) : null;
 
-  const timer = useTimer(nextEventTime(agendaData));
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1);
     router.push(route as Route);
@@ -229,6 +229,7 @@ const renderAgendaSection = () => {
           </View>
         </View>
 
+      {timer ? (
         <View style={styles.countdownCard}>
           <View style={styles.countdownHeader}>
             <Text style={styles.countdownTitle}>Event Starts In</Text>
@@ -253,6 +254,32 @@ const renderAgendaSection = () => {
             </View>
           </View>
         </View>
+      ) : (
+        <View style={styles.countdownCard}>
+          <View style={styles.countdownHeader}>
+            <Text style={styles.countdownTitle}>Event Starts In</Text>
+            <Icon name="time-sharp" size={20} color="#fff" />
+          </View>
+          <View style={styles.countdownRow}>
+            <View style={styles.countdownItem}>
+              <Text style={styles.countdownNumber}>00</Text>
+              <Text style={styles.countdownLabel}>Days</Text>
+            </View>
+            <View style={styles.countdownItem}>
+              <Text style={styles.countdownNumber}>00</Text>
+              <Text style={styles.countdownLabel}>Hours</Text>
+            </View>
+            <View style={styles.countdownItem}>
+              <Text style={styles.countdownNumber}>00</Text>
+              <Text style={styles.countdownLabel}>Minutes</Text>
+            </View>
+            <View style={styles.countdownItem}>
+              <Text style={styles.countdownNumber}>00</Text>
+              <Text style={styles.countdownLabel}>Seconds</Text>
+            </View>
+          </View>
+          </View>
+      )}
 
           {/* Agenda Section */}
           {renderAgendaSection()}
