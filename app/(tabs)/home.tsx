@@ -51,29 +51,30 @@ export default function Home() {
           });
 
           const events = await response.json();
-const transformed = events
-  .filter((event: any) => event?.date && event?.startTime && event?.endTime)
-  .map((event: any) => {
-    const transformedDate = event.date.split('T')[0];
-    return {
-      id: event.id,
-      icon: (
-        <Ionicons name="mic" size={20} color="#8DD22A" />
-      ),
-      title: event.title,
-      desc: event.description,
-      time: `${event.startTime} - ${event.endTime}`,
-      startTime: `${transformedDate}T${event.startTime}`,
-      endTime: `${transformedDate}T${event.endTime}`,
-      location: event.location,
-      date: new Date(transformedDate).toDateString(),
-      category: event.category,
-    };
-  });
+          const transformed = events
+            .filter((event: any) => event?.date && event?.startTime && event?.endTime)
+            .map((event: any) => {
+              const transformedDate = event.date.split('T')[0];
+              return {
+                id: event.id,
+                icon: (
+                  <Ionicons name="mic" size={20} color="#8DD22A" />
+                ),
+                title: event.title,
+                desc: event.description,
+                time: `${event.startTime} - ${event.endTime}`,
+                startTime: `${transformedDate}T${event.startTime}`,
+                endTime: `${transformedDate}T${event.endTime}`,
+                location: event.location,
+                date: new Date(transformedDate).toDateString(),
+                category: event.category,
+              };
+            });
 
           setAgendaData(transformed);
         } catch (error) {
-          console.error('Error fetching events:', error);
+          //This error is handled byt the agenda component
+          console.log('Error fetching events:', error);
         } finally {
           setLoading(false); 
         }
@@ -106,7 +107,6 @@ const renderAgendaSection = () => {
   if (days.length === 0) {
     return (
       <View>
-        {/* Agenda Header with Full Schedule link */}
         <View style={styles.agendaHeaderRow}>
           <Text style={styles.agendaTitle}>Agenda</Text>
           <TouchableOpacity
@@ -120,7 +120,6 @@ const renderAgendaSection = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Empty Agenda Card */}
         <View style={[styles.agendaCard, { backgroundColor: '#E0E0E0' }]}>
           <View style={[styles.iconBox, { backgroundColor: '#BDBDBD' }]}>
             <Image
@@ -257,6 +256,7 @@ const renderAgendaSection = () => {
 
           {/* Agenda Section */}
           {renderAgendaSection()}
+
         <View>
           <View style={styles.agendaHeaderRow}>
             <Text style={styles.agendaTitle}>Featured Speakers</Text>
