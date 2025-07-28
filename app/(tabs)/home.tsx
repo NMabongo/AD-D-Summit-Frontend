@@ -1,7 +1,7 @@
+import SummitBg from '@/assets/images/svg/homeBanner';
 import FeaturedSpeakersGrid from '@/components/featuredSpeakersGrid';
 import FullScreenLoader from '@/components/FullScreenLoader';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
-import ImageSlider from '@/components/imageSlider';
 import MapModal from '@/components/MapModal';
 import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
@@ -19,20 +19,11 @@ export default function Home() {
   const [showMap, setShowMap] = useState(false);
 
   const router = useRouter();
-
-  const bannerImages: any[] = [
-    require('@/assets/images/kick.jpg'),
-    require('@/assets/images/yoga.jpg'),
-    require('@/assets/images/lazorSparks.jpg'),
-    require('@/assets/images/lazorSparks-1.jpg'),
-  ]
-
-
-const nextTime = useMemo(() => {
-  if (agendaData.length === 0) return null;
-  return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
-}, [agendaData]);
-const timer = nextTime !== null ? useTimer(nextTime) : null;
+  const nextTime = useMemo(() => {
+    if (agendaData.length === 0) return null;
+    return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
+  }, [agendaData]);
+  const timer = nextTime !== null ? useTimer(nextTime) : null;
 
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1);
@@ -212,7 +203,7 @@ const renderAgendaSection = () => {
         {/* Hero */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
-            <ImageSlider images={bannerImages} />
+            <SummitBg width="100%" height="100%" />
           </View>
           <View style={styles.heroOverlay}>
             <Text style={styles.heroOrg}>Africa Consulting Services</Text>
