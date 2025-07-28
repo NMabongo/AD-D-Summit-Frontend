@@ -42,12 +42,10 @@ export default function RegistrationScreen() {
   const [regionError, setRegionError] = useState('');
 
   const regions = [
-    'North America',
-    'EMEA (Europe, Middle East, Africa)',
-    'Asia Pacific',
-    'Latin America',
-    'Africa',
-    'Oceania',
+    'Southern Africa',
+    'East Africa',
+    'West Africa',
+    'North Africa',
   ];
 
   const validateEmail = (text: string) => {
