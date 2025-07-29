@@ -120,7 +120,7 @@ const ContactUs: React.FC = () => {
                   {errors.firstName && <Text style={{ color: 'red', marginTop: 4 }}>{errors.firstName}</Text>}
                 </View>
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>First Name</Text>
+                  <Text style={styles.label}>Last Name</Text>
                   <TextInput
                     style={[styles.input, styles.textInput]}
                     placeholder="Ntshezi"
