@@ -22,16 +22,25 @@ const attendanceOptions = [
 ];
 const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
+const dietaryOptions = [
+  { label: "None", value: 'None' },
+  { label: 'Halaal', value: 'Halaal' },
+  { label: 'Vegetarian', value: 'Vegetarian' },
+  { label: 'Other', value: 'Other' },
+];
 
   
 export default function RegistrationAttendanceConfirmation() {
-  const [selected, setSelected] = useState('yes');
+  const [selected, setSelected] = useState('');
   const [funFact, setFunFact] = useState('');
   const { email } = useLocalSearchParams();
 
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
+  const [dietarySelected, setDietarySelected] = useState('None');
+  const [otherDietary, setOtherDietary] = useState('');
+  const [roommate, setRoommate] = useState('');
 
   const nextScreen = () => {
   router.push({
@@ -55,6 +64,8 @@ const handleUpdateAttendance = async () => {
           attending: selected,
           email: email,
           funFact: funFact,
+          dietaryPreference: dietarySelected === 'Other' ? otherDietary : dietarySelected,
+          roommate: roommate,
         }),
 
         
@@ -112,17 +123,68 @@ const handleUpdateAttendance = async () => {
 
             <View style={{ marginTop: 16, marginBottom: 18 }}>
               {attendanceOptions.map(option => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={styles.radioRow}
-                  onPress={() => setSelected(option.value)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.radioOuter}>
-                    {selected === option.value && <View style={styles.radioInner} />}
-                  </View>
-                  <Text style={styles.radioLabel}>{option.label}</Text>
-                </TouchableOpacity>
+                <View  key={option.value}>
+                  <TouchableOpacity
+                    key={option.value}
+                    style={styles.radioRow}
+                    onPress={() => (
+                      option.value !== 'yes' ? 
+                        (setDietarySelected('None') 
+                        , setRoommate('')) :
+                         null,
+                      setSelected(option.value))}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.radioOuter}>
+                      {selected === option.value && <View style={styles.radioInner} />}
+                    </View>
+                    <Text style={styles.radioLabel}>{option.label}</Text>
+                  </TouchableOpacity>
+                  {selected === 'yes' && option.value === 'yes' && (
+                    dietaryOptions.map(dietaryOption => (
+                      <View style={{ marginLeft: 36 }} key={dietaryOption.value}>
+                        <TouchableOpacity
+                          key={dietaryOption.value}
+                          style={[styles.radioRow, ]}
+                          onPress={() => setDietarySelected(dietaryOption.value)}
+                          activeOpacity={0.7}
+                        >
+                          <View style={styles.radioOuter}>
+                            {dietarySelected === dietaryOption.value && <View style={styles.radioInner} />}
+                          </View>
+                          <Text style={styles.radioLabel}>{dietaryOption.label}</Text>
+                        </TouchableOpacity>
+                        {dietarySelected === 'Other' && dietaryOption.value === 'Other' && (
+                          <TextInput
+                            style={[styles.inputRoomShare, { width: '100%'}]}
+                            placeholder="Dietary preference"
+                            placeholderTextColor="#bdbdbd"
+                            value={otherDietary}
+                            onChangeText={setOtherDietary}
+                            textAlignVertical="top"
+                          />
+                        )}
+                      </View>
+                    ))
+                  )}
+
+                  {selected === 'yes' && option.value === 'yes' && (
+                    <View style={{ marginLeft: 36 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 10 }}>
+                        <Text style={[styles.radioLabel, { marginRight: 12, marginBottom: 0 }]}>Please provide the name of a colleague you wish to share a room with.</Text>
+                      </View>
+
+                      <TextInput
+                        style={styles.inputRoomShare}
+                        placeholder="Room share colleague's name"
+                        placeholderTextColor="#bdbdbd"
+                        value={roommate}
+                        onChangeText={setRoommate}
+                        textAlignVertical="top"
+                      />
+                    </View>
+                  )}
+                </View>
               ))}
             </View>
 
@@ -240,6 +302,17 @@ const styles = StyleSheet.create({
     color: '#222',
     width: '100%',
     minHeight: 80,
+    marginBottom: 18,
+  },
+  inputRoomShare: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    fontSize: 15,
+    color: '#222',
+    width: '100%',
+    minHeight: 40,
     marginBottom: 18,
   },
   button: {
