@@ -24,9 +24,10 @@ const mapsImage = require('@/assets/images/mapsHeader.jpg');
 export default function MapModal({ visible, onClose }: MapModalProps) {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(true);
+  const [userLocation, setUserLocation] = useState<Location.LocationObject | null>(null);
 
   const venueLocation = {
-    latitude: -25.6582, 
+    latitude: -25.6582,
     longitude: 28.2843,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
@@ -35,6 +36,7 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
   useEffect(() => {
     if (visible) {
       setLoading(true);
+      setUserLocation(null);
 
       if (Platform.OS !== 'web') {
         (async () => {
@@ -44,12 +46,19 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
             Alert.alert('Location permission denied', 'Map may not function correctly.');
           } else {
             setHasPermission(true);
+            try {
+              const location = await Location.getCurrentPositionAsync({});
+              setUserLocation(location);
+            } catch (e) {
+              console.warn('Failed to get user location:', e);
+            }
           }
-        })();
-      }
 
-      const timeout = setTimeout(() => setLoading(false), 1000);
-      return () => clearTimeout(timeout);
+          setTimeout(() => setLoading(false), 1000);
+        })();
+      } else {
+        setTimeout(() => setLoading(false), 1000);
+      }
     }
   }, [visible]);
 
@@ -90,6 +99,16 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
               showsUserLocation={true}
             >
               <Marker coordinate={venueLocation} title="Kievits Kroon" />
+              {userLocation && (
+                <Marker
+                  coordinate={{
+                    latitude: userLocation.coords.latitude,
+                    longitude: userLocation.coords.longitude,
+                  }}
+                  title="You are here"
+                  pinColor="blue"
+                />
+              )}
             </MapView>
           ) : (
             <View style={styles.permissionDenied}>
