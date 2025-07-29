@@ -32,10 +32,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({name, onTabPress}) => {
         <Icon name="cloud" size={24} color={name===en.navigationOptions.mindful? "#8DD22A" : "#BDBDBD"} />
         <Text style={[ name===en.navigationOptions.mindful? styles.navLabelActive : styles.navLabel]}>{en.navigationOptions.mindful}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.navItem} onPress={() => handleTabPress('/(tabs)/profile')}>
-        <Icon name="person" size={24} color={name===en.navigationOptions.profile? "#8DD22A" : "#BDBDBD"} />
-        <Text style={[name===en.navigationOptions.profile? styles.navLabelActive : styles.navLabel]}>{en.navigationOptions.profile}</Text>
-      </TouchableOpacity>
     </View>
   );
 };
