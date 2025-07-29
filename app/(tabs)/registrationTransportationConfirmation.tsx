@@ -1,5 +1,6 @@
 import ErrorModal from '@/components/ErrorModal';
 import MapModal from '@/components/MapModal';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -12,6 +13,7 @@ import {
   View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 const nextScreen = () => {
   router.push('/home');
 }
@@ -43,9 +45,11 @@ export default function RegistrationTransportationConfirmation() {
           'Content-Type': 'application/json',
           //Authorization: ``
         },
-        body:JSON.stringify({
+        body: JSON.stringify({
           travel: selected,
           email: email,
+          arrivalTimeOffice: arrivalTimeOffice.toISOString(),
+          arrivalTimeVenue: arrivalTimeVenue.toISOString(),
         }),
       });
 
@@ -117,7 +121,7 @@ export default function RegistrationTransportationConfirmation() {
                   </TouchableOpacity>
                   {selected === option.value && option.value === 'office' && (
                     <View style={{ marginLeft: 36 }}>
-                      <Text style={styles.label}>Please could you give an estimate of your arrival time?</Text>
+                      <Text style={styles.label}>Please could you give an estimate of your arrival time at the office?</Text>
                       <DateTimePicker
                         testID="dateTimePicker"
                         value={arrivalTimeOffice}
@@ -134,7 +138,7 @@ export default function RegistrationTransportationConfirmation() {
                   )}
                   {selected === option.value && option.value === 'own' && (
                     <View style={{ marginLeft: 36 }}>
-                      <Text style={styles.label}>Please could you give an estimate of your arrival time?</Text>
+                      <Text style={styles.label}>Please could you give an estimate of your arrival time at the venue?</Text>
                       <DateTimePicker
                         testID="dateTimePicker"
                         value={arrivalTimeVenue}
