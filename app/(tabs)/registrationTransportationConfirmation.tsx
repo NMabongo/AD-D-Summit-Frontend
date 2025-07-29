@@ -26,7 +26,9 @@ export default function RegistrationTransportationConfirmation() {
   const [selected, setSelected] = useState('office');
   const [showMap, setShowMap] = useState(false);
   const { email } = useLocalSearchParams();
-  
+  const [arrivalTimeOffice, setArrivalTimeOffice] = useState(new Date());
+  const [arrivalTimeVenue, setArrivalTimeVenue] = useState(new Date());
+
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
@@ -101,17 +103,53 @@ export default function RegistrationTransportationConfirmation() {
             </View>
             <View style={{ marginBottom: 18 }}>
               {transportationOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={styles.radioRow}
-                  onPress={() => setSelected(option.value)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.radioOuter}>
-                    {selected === option.value && <View style={styles.radioInner} />}
-                  </View>
-                  <Text style={styles.radioLabel}>{option.label}</Text>
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity
+                    key={option.value}
+                    style={styles.radioRow}
+                    onPress={() => setSelected(option.value)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.radioOuter}>
+                      {selected === option.value && <View style={styles.radioInner} />}
+                    </View>
+                    <Text style={styles.radioLabel}>{option.label}</Text>
+                  </TouchableOpacity>
+                  {selected === option.value && option.value === 'office' && (
+                    <View style={{ marginLeft: 36 }}>
+                      <Text style={styles.label}>Please could you give an estimate of your arrival time?</Text>
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={arrivalTimeOffice}
+                        mode="time" // Set mode to 'time' for time selection
+                        is24Hour={true} // Optional: Set to true for 24-hour format
+                        display="default" // Optional: 'spinner' or 'clock' on Android
+                        onChange={(_, selectedDate) => {
+                          if (selectedDate) {
+                          setArrivalTimeOffice(selectedDate);
+                          }
+                        }}
+                      />
+                    </View>
+                  )}
+                  {selected === option.value && option.value === 'own' && (
+                    <View style={{ marginLeft: 36 }}>
+                      <Text style={styles.label}>Please could you give an estimate of your arrival time?</Text>
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={arrivalTimeVenue}
+                        mode="time" // Set mode to 'time' for time selection
+                        is24Hour={true} // Optional: Set to true for 24-hour format
+                        display="default" // Optional: 'spinner' or 'clock' on Android
+                        onChange={(_, selectedDate) => {
+                          if (selectedDate) {
+                          setArrivalTimeVenue(selectedDate);
+                          }
+                        }}
+                      />
+                    </View>
+                  )}
+                </View>
               ))}
             </View>
 
