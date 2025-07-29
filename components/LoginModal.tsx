@@ -61,7 +61,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, onClose, onRegister })
         await login(data.token); 
         clearData();
         onClose();
-        router.push('/(tabs)/registrationAttendanceConfirmation');
+        router.push('/(tabs)/home');
       } else {
         setErrorMessage(data.message || 'Login failed. Please try again.');
         setErrorVisible(true);

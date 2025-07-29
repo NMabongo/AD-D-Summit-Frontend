@@ -17,7 +17,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { failedRegistration, serverErrorMessage, serverErrorTitle } from './data_constants';
+import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from './data_constants';
+
 
 export default function RegistrationScreen() {
   const [firstName, setFirstName] = useState('');
@@ -66,7 +67,7 @@ export default function RegistrationScreen() {
   // This not used for V1
   const handleLogin = async () => {
     try {
-      const response = await fetch('', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,14 +147,17 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
-        router.push({
-          pathname: '/(tabs)/registrationAttendanceConfirmation',
-          params: { email: email }
-        });
+        handleLogin()
+        router.push('/(tabs)/registrationAttendanceConfirmation');
       } else {
-        console.error('Registration Failed;', {response})
-        setErrorModalTitle(failedRegistration);            
-        setErrorModalMessage(`Could not complete registration at this time. Please try again later.`);     
+        setErrorModalTitle(failedRegistration);
+        if (data.message === userExists) {
+          setErrorModalTitle(userExistsTitle);
+          setErrorModalMessage(`${userExists} ${tryDifferentEmail} or Login to your account.`);
+          setUserExistsError(true);
+        } else {
+          setErrorModalMessage(`${failedRegistration} ${data.message || 'Unknown error'}`);
+        }
         setErrorModalVisible(true);
       }
     } catch (error) {
@@ -318,13 +322,17 @@ const validateInput = async () => {
               <Text style={styles.buttonText}>Register Now</Text>
             </TouchableOpacity>
 
-            <Text style={styles.footerText}>
-          Having problems?{' '}
+           <Text style={styles.footerText}>
+              Having problems?{' '}
           <Text style={styles.contactText} onPress={() => {
             clearErrors();
             router.push('/(tabs)/contactUs')
           }}>
             Contact us
+          </Text>
+          {'  |  '}
+          <Text style={styles.contactText} onPress={() => setLoginModalVisible(true)}>
+            Login
           </Text>
         </Text>
         </View>
@@ -372,6 +380,7 @@ const validateInput = async () => {
           setErrorModalVisible(false);
           setUserExistsError(false);
         }}
+        userExists={userExistsError}
         onLoginPress={() => {
           setErrorModalVisible(false);
           setUserExistsError(false);
