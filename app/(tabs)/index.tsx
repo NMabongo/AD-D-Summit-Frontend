@@ -5,7 +5,7 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react
 
 
 
-    const profileBackground = require('@/assets/images/WelcomeBackground.jpg')
+    const profileBackground = require('@/assets/images/WelcomeBackground-2.png')
 
 export default function homeScreen(){
   return (
@@ -14,24 +14,25 @@ export default function homeScreen(){
         source={profileBackground}
         style={styles.background}
         resizeMode="cover"
-      />
-      <View style={
-        { flex: 1, justifyContent: 'center', alignItems: 'center' }
-      } >
-        <Text style={styles.title}>{en.africaConsulting}</Text>
-        <Text style={styles.subtitle}>{en.welcomePage.subtitle}</Text>
-        <View style={styles.card}>
-          <Text style={styles.builtBy}>{en.welcomePage.builtBy}</Text>
-          <Text style={styles.cardTitle}>{en.welcomePage.cardTitle}</Text>
-          <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitle}</Text>
-          <View style={styles.divider} />
-          <Text style={styles.hostedBy}>{en.welcomePage.hostedBy}</Text>
-          <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitlePractice}</Text>
+      >
+        <View style={
+          { flex: 1, justifyContent: 'center', alignItems: 'center' }
+        } >
+          <Text style={styles.title}>{en.africaConsulting}</Text>
+          <Text style={styles.subtitle}>{en.welcomePage.subtitle}</Text>
+          <View style={styles.card}>
+            <Text style={styles.builtBy}>{en.welcomePage.builtBy}</Text>
+            <Text style={styles.cardTitle}>{en.welcomePage.cardTitle}</Text>
+            <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitle}</Text>
+            <View style={styles.divider} />
+            <Text style={styles.hostedBy}>{en.welcomePage.hostedBy}</Text>
+            <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitlePractice}</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={ () => router.push('/registrationScreen')}>
+            <Text style={styles.buttonText}>{en.welcomePage.buttonText}</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button} onPress={ () => router.push('/registrationScreen')}>
-          <Text style={styles.buttonText}>{en.welcomePage.buttonText}</Text>
-        </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </View>
   );
 }
