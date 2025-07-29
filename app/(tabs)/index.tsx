@@ -1,15 +1,20 @@
-import WelcomePageBackground from '@/assets/images/svg/welcomePageBackground';
 import en from "@/assets/translations/en.json";
 import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
+
+    const profileBackground = require('@/assets/images/WelcomeBackground.jpg')
 
 export default function homeScreen(){
   return (
     <View style={styles.container}>
-      <WelcomePageBackground />
+      <ImageBackground
+        source={profileBackground}
+        style={styles.background}
+        resizeMode="cover"
+      />
       <View style={
         { flex: 1, justifyContent: 'center', alignItems: 'center' }
       } >
@@ -123,4 +128,9 @@ const styles = StyleSheet.create({
     left: '-10%',
     opacity: 0.5,
   },
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  }
 });
