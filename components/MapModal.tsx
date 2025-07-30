@@ -27,12 +27,12 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
   const [userLocation, setUserLocation] = useState<Location.LocationObject | null>(null);
   const [mapType, setMapType] = useState<'standard' | 'satellite'>('standard');
 
-  const venueLocation = {
-    latitude: -25.6582,
-    longitude: 28.2843,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  };
+const venueLocation = {
+  latitude: -25.658492948509352,
+  longitude: 28.32095859341859,
+  latitudeDelta: 0.01,
+  longitudeDelta: 0.01,
+};
 
   const toggleMapType = () => {
     setMapType(prev => (prev === 'standard' ? 'satellite' : 'standard'));
@@ -88,13 +88,13 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
 
           {Platform.OS === 'web' ? (
             <iframe
-              src="https://maps.google.com/maps?q=Kievits%20Kroon%20Gauteng&t=&z=13&ie=UTF8&iwloc=&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              onLoad={() => setLoading(false)}
+            src="https://maps.google.com/maps?q=-25.658492948509352,28.32095859341859&z=15&output=embed"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            onLoad={() => setLoading(false)}
             />
           ) : hasPermission ? (
             <>
