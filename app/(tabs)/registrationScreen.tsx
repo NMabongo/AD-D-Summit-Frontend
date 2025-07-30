@@ -148,7 +148,10 @@ const validateInput = async () => {
 
       if (response.ok) {
         handleLogin()
-        router.push('/(tabs)/registrationAttendanceConfirmation');
+        router.push({
+          pathname: '/(tabs)/registrationAttendanceConfirmation',
+          params: { email: email }
+        });
       } else {
         setErrorModalTitle(failedRegistration);
         if (data.message === userExists) {
