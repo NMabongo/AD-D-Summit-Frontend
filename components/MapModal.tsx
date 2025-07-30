@@ -25,12 +25,17 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(true);
   const [userLocation, setUserLocation] = useState<Location.LocationObject | null>(null);
+  const [mapType, setMapType] = useState<'standard' | 'satellite'>('standard');
 
   const venueLocation = {
     latitude: -25.6582,
     longitude: 28.2843,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
+  };
+
+  const toggleMapType = () => {
+    setMapType(prev => (prev === 'standard' ? 'satellite' : 'standard'));
   };
 
   useEffect(() => {
@@ -92,27 +97,37 @@ export default function MapModal({ visible, onClose }: MapModalProps) {
               onLoad={() => setLoading(false)}
             />
           ) : hasPermission ? (
+            <>
             <MapView
-              style={StyleSheet.absoluteFill}
-              region={venueLocation}
-              onMapReady={() => setLoading(false)}
-              showsUserLocation={true}
+                style={StyleSheet.absoluteFill}
+                region={venueLocation}
+                onMapReady={() => setLoading(false)}
+                showsUserLocation={true}
+                mapType={mapType}
             >
-              <Marker coordinate={venueLocation} title="Kievits Kroon" />
-              {userLocation && (
+                <Marker coordinate={venueLocation} title="Kievits Kroon" />
+                {userLocation && (
                 <Marker
-                  coordinate={{
+                    coordinate={{
                     latitude: userLocation.coords.latitude,
                     longitude: userLocation.coords.longitude,
-                  }}
-                  title="You are here"
-                  pinColor="blue"
+                    }}
+                    title="You are here"
+                    pinColor="blue"
                 />
-              )}
+                )}
             </MapView>
+            <TouchableOpacity onPress={toggleMapType} style={styles.toggleButton}>
+                <Text style={styles.toggleButtonText}>
+                {mapType === 'standard' ? 'Satellite View' : 'Standard View'}
+                </Text>
+            </TouchableOpacity>
+            </>
           ) : (
             <View style={styles.permissionDenied}>
-              <Text style={{ color: '#fff', fontSize: 16 }}>Location permission is required to show the map.</Text>
+            <Text style={{ color: '#fff', fontSize: 16 }}>
+                Location permission is required to show the map.
+            </Text>
             </View>
           )}
         </View>
@@ -167,5 +182,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#222',
     padding: 20,
+  },
+  toggleButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    zIndex: 1000,
+  },
+  toggleButtonText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
   },
 });
