@@ -7,8 +7,10 @@ import NavigationBar from '@/components/navigationBar';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
 import { Route, useFocusEffect, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { default as Icon, default as Ionicons } from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
@@ -190,10 +192,12 @@ const renderAgendaSection = () => {
   ));
 };
 
+  const insets = useSafeAreaInsets();
 
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <StatusBar style="light" translucent backgroundColor="transparent" />
       { loading ?   <FullScreenLoader/> : (
         <>
       <View style={styles.headerContainer}>
