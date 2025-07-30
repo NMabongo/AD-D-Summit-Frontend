@@ -2,9 +2,11 @@ import ErrorModal from '@/components/ErrorModal';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ContactUs: React.FC = () => {
+  const ContactUs: React.FC = () => {
+    const insets = useSafeAreaInsets();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -90,7 +92,7 @@ const ContactUs: React.FC = () => {
         resizeMode="cover"
       >
         <View style={styles.overlay} />
-        <View style={styles.topBar}>
+        <View style={[styles.topBar, { paddingTop: insets.top }]}>
           <TouchableOpacity
             onPress={() => router.back()}
             hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}

@@ -3,7 +3,7 @@ import HeaderWithMenu from '@/components/HeaderWithMenu';
 import NavigationBar from '@/components/navigationBar';
 import { Route, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const mindfulBanner = require('@/assets/images/yoga.jpg');
@@ -96,9 +96,7 @@ export default function Mindful() {
     
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      
-      {/* Header Section */}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>      
       <View style={styles.headerContainer}>
         <HeaderWithMenu resetSignal={menuResetKey}/>
       </View>
@@ -145,11 +143,10 @@ export default function Mindful() {
         })}
       </ScrollView>
 
-      {/* Footer Navigation Bar */}
       <NavigationBar name={en.navigationOptions.mindful} 
          onTabPress={handleNavigationAndReset} 
       />
-    </View>
+      </SafeAreaView>
   );
 }
 
@@ -157,6 +154,10 @@ const styles = StyleSheet.create({
   headerContainer:{
     zIndex: 1000,
     position: 'relative',
+  },
+    container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
   },
   header: {
     backgroundColor: '#fff',
