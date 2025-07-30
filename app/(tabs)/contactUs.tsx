@@ -4,26 +4,26 @@ import React, { useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 const ContactUs: React.FC = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const[errorVisible, setErrorVisible] = useState(false);
-    const[errorMessage, setErrorMessage] = useState('');
-    const[errorModalTitle, setErrorModalTitle] = useState(''); 
-    
+    const [submitting, setSubmitting] = useState(false);
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errorModalTitle, setErrorModalTitle] = useState('');
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const profileBackground = require('@/assets/images/ContactUs.jpg')
+    const profileBackground = require('@/assets/images/ContactUs.jpg');
 
     const clearData = () => {
       setFirstName('');
       setLastName('');
       setEmail('');
       setMessage('');
-    }
+    };
+
     const handleSubmit = async () => {
       const newErrors: { [key: string]: string } = {};
 
@@ -47,6 +47,8 @@ const ContactUs: React.FC = () => {
       }
 
       try {
+        setSubmitting(true);
+
         const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/contactUs', {
           method: 'POST',
           headers: {
@@ -75,12 +77,13 @@ const ContactUs: React.FC = () => {
         setErrorModalTitle('Internal Error');
         setErrorMessage('Message cannot be sent at this time, try again later.');
         setErrorVisible(true);
+      } finally {
+        setSubmitting(false);
       }
     };
 
   return (
     <View style={{ flex: 1 }}>
-
       <ImageBackground
         source={profileBackground}
         style={styles.background}
@@ -116,7 +119,7 @@ const ContactUs: React.FC = () => {
                     placeholderTextColor="#ccc"
                     value={firstName}
                     onChangeText={setFirstName}
-                  />       
+                  />
                   {errors.firstName && <Text style={{ color: 'red', marginTop: 4 }}>{errors.firstName}</Text>}
                 </View>
                 <View style={styles.inputGroup}>
@@ -152,21 +155,29 @@ const ContactUs: React.FC = () => {
                   multiline
                   value={message}
                   onChangeText={setMessage}
-                />           
+                />
                 {errors.message && <Text style={{ color: 'red', marginTop: 4 }}>{errors.message}</Text>}
               </View>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
+
+              <TouchableOpacity
+                style={[styles.button, submitting && { opacity: 0.6 }]}
+                onPress={handleSubmit}
+                disabled={submitting}
+              >
+                <Text style={styles.buttonText}>
+                  {submitting ? 'Sending...' : 'Submit'}
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
       </ImageBackground>
+
       <ErrorModal
         visible={errorVisible}
         title={errorModalTitle}
         message={errorMessage}
-        onClose={() => {setErrorVisible(false)}}
+        onClose={() => setErrorVisible(false)}
       />
     </View>
   );
