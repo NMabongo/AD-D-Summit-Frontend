@@ -54,9 +54,11 @@ useFocusEffect(
       }
     };
 
+    /*
     if (isAuthenticated) {
       fetchAvatar();
     }
+      */
   }, [isAuthenticated])
 );
 
@@ -116,10 +118,6 @@ useFocusEffect(
           )}
         </View>
       )}
-      {/** 
-       *  This will not be used for the current version hence it being hidden
-       * 
-      */}
       <LogoutConfirmModal
         visible={logoutModalVisible}
         onCancel={() => setLogoutModalVisible(false)}
