@@ -1,7 +1,9 @@
 import en from '@/assets/translations/en.json';
+import DeleteAccountModal from '@/components/DeleteAccountModal';
 import ErrorModal from '@/components/ErrorModal';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import LoginModal from '@/components/LoginModal';
+import { useAuth } from '@/context/AuthContext';
 import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -47,6 +49,8 @@ export default function Profile() {
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const { isAuthenticated, logout } = useAuth();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const regions = [
     'North America',
@@ -249,9 +253,41 @@ export default function Profile() {
     }
   };
 
-  const handleDeleteProfile = async () => {
-
-  }
+  const handleDeleteProfile = async() => {
+    try {
+      const token = await getToken();
+      const response = await fetch(
+        `https://deloittesummitbe.azurewebsites.net/api/User/deleteaccount?email=${encodeURIComponent(email)}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        /**
+         * Delete account, showtickmark, logout then reroute 
+         */
+        showAnimatedCheckmark();
+        await logout();
+        router.push('/(tabs)/home');    
+      } else {
+        console.error('Error', data.message || 'Failed to delete account.');
+        setErrorModalTitle('Profile Error');
+        setErrorMessage('User profile cannot be deleted at this time. Please try again');
+        setErrorVisible(true);
+      }
+    } catch (error) {
+        console.error('Error',error);
+        setErrorModalTitle('Server Error');
+        setErrorMessage('An unexpected error occurred.');
+        setErrorVisible(true);
+    }
+    setShowDeleteModal(false);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -314,11 +350,13 @@ export default function Profile() {
                   source={selectedImage ? { uri: selectedImage } : profileAvatar}
                   style={styles.avatarImg}
                 />
+                {/* 
+                Functionality for uploading a profile picture
                 <TouchableOpacity style={styles.avatarOverlay} onPress={pickImage}>
                   <View style={styles.avatarCheck}>
                     <Icon name="camera-outline" size={26} color="#fff" />
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <Text style={styles.profileName}>{`${firstName} ${lastName}`}</Text>
               <Text style={styles.profileSubtitle}>Update and save your profile</Text>
@@ -375,7 +413,7 @@ export default function Profile() {
                 <Text style={region ? styles.dropdownText : styles.dropdownPlaceholder}>
                   {region || 'Select your region'}
                 </Text>
-                <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: 10 }} />
+                <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: -5 }} />
               </TouchableOpacity>
             </View>
 
@@ -411,7 +449,7 @@ export default function Profile() {
             </View>
             <TouchableOpacity
               style={styles.buttonDelete}
-              onPress={handleDeleteProfile}
+                onPress={() => setShowDeleteModal(true)}
               disabled={loading}
             >
               <Text style={styles.buttonText}>
@@ -513,6 +551,13 @@ export default function Profile() {
             // eslint-disable-next-line no-unused-expressions
             onClose={() => {setErrorVisible(false), router.push('/(tabs)/home')}}
           />
+          <DeleteAccountModal
+              visible={showDeleteModal}
+              onConfirm={() => {
+                handleDeleteProfile();
+              }}
+              onCancel={() => setShowDeleteModal(false)}
+            />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
