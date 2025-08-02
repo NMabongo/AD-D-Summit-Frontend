@@ -25,7 +25,7 @@ export default function Home() {
     if (agendaData.length === 0) return null;
     return Math.min(...agendaData.map(event => new Date(event.startTime).getTime()));
   }, [agendaData]);
-  const timer = nextTime !== null ? useTimer(nextTime) : null;
+  const timer = nextTime !== null ? useTimer(nextTime) : useTimer(new Date ('2025-09-08T00:00:00Z').getTime());
 
   const handleNavigationAndReset = (route: string) => {
     setMenuResetKey((prev) => prev + 1);
@@ -114,6 +114,15 @@ const renderAgendaSection = () => {
   if (days.length === 0) {
     return (
       <View>
+        <View style={[styles.agendaCard, { backgroundColor: '#E6F5D6', }]}>
+          <View style={[styles.iconBox, { backgroundColor: 'green' }]}>
+            <Icon name="timer-outline" size={18} color="#fff" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.agendaSessionTitle}>Watch the space!</Text>
+          </View>
+        </View>
+
         <View style={styles.agendaHeaderRow}>
           <Text style={styles.agendaTitle}>Agenda</Text>
           <TouchableOpacity
@@ -212,7 +221,7 @@ const renderAgendaSection = () => {
           <View style={styles.heroOverlay}>
             <Text style={styles.heroOrg}>Africa Consulting Services</Text>
             <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
-            <Text style={styles.heroTagline}>Energy • Synergy • Thrive</Text>
+            <Text style={styles.heroTagline}>Aspire • Energy • Synergise</Text>
             <View style={styles.heroInfoRow}>
               <Icon name="calendar-outline" size={18} color="#fff" />
               <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
