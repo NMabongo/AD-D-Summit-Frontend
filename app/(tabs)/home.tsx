@@ -213,7 +213,6 @@ const renderAgendaSection = () => {
         <HeaderWithMenu resetSignal={menuResetKey} />
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: 80, zIndex: 100 }}>
-        {/* Hero */}
         <View style={styles.heroContainer}>
           <View style={styles.heroBg}>
             <SummitBg width="100%" height="100%" />
@@ -301,7 +300,6 @@ const renderAgendaSection = () => {
           </View>
       )}
 
-          {/* Agenda Section */}
           {renderAgendaSection()}
 
         <View>
