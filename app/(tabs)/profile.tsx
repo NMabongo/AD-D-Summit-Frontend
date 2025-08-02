@@ -418,15 +418,6 @@ export default function Profile() {
                 {loading ? 'Deleting...' : 'Delete Account'}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleUpdateProfile}
-              disabled={loading}
-            >
-              <Text style={styles.buttonText}>
-                {loading ? 'Saving...' : 'Save Changes'}
-              </Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
 
