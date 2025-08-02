@@ -6,9 +6,6 @@ import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
-
-import Toast from 'react-native-toast-message';
-
 import React, { useCallback, useRef, useState } from 'react';
 import {
   Animated,
@@ -44,8 +41,6 @@ export default function Profile() {
 
   const [lastNameError, setLastNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
-  const [showRedirectModal, setShowRedirectModal] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [showCheckmark, setShowCheckmark] = useState(false);
@@ -254,22 +249,17 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteProfile = async () => {
+
+  }
 
   useFocusEffect(
     useCallback(() => {
       const verifyAuthAndLoad = async () => {
         const token = await getToken();
         if (!token) {
-          Toast.show({
-            type: 'info',
-            text1: 'Feature not available... Redirecting',
-            position: 'bottom',
-            visibilityTime: 1500,
-          });
-
-          setTimeout(() => {
-            router.push('/(tabs)/home');
-          }, 1500);
+          router.push('/(tabs)/home')
+          setLoginModalVisible(true);
         } else {
           handleLoadProfile(token);
         }
@@ -419,7 +409,15 @@ export default function Profile() {
                 <Text style={styles.warningText}>⚠️ Do not use your Deloitte password</Text>
               )}
             </View>
-
+            <TouchableOpacity
+              style={styles.buttonDelete}
+              onPress={handleDeleteProfile}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? 'Deleting...' : 'Delete Account'}
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={handleUpdateProfile}
@@ -524,17 +522,6 @@ export default function Profile() {
             // eslint-disable-next-line no-unused-expressions
             onClose={() => {setErrorVisible(false), router.push('/(tabs)/home')}}
           />
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          zIndex: 999,
-        }}
-      />
       </KeyboardAvoidingView>
     </ImageBackground>
   );
@@ -682,6 +669,15 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#8DD22A',
+    borderRadius: 30,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 10,
+    width: '100%',
+  },
+    buttonDelete: {
+    backgroundColor: 'red',
     borderRadius: 30,
     paddingVertical: 16,
     alignItems: 'center',
