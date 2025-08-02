@@ -277,7 +277,6 @@ const maskedPassword = password.split('').map(() => '*').join('');
     });
   };
 
-  const profileAvatar = require('@/assets/images/icon.png');
   const profileBackground = require('@/assets/images/profilebackground.png')
 
   return (
@@ -296,7 +295,7 @@ const maskedPassword = password.split('').map(() => '*').join('');
             <View style={styles.profileHeader}>
               <View style={styles.avatarContainer}>
                 <Image
-                  source={selectedImage ? { uri: selectedImage } : profileAvatar}
+                  source={ profileBackground}
                   style={styles.avatarImg}
                 />
                 {/* 
