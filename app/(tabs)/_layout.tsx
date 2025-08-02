@@ -36,7 +36,6 @@ export default function TabLayout() {
       <Tabs.Screen name="featuredSpeakers" options={{ title: 'Speakers', tabBarStyle: { display: 'none' }, }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarStyle: { display: 'none' }, }} />
       <Tabs.Screen name="speaker-bio"options={{ title: 'Speaker Bio', tabBarStyle: { display: 'none' },}} />
-      <Tabs.Screen name="mindfulnessActivity" options={{ title: 'Mindfulness Activity', tabBarStyle: { display: 'none' },}} />
       <Tabs.Screen name="breakoutRoom" options={{ title: 'breakoutRoom', tabBarStyle: { display: 'none' }, }} />
     </Tabs>
   );

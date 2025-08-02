@@ -1,5 +1,6 @@
 import ErrorModal from '@/components/ErrorModal';
 import LoginModal from '@/components/LoginModal';
+import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from '@/constants/data_constants';
 import { saveToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -18,7 +19,6 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from './data_constants';
 
 
 export default function RegistrationScreen() {
@@ -65,8 +65,7 @@ export default function RegistrationScreen() {
     return isValid;
   };
 
-  // This not used for V1
-  const handleLogin = async () => {
+const handleLogin = async () => {
     try {
       const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/login', {
         method: 'POST',
@@ -91,6 +90,14 @@ export default function RegistrationScreen() {
         setErrorModalVisible(true);
     } 
   };
+
+const clearData = async () => {
+  setFirstName('');
+  setLastName('');
+  setEmail('');
+  setRegion('');
+  setPassword('');
+}
 
 const validateInput = async () => { 
   let isValid = true;
@@ -148,6 +155,7 @@ const validateInput = async () => {
       const data = await response.json();
 
       if (response.ok) {
+        clearData();
         handleLogin()
         router.push({
           pathname: '/(tabs)/registrationAttendanceConfirmation',
