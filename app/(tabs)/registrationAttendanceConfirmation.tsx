@@ -9,9 +9,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 
@@ -35,30 +34,45 @@ export default function RegistrationAttendanceConfirmation() {
   const [funFact, setFunFact] = useState('');
   const { email } = useLocalSearchParams();
 
-  const [errorModalVisible, setErrorModalVisible] = useState(false);
-  const [errorModalTitle, setErrorModalTitle] = useState('');
-  const [errorModalMessage, setErrorModalMessage] = useState('');
-  const [dietarySelected, setDietarySelected] = useState('None');
-  const [otherDietary, setOtherDietary] = useState('');
-  const [roommate, setRoommate] = useState('');
-  const [requireAccommodation, setRequireAccommodation] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorModalTitle, setErrorModalTitle] = useState('');
+    const [errorModalMessage, setErrorModalMessage] = useState('');
+    const [dietarySelected, setDietarySelected] = useState('None');
+    const [otherDietary, setOtherDietary] = useState('');
+    const [roommate, setRoommate] = useState('');
+    const [requireAccommodation, setRequireAccommodation] = useState(false);
 
   const nextScreen = () => {
-  router.push({
-    pathname: '/registrationTransportationConfirmation', 
-    params: { 
-      email: email,
-    }} );
+    if (selected === 'yes') {
+      router.push({
+        pathname: '/registrationTransportationConfirmation',
+        params: {
+          email: email,
+        }
+      });
+    } else {
+      router.push({
+        pathname: '/home',
+        params: {
+          email: email,
+        }
+      });
+    }
 }
 
 const handleUpdateAttendance = async () => {
+  if (!selected) {
+    setErrorModalTitle('Error');
+    setErrorModalMessage('Please select an attendance option.');
+    setErrorModalVisible(true);
+    return;
+  }
 
-    try {
-    
-      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/ConfirmAttendance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+  try {
+    const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/ConfirmAttendance', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
          // Authorization: ``
         },
         body:JSON.stringify({
@@ -70,7 +84,6 @@ const handleUpdateAttendance = async () => {
           requireAccommodation: requireAccommodation
         }),
 
-        
       });
 
       let data;
@@ -121,7 +134,7 @@ const handleUpdateAttendance = async () => {
         >
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm your attendance</Text>
-            <Text style={styles.subtitle}>Summit dates:  8 - 9 Sep '25</Text>
+            <Text style={styles.subtitle}>Summit dates:  8 - 10 Sep '25</Text>
 
             <View style={{ marginTop: 16, marginBottom: 18 }}>
               {attendanceOptions.map(option => (
@@ -130,10 +143,6 @@ const handleUpdateAttendance = async () => {
                     key={option.value}
                     style={styles.radioRow}
                     onPress={() => (
-                      option.value !== 'yes' ? 
-                        (setDietarySelected('None'), setOtherDietary(''), setRequireAccommodation(false)
-                        , setRoommate('')) :
-                         null,
                       setSelected(option.value))}
                     activeOpacity={0.7}
                   >
@@ -142,82 +151,10 @@ const handleUpdateAttendance = async () => {
                     </View>
                     <Text style={styles.radioLabel}>{option.label}</Text>
                   </TouchableOpacity>
-                  {selected === 'yes' && option.value === 'yes' && (
-                    <View style={{ marginLeft: 36 }}>
-                      <Text style={[styles.radioLabel, {marginBottom: 8}]}>Dietary Preference</Text>
-                      {dietaryOptions.map(dietaryOption => (
-                        <View style={{ marginLeft: 36 }} key={dietaryOption.value}>
-                          <TouchableOpacity
-                            key={dietaryOption.value}
-                            style={[styles.radioRow, ]}
-                          onPress={() => setDietarySelected(dietaryOption.value)}
-                          activeOpacity={0.7}
-                        >
-                          <View style={styles.radioOuter}>
-                            {dietarySelected === dietaryOption.value && <View style={styles.radioInner} />}
-                          </View>
-                          <Text style={styles.radioLabel}>{dietaryOption.label}</Text>
-                        </TouchableOpacity>
-                        {dietarySelected === 'Other' && dietaryOption.value === 'Other' && (
-                          <TextInput
-                            style={[styles.inputRoomShare, { width: '100%'}]}
-                            placeholder="Dietary preference"
-                            placeholderTextColor="#bdbdbd"
-                            value={otherDietary}
-                            onChangeText={setOtherDietary}
-                            textAlignVertical="top"
-                          />
-                        )}
-                      </View>
-                    ))}
-                    </View>
-                  )}
-                  {selected === 'yes' && option.value === 'yes' && (
-                    <View style={{ marginLeft: 36 }}>
-                      <TouchableOpacity
-                            style={[styles.radioRow, ]}
-                          onPress={() => setRequireAccommodation(!requireAccommodation)}
-                          activeOpacity={0.7}
-                        >
-                          <View style={styles.radioOuter}>
-                            {requireAccommodation && <View style={styles.radioInner} />}
-                          </View>
-                          <Text style={styles.radioLabel}>Do you require accommodation?</Text>
-                        </TouchableOpacity>
-                      {requireAccommodation && (
-                        <View> 
-                          <Text style={styles.label}>Please provide the name of a colleague you wish to share a room with. Leave blank if you don't have anyone in mind.</Text>
-                          <TextInput
-                            style={styles.inputRoomShare}
-                            placeholder="Room share colleague's name"
-                            placeholderTextColor="#bdbdbd"
-                            value={roommate}
-                            onChangeText={setRoommate}
-                            textAlignVertical="top"
-                          />
-                        </View>
-                      )}
-                    </View>
-                  )}
+                  
                 </View>
               ))}
             </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 18 }}>
-              <Text style={[styles.label, { marginRight: 12, marginBottom: 0 }]}>Tell us about you</Text>
-            </View>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Fun Fact, hidden talent, or anything else you'd like us to know"
-              placeholderTextColor="#bdbdbd"
-              value={funFact}
-              onChangeText={setFunFact}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-
             <TouchableOpacity style={styles.button} onPress={handleUpdateAttendance}>
               <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
