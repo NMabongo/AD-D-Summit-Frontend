@@ -1,6 +1,5 @@
 import ErrorModal from '@/components/ErrorModal';
 import MapModal from '@/components/MapModal';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -19,7 +18,6 @@ const nextScreen = () => {
 }
 const transportationOptions = [
   { label: 'Hook me up with a lift from the Waterfall', value: 'office' },
-  { label: 'Hook me up with a lift from the airport', value: 'pickup' },
   { label: "I'l be driving there", value: 'own' },
 ];
   const profileBackground = require('@/assets/images/confirmTransportation.jpg')
@@ -119,40 +117,6 @@ export default function RegistrationTransportationConfirmation() {
                     </View>
                     <Text style={styles.radioLabel}>{option.label}</Text>
                   </TouchableOpacity>
-                  {selected === option.value && option.value === 'office' && (
-                    <View style={{ marginLeft: 36 }}>
-                      <Text style={styles.label}>Please could you give an estimate of your arrival time at the office?</Text>
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={arrivalTimeOffice}
-                        mode="time" // Set mode to 'time' for time selection
-                        is24Hour={true} // Optional: Set to true for 24-hour format
-                        display="default" // Optional: 'spinner' or 'clock' on Android
-                        onChange={(_, selectedDate) => {
-                          if (selectedDate) {
-                          setArrivalTimeOffice(selectedDate);
-                          }
-                        }}
-                      />
-                    </View>
-                  )}
-                  {selected === option.value && option.value === 'own' && (
-                    <View style={{ marginLeft: 36 }}>
-                      <Text style={styles.label}>Please could you give an estimate of your arrival time at the venue?</Text>
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={arrivalTimeVenue}
-                        mode="time" // Set mode to 'time' for time selection
-                        is24Hour={true} // Optional: Set to true for 24-hour format
-                        display="default" // Optional: 'spinner' or 'clock' on Android
-                        onChange={(_, selectedDate) => {
-                          if (selectedDate) {
-                          setArrivalTimeVenue(selectedDate);
-                          }
-                        }}
-                      />
-                    </View>
-                  )}
                 </View>
               ))}
             </View>
