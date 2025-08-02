@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   ImageBackground,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -13,9 +14,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const nextScreen = () => {
-  router.push('/home');
-}
+
 const transportationOptions = [
   { label: 'Hook me up with a lift from the Waterfall', value: 'office' },
   { label: "I'l be driving there", value: 'own' },
@@ -33,6 +32,12 @@ export default function RegistrationTransportationConfirmation() {
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
 
+  const nextScreen = () => {
+    router.push({
+        pathname: '/(tabs)/registrationDietTellUsAboutYou',
+        params: { email: email }
+      });
+  };
   const handleUpdateTravel = async () => {
 
     try {
@@ -126,8 +131,21 @@ export default function RegistrationTransportationConfirmation() {
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
 
-            <Text style={styles.footerText}>
-              Having problems? <Text style={styles.contactText} onPress={() => {router.push('/(tabs)/contactUs')}}>Contact us</Text>
+            <Text style={[styles.footerText, { marginTop: 20 }]}>
+                Having problems?{' '}
+              </Text>
+              <Text style={styles.footerText} >
+                {'  Email:  '} 
+                <Text style={styles.contactText} onPress={() =>
+                    Linking.openURL('mailto:nhngcobo@deloitte.co.za?subject=AD-D-Summit Registration Issue')}>
+                  nhngcobo@deloitte.co.za
+                </Text>
+              </Text>
+              <Text style={styles.footerText}>{'  OR:  '}</Text>
+              <Text style={styles.contactText} onPress={() => {
+                router.push('/(tabs)/contactUs')
+              }}>
+                Contact us
             </Text>
           </View>
 

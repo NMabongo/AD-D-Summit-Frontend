@@ -221,10 +221,10 @@ const renderAgendaSection = () => {
           <View style={styles.heroOverlay}>
             <Text style={styles.heroOrg}>Africa Consulting Services</Text>
             <Text style={styles.heroTitle}>Leadership Summit 2025</Text>
-            <Text style={styles.heroTagline}>Aspire • Energy • Synergise</Text>
+            <Text style={styles.heroTagline}>Aspire • Energise • Synergise</Text>
             <View style={styles.heroInfoRow}>
               <Icon name="calendar-outline" size={18} color="#fff" />
-              <Text style={styles.heroInfoText}> Sep 08 · 09 </Text>
+              <Text style={styles.heroInfoText}> Sep 08 · 10 </Text>
               <TouchableOpacity onPress={() => setShowMap(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon name="location-outline" size={18} color="#fff" />
                 <Text style={styles.heroInfoText}>Kievits Kroon Gauteng</Text>

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import {
   ImageBackground,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -160,14 +161,21 @@ const handleUpdateAttendance = async () => {
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
 
-            <Text style={styles.footerText}>
-              Having problems?{' '}
-              <Text
-                style={styles.contactText}
-                onPress={() => router.push('/(tabs)/contactUs')}
-              >
-                Contact us
+            <Text style={[styles.footerText, { marginTop: 20 }]}>
+                Having problems?{' '}
               </Text>
+              <Text style={styles.footerText} >
+                {'  Email:  '} 
+                <Text style={styles.contactText} onPress={() =>
+                    Linking.openURL('mailto:nhngcobo@deloitte.co.za?subject=AD-D-Summit Registration Issue')}>
+                  nhngcobo@deloitte.co.za
+                </Text>
+              </Text>
+              <Text style={styles.footerText}>{'  OR:  '}</Text>
+              <Text style={styles.contactText} onPress={() => {
+                router.push('/(tabs)/contactUs')
+              }}>
+                Contact us
             </Text>
           </View>
         </ScrollView>
