@@ -54,6 +54,7 @@ export default function Profile() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [menuResetKey, setMenuResetKey] = useState(0);
   
+const maskedPassword = password.split('').map(() => '*').join('');
 
   const regions = [
     'North America',
@@ -372,8 +373,8 @@ export default function Profile() {
                   style={[styles.input, { flex: 1 }]}
                   placeholder="Password"
                   placeholderTextColor="#bdbdbd"
-                  value={password}
-                  secureTextEntry={!showPassword}
+                  value={showPassword ? password : maskedPassword}
+                  secureTextEntry={false}
                   autoCapitalize="none"
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
