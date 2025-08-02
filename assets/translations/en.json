@@ -4,12 +4,12 @@
   "appDescription": "A platform for the Africa Consulting Services Leadership Summit",
     "welcomePage": {
         "title": "Welcome to the AD-D Summit",
-        "subtitle": "D/AD Leadership Summit 2025",
+        "subtitle": "Leadership Summit 2025",
         "builtBy": "BUILT BY",
-        "cardTitle": "Deloitte Africa",
-        "cardSubtitle": "Product & Platform Engineering",
+        "cardTitle": "Product & Platform Engineering",
+        "cardSubtitle": "Deloitte Africa",
         "hostedBy": "HOSTED BY",
-        "cardSubtitlePractice": "Microsoft Practice",
+        "cardSubtitlePractice": "Deloitte Africa Microsoft Practice",
         "buttonText": "Get Started"
     },
     "registrationScreen": {
