@@ -7,6 +7,7 @@ import {
   FlatList,
   ImageBackground,
   KeyboardAvoidingView,
+  Linking,
   Modal,
   Platform,
   ScrollView,
@@ -46,7 +47,7 @@ export default function RegistrationScreen() {
     'Southern Africa',
     'East Africa',
     'West Africa',
-    'North Africa',
+    'Global',
   ];
 
   const validateEmail = (text: string) => {
@@ -266,7 +267,6 @@ const validateInput = async () => {
                 <Text style={styles.warningText}>⚠️ {emailError}</Text>
               ) : null}
             </View>
-
             <View style={[styles.inputContainer, styles.textInputLong]}>
               <Text style={styles.label}>Region</Text>
               <TouchableOpacity
@@ -282,7 +282,6 @@ const validateInput = async () => {
                 <Text style={styles.warningText}>⚠️ {regionError}</Text>
               ) : null}
             </View>
-
             <View style={[styles.inputContainer, styles.textInputLong]}>
               <Text style={styles.label}>Create Password</Text>
               <View style={styles.inputIconRow}>
@@ -324,20 +323,29 @@ const validateInput = async () => {
             >
               <Text style={styles.buttonText}>Register Now</Text>
             </TouchableOpacity>
-
-           <Text style={styles.footerText}>
+            <Text style={styles.footerLoginText}>
+              Already registered?{' '}
+              <Text style={styles.contactLoginText} onPress={() => setLoginModalVisible(true)}>
+                Login
+              </Text>
+          </Text>
+           <Text style={[styles.footerText, { marginTop: 20 }]}>
               Having problems?{' '}
-          <Text style={styles.contactText} onPress={() => {
-            clearErrors();
-            router.push('/(tabs)/contactUs')
-          }}>
-            Contact us
+            </Text>
+            <Text style={styles.footerText} >
+              {'  Email:  '} 
+              <Text style={styles.contactText} onPress={() =>
+                  Linking.openURL('mailto:nhngcobo@deloitte.co.za?subject=AD-D-Summit Registration Issue')}>
+                nhngcobo@deloitte.co.za
+              </Text>
+            </Text>
+            <Text style={styles.footerText}>{'  OR:  '}</Text>
+            <Text style={styles.contactText} onPress={() => {
+              clearErrors();
+              router.push('/(tabs)/contactUs')
+            }}>
+              Contact us
           </Text>
-          {'  |  '}
-          <Text style={styles.contactText} onPress={() => setLoginModalVisible(true)}>
-            Login
-          </Text>
-        </Text>
         </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -490,6 +498,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  footerLoginText: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 8,
+  },
   footerText: {
     color: '#fff',
     fontSize: 14,
@@ -499,6 +513,11 @@ const styles = StyleSheet.create({
   contactText: {
     color: '#8DD22A',
     fontWeight: 'bold',
+  },
+  contactLoginText: {
+    color: '#8DD22A',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   bottomButtonsContainer: {
     flexDirection: 'row',
