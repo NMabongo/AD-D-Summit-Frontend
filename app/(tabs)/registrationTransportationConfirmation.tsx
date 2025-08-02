@@ -105,9 +105,8 @@ export default function RegistrationTransportationConfirmation() {
             </View>
             <View style={{ marginBottom: 18 }}>
               {transportationOptions.map((option) => (
-                <View>
+                <View key={option.value}>
                   <TouchableOpacity
-                    key={option.value}
                     style={styles.radioRow}
                     onPress={() => setSelected(option.value)}
                     activeOpacity={0.7}
