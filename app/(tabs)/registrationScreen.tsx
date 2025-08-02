@@ -1,5 +1,6 @@
 import ErrorModal from '@/components/ErrorModal';
 import LoginModal from '@/components/LoginModal';
+import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from '@/constants/data_constants';
 import { saveToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -18,7 +19,6 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from './data_constants';
 
 
 export default function RegistrationScreen() {
