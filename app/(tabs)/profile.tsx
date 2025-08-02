@@ -3,20 +3,21 @@ import DeleteAccountModal from '@/components/DeleteAccountModal';
 import ErrorModal from '@/components/ErrorModal';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import LoginModal from '@/components/LoginModal';
+import NavigationBar from '@/components/navigationBar';
 import { useAuth } from '@/context/AuthContext';
 import { getToken } from '@/utils/authToken';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { Route, router, useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import {
   Animated,
   FlatList,
   Image,
   ImageBackground,
-  KeyboardAvoidingView,
   Modal,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -51,6 +52,8 @@ export default function Profile() {
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const { isAuthenticated, logout } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [menuResetKey, setMenuResetKey] = useState(0);
+  
 
   const regions = [
     'North America',
@@ -94,63 +97,10 @@ export default function Profile() {
     }
   };
 
-  const validatePassword = (text: string) => {
-    const isValid = text.length >= 8 && /[A-Z]/.test(text) && /[0-9]/.test(text);
-    if (!isValid) {
-      setPasswordError(
-        'Password must be at least 8 characters long, contain an uppercase letter, and a number'
-      );
-    } else {
-      setPasswordError('');
-    }
-    return isValid;
-  };
-
-  const validateInput = () => {
-    let isValid = true;
-
-    if (!lastName.trim()) {
-      setLastNameError('Last name is required');
-      isValid = false;
-    } else {
-      setLastNameError('');
-    }
-
-    if (!validatePassword(password)) {
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  const clearData = () => {
-    setFirstName('');
-    setLastName('');
-    setEmail('mail@gmail.com');
-    setRegion('');
-    setPassword('');
-  };
-
-  const handleHomePress = () => {
-    clearData();
-    router.push('/(tabs)/home');
-  };
-  const handleAgendaPress = () => {
-    clearData();
-    router.push('/(tabs)/agenda');
-  };
-  const handleFeaturedSpeakersPress = () => {
-    clearData();
-    router.push('/(tabs)/featuredSpeakers');
-  };
-  const handleMindfulPress = () => {
-    clearData();
-    router.push('/(tabs)/mindful');
-  };
-  const handleProfilePress = () => {
-    clearData();
-    router.push('/(tabs)/profile');
-  };
+      const handleNavigationAndReset = (route: string) => {
+        setMenuResetKey((prev) => prev + 1); 
+        useRouter().push(route as Route); 
+      };
 
 
   const handleLoadProfile = async (authToken: string) => {
@@ -192,7 +142,7 @@ export default function Profile() {
   };
 
   const handleUpdateProfile = async () => {
-    const isValid = validateInput();
+    const isValid = true;
     if (!isValid) return;
 
     try {
@@ -330,15 +280,13 @@ export default function Profile() {
   const profileBackground = require('@/assets/images/profilebackground.png')
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
     <ImageBackground
       source={profileBackground}
       style={styles.background}
       resizeMode="cover"
     >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+
         <View style={styles.headerContainer}>
           <HeaderWithMenu hideProfileIcon={true} />
         </View>
@@ -418,17 +366,13 @@ export default function Profile() {
             </View>
 
             <View style={[styles.inputContainer, styles.textInputLong]}>
-              <Text style={styles.label}>Create Password</Text>
+              <Text style={styles.label}>Password</Text>
               <View style={styles.inputIconRow}>
                 <TextInput
                   style={[styles.input, { flex: 1 }]}
-                  placeholder="Enter new password"
+                  placeholder="Password"
                   placeholderTextColor="#bdbdbd"
                   value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    validatePassword(text);
-                  }}
                   secureTextEntry={!showPassword}
                   autoCapitalize="none"
                 />
@@ -459,28 +403,6 @@ export default function Profile() {
           </View>
         </ScrollView>
 
-        <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem} onPress={handleHomePress}>
-            <Icon name="home" size={24} color="#BDBDBD" />
-            <Text style={styles.navLabel}>{en.navigationOptions.home}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleAgendaPress}>
-            <Icon name="calendar" size={24} color="#BDBDBD" />
-            <Text style={styles.navLabel}>{en.navigationOptions.agenda}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleFeaturedSpeakersPress}>
-            <Icon name="people" size={24} color="#BDBDBD" />
-            <Text style={styles.navLabel}>{en.navigationOptions.featuredSpeakers}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleMindfulPress}>
-            <Icon name="cloud" size={24} color="#BDBDBD" />
-            <Text style={styles.navLabel}>{en.navigationOptions.mindful}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={handleProfilePress}>
-            <Icon name="person" size={24} color="#8DD22A" />
-            <Text style={styles.navLabelActive}>{en.navigationOptions.profile}</Text>
-          </TouchableOpacity>
-        </View>
 
         <Modal
           animationType="fade"
@@ -558,8 +480,11 @@ export default function Profile() {
               }}
               onCancel={() => setShowDeleteModal(false)}
             />
-      </KeyboardAvoidingView>
-    </ImageBackground>
+        </ImageBackground>
+              <NavigationBar name={en.navigationOptions.profile} 
+            onTabPress={handleNavigationAndReset} 
+          />
+    </SafeAreaView>
   );
 }
 
