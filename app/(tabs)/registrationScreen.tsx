@@ -276,7 +276,7 @@ const validateInput = async () => {
                 <Text style={region ? styles.dropdownText : styles.dropdownPlaceholder}>
                   {region || 'Select your region'}
                 </Text>
-                <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: 10 }} />
+                <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: -5 }} />
               </TouchableOpacity>
               {regionError ? (
                 <Text style={styles.warningText}>⚠️ {regionError}</Text>
