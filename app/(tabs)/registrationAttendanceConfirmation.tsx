@@ -1,3 +1,4 @@
+import ContactSupport from '@/components/contactSupport';
 import ErrorModal from '@/components/ErrorModal';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -5,7 +6,6 @@ import React, { useState } from 'react';
 import {
   ImageBackground,
   KeyboardAvoidingView,
-  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -160,22 +160,7 @@ const handleUpdateAttendance = async () => {
               <Ionicons name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-
-            <Text style={[styles.footerText, { marginTop: 20 }]}>
-                Having problems?{' '}
-              </Text>
-              <Text style={styles.footerText} >
-                {'  Email:  '} 
-                <Text style={styles.contactText} onPress={() =>
-                    Linking.openURL('mailto:nhngcobo@deloitte.co.za?subject=AD-D-Summit Registration Issue')}>
-                  nhngcobo@deloitte.co.za
-                </Text>
-              </Text>
-              <Text style={styles.footerText}>{'  OR:  '}</Text>
-              <Text style={styles.contactText} onPress={() => { router.push({ pathname: '/contactUs' })
-              }}>
-                Contact us
-            </Text>
+            <ContactSupport />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

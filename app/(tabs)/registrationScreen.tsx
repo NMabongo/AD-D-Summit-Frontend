@@ -1,3 +1,4 @@
+import ContactSupport from '@/components/contactSupport';
 import ErrorModal from '@/components/ErrorModal';
 import LoginModal from '@/components/LoginModal';
 import { failedRegistration, serverErrorMessage, serverErrorTitle, tryDifferentEmail, userExists, userExistsTitle } from '@/constants/data_constants';
@@ -8,7 +9,6 @@ import {
   FlatList,
   ImageBackground,
   KeyboardAvoidingView,
-  Linking,
   Modal,
   Platform,
   ScrollView,
@@ -16,7 +16,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -337,22 +337,7 @@ const validateInput = async () => {
                 Login
               </Text>
           </Text>
-           <Text style={[styles.footerText, { marginTop: 20 }]}>
-              Having problems?{' '}
-            </Text>
-            <Text style={styles.footerText} >
-              {'  Email:  '} 
-              <Text style={styles.contactText} onPress={() =>
-                  Linking.openURL('mailto:nhngcobo@deloitte.co.za?subject=AD-D-Summit Registration Issue')}>
-                nhngcobo@deloitte.co.za
-              </Text>
-            </Text>
-            <Text style={styles.footerText}>{'  OR:  '}</Text>
-            <Text style={styles.contactText} onPress={() => {
-              router.push({ pathname: '/contactUs' })
-            }}>
-              Contact us
-          </Text>
+           <ContactSupport />
         </View>
         </ScrollView>
       </KeyboardAvoidingView>
