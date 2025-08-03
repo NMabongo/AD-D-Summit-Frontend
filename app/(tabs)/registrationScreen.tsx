@@ -34,6 +34,8 @@ export default function RegistrationScreen() {
   const [errorModalMessage, setErrorModalMessage] = useState('');
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [userExistsError, setUserExistsError] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
 
 
@@ -97,6 +99,7 @@ const clearData = async () => {
   setEmail('');
   setRegion('');
   setPassword('');
+  setConfirmPassword('');
 }
 
 const validateInput = async () => { 
@@ -130,11 +133,19 @@ const validateInput = async () => {
     setRegionError('');
   }
 
-  if (!validatePassword(password)) {
-    isValid = false;
-  } else {
-    setPasswordError('');
-  }
+if (!validatePassword(password)) {
+  isValid = false;
+} else {
+  setPasswordError('');
+}
+
+if (confirmPassword !== password) {
+  setConfirmPasswordError('Passwords do not match');
+  isValid = false;
+} else {
+  setConfirmPasswordError('');
+}
+
 
   if (isValid) {
     try {
@@ -322,7 +333,36 @@ const validateInput = async () => {
                 <Text style={styles.warningText}>⚠️ Do not use your Deloitte password</Text>
               )}
             </View>
-
+            <View style={[styles.inputContainer, styles.textInputLong]}>
+              <Text style={styles.label}>Confirm Password</Text>
+              <View style={styles.inputIconRow}>
+                <TextInput
+                  style={[styles.input, { flex: 1 }]}
+                  placeholder="Re-enter password"
+                  placeholderTextColor="#bdbdbd"
+                  value={confirmPassword}
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                    if (text === password) {
+                      setConfirmPasswordError('');
+                    }
+                  }}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Icon
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={22}
+                    color="#bdbdbd"
+                    style={{ marginRight: 10 }}
+                  />
+                </TouchableOpacity>
+              </View>
+              {confirmPasswordError ? (
+                <Text style={styles.warningText}>⚠️ {confirmPasswordError}</Text>
+              ) : null}
+            </View>
             <TouchableOpacity
               style={styles.button}
               onPress={async () => {
