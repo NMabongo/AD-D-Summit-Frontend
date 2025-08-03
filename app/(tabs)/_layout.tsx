@@ -29,7 +29,6 @@ export default function TabLayout() {
       <Tabs.Screen name="registrationScreen" options={{title: 'Register', tabBarStyle: { display: 'none' },}} />
       <Tabs.Screen name="registrationAttendanceConfirmation" options={{ title: 'registrationAttendanceConfirmation', tabBarStyle: { display: 'none' }, }} />
       <Tabs.Screen name="registrationTransportationConfirmation" options={{ title: 'registrationTransportationConfirmation', tabBarStyle: { display: 'none' },}} />
-      <Tabs.Screen name="contactUs" options={{ title: 'Contact Us', tabBarStyle: { display: 'none' },  }} />
       <Tabs.Screen name="mindful" options={{ title: 'mindful', tabBarStyle: { display: 'none' }, }} />
       <Tabs.Screen name="home" options={{ title: 'Home', tabBarStyle: { display: 'none' }, }} />
       <Tabs.Screen name="agenda"options={{ title: 'Agenda', tabBarStyle: { display: 'none' }, }} />

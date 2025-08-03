@@ -349,8 +349,7 @@ const validateInput = async () => {
             </Text>
             <Text style={styles.footerText}>{'  OR:  '}</Text>
             <Text style={styles.contactText} onPress={() => {
-              clearErrors();
-              router.push('/(tabs)/contactUs')
+              router.push({ pathname: '/contactUs' })
             }}>
               Contact us
           </Text>

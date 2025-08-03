@@ -1,9 +1,10 @@
 import ErrorModal from '@/components/ErrorModal';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
   const ContactUs: React.FC = () => {
     const insets = useSafeAreaInsets();
@@ -18,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
     const [errorModalTitle, setErrorModalTitle] = useState('');
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const profileBackground = require('@/assets/images/ContactUs.jpg');
+    const { from } = useLocalSearchParams();
 
     const clearData = () => {
       setFirstName('');
@@ -83,6 +85,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
         setSubmitting(false);
       }
     };
+
 
   return (
     <View style={{ flex: 1 }}>

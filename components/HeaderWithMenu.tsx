@@ -78,7 +78,7 @@ const HeaderWithMenu: React.FC<HeaderWithMenuProps> = ({
     await logout();
     setAvatarUrl(null);
     setLogoutModalVisible(false);
-    router.replace('/');
+    router.push('/');
   };
 
   return (

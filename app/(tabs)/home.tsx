@@ -316,7 +316,9 @@ const renderAgendaSection = () => {
           <Text style={styles.contactTitle}>Contact Us</Text>
         <TouchableOpacity 
           style={styles.card}
-          onPress={() => router.push('/(tabs)/contactUs')}
+          onPress={() => 
+          router.push({ pathname: '/contactUs' })
+          }
         >
           <View style={styles.iconContainer}>
             <Ionicons name="chatbubble" size={24} color="green" />

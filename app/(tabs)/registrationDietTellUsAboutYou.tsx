@@ -272,8 +272,7 @@ const handleUpdateAttendance = async () => {
               </Text>
               <Text style={styles.footerText}>{'  OR:  '}</Text>
               <Text style={styles.contactText} onPress={() => {
-                clearErrors();
-                router.push('/(tabs)/contactUs')
+                clearErrors(); router.push({ pathname: '/contactUs' })
               }}>
                 Contact us
             </Text>
