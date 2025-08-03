@@ -114,15 +114,6 @@ const renderAgendaSection = () => {
   if (days.length === 0) {
     return (
       <View>
-        <View style={[styles.agendaCard, { backgroundColor: '#E6F5D6', }]}>
-          <View style={[styles.iconBox, { backgroundColor: 'green' }]}>
-            <Icon name="timer-outline" size={18} color="#fff" />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.agendaSessionTitle}>Watch the space!</Text>
-          </View>
-        </View>
-
         <View style={styles.agendaHeaderRow}>
           <Text style={styles.agendaTitle}>Agenda</Text>
           <TouchableOpacity
@@ -144,8 +135,8 @@ const renderAgendaSection = () => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.agendaSessionTitle}>You’re all caught up!</Text>
-            <Text style={styles.agendaSessionDesc}>No scheduled events yet.</Text>
+            <Text style={styles.agendaSessionTitle}>Watch the space!</Text>
+            <Text style={styles.agendaSessionDesc}>Stay tuned for updates.</Text>
           </View>
         </View>
       </View>

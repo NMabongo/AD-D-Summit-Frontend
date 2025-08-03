@@ -70,8 +70,8 @@ const extractUniqueMonths = (events: any[]): string[] => {
                     style={{ width: 22, height: 22, resizeMode: 'contain' }}
                   />
                 ),
-                title: 'You’re all caught up!',
-                desc: 'No events scheduled for today.',
+                title: 'Watch the space!',
+                desc: 'Stay tuned for updates.',
                 time: '',
                 location: '',
                 color: '#E0E0E0',
