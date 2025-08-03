@@ -372,8 +372,9 @@ const maskedPassword = password.split('').map(() => '*').join('');
                   style={[styles.input, { flex: 1 }]}
                   placeholder="Password"
                   placeholderTextColor="#bdbdbd"
-                  value={showPassword ? password : maskedPassword}
-                  secureTextEntry={false}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={true}
                   autoCapitalize="none"
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -474,12 +475,18 @@ const maskedPassword = password.split('').map(() => '*').join('');
             onClose={() => {setErrorVisible(false), router.push('/(tabs)/home')}}
           />
           <DeleteAccountModal
-              visible={showDeleteModal}
-              onConfirm={() => {
-                handleDeleteProfile();
-              }}
-              onCancel={() => setShowDeleteModal(false)}
-            />
+            visible={showDeleteModal}
+            onConfirm={() => {
+              handleDeleteProfile(); 
+              setShowDeleteModal(false);
+            }}
+            onCancel={() => setShowDeleteModal(false)}
+            onFail={(message) => {
+              setErrorModalTitle('Password Error');
+              setErrorMessage(message);
+              setErrorVisible(true);
+            }}
+          />
         </ImageBackground>
               <NavigationBar name={en.navigationOptions.profile} 
             onTabPress={handleNavigationAndReset} 

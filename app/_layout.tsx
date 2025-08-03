@@ -1,11 +1,9 @@
-import { toastConfig } from '@/components/toastConfig';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Toast from 'react-native-toast-message';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -46,7 +44,6 @@ export default function RootLayout() {
           </ThemeProvider>
         </SafeAreaProvider>
       </ResetSignalContext.Provider>
-      <Toast config={toastConfig} bottomOffset={70} />
     </AuthProvider>
   );
 }
