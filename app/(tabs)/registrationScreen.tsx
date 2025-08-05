@@ -54,9 +54,16 @@ export default function RegistrationScreen() {
     'Global',
   ];
 
-  const validateEmail = (text: string) => {
+  const validateEmailFormat = (text: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(text);
+  };
+
+  const isDeloitteEmail = (text: string) => {
+    const parts = text.split('@');
+    if (parts.length !== 2) return false;
+    const domain = parts[1].toLowerCase();
+    return domain.includes('deloitte.');
   };
 
   const validatePassword = (text: string) => {
@@ -121,8 +128,11 @@ const validateInput = async () => {
     setLastNameError('');
   }
 
-  if (!email.trim() || !validateEmail(email)) {
+  if (!email.trim() || !validateEmailFormat(email)) {
     setEmailError('Invalid email format');
+    isValid = false;
+  } else if (!isDeloitteEmail(email)) {
+    setEmailError('Email must be a Deloitte email');
     isValid = false;
   } else {
     setEmailError('');
@@ -290,8 +300,10 @@ if (confirmPassword !== password) {
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
-                    if (!validateEmail(text)) {
+                    if (!validateEmailFormat(text)) {
                       setEmailError('Invalid email format');
+                    } else if (!isDeloitteEmail(text)) {
+                      setEmailError('Email must be a Deloitte email');
                     } else {
                       setEmailError('');
                     }
