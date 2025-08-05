@@ -6,6 +6,7 @@ import { saveToken } from '@/utils/authToken';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   ImageBackground,
   KeyboardAvoidingView,
@@ -33,6 +34,7 @@ export default function RegistrationScreen() {
   const [errorModalTitle, setErrorModalTitle] = useState('');
   const [errorModalMessage, setErrorModalMessage] = useState('');
   const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [userExistsError, setUserExistsError] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
@@ -146,8 +148,9 @@ if (confirmPassword !== password) {
   setConfirmPasswordError('');
 }
 
+  if (!isValid) return false;
 
-  if (isValid) {
+    setLoading(true);
     try {
       const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/register', {
         method: 'POST',
@@ -167,7 +170,7 @@ if (confirmPassword !== password) {
 
       if (response.ok) {
         clearData();
-        handleLogin()
+        await handleLogin();
         router.push({
           pathname: '/(tabs)/registrationAttendanceConfirmation',
           params: { email: email }
@@ -188,8 +191,10 @@ if (confirmPassword !== password) {
         setErrorModalTitle(serverErrorTitle);
         setErrorModalMessage(serverErrorMessage);
         setErrorModalVisible(true);
-  }}
-  return isValid; 
+    } finally {
+      setLoading(false);
+    }
+    return true;
 };
 
 
@@ -211,6 +216,20 @@ if (confirmPassword !== password) {
 
   return (
     <View style={{ flex: 1}}>
+            {loading && (
+            <View
+              style={{
+                ...StyleSheet.absoluteFillObject,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 999,
+              }}
+            >
+              <ActivityIndicator size="large" color="#7EC60B" />
+              <Text style={{ marginTop: 8 }}>Registering...</Text>
+            </View>
+          )}
         <ImageBackground
           source={profileBackground}
           style={styles.background}
@@ -368,8 +387,11 @@ if (confirmPassword !== password) {
               onPress={async () => {
                 await validateInput();
               }}
+              disabled={loading}
             >
-              <Text style={styles.buttonText}>Register Now</Text>
+              <Text style={styles.buttonText}>
+                {loading ? 'Registering...' : 'Register Now'}
+              </Text>
             </TouchableOpacity>
             <Text style={styles.footerLoginText}>
               Already registered?{' '}
