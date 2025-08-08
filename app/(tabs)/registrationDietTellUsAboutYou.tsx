@@ -20,7 +20,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const profileBackground = require('@/assets/images/confirmAttendance.jpg')
 
 const dietaryOptions = [
-  { label: "None", value: 'None' },
+  { label: "I eat everything.", value: 'None' },
   { label: 'Halaal', value: 'Halaal' },
   { label: 'Vegetarian', value: 'Vegetarian' },
   { label: 'Vegan', value: 'Vegan' },
@@ -149,11 +149,10 @@ const handleUpdateAttendance = async () => {
         >
           <View style={styles.overlay}>
             <Text style={styles.title}>Tell us about you</Text>
-            <Text style={styles.subtitle}>Summit dates:  8 - 10 Sep '25</Text>
 
             <View style={{ marginTop: 16, width: '100%' }}>
               
-              <Text style={[styles.radioLabel, {marginBottom: 8}]}> What is your food Preference</Text>
+              <Text style={[styles.radioLabel, {marginBottom: 12}]}>What do you like to eat?</Text>
               {dietaryOptions.map(option => (
                 <View  key={option.value}>
                   <TouchableOpacity
@@ -173,7 +172,7 @@ const handleUpdateAttendance = async () => {
                     <View >
                       <TextInput
                         style={[styles.inputRoomShare]}
-                        placeholder="please enter your food preference"
+                        placeholder="Please enter your food preference"
                         placeholderTextColor="#bdbdbd"
                         value={otherDietary}
                             onChangeText={setOtherDietary}
@@ -184,8 +183,8 @@ const handleUpdateAttendance = async () => {
                 </View>
               ))}
               <View style={{ marginTop: 8}}>
-                <Text style={styles.radioLabel}>Do you require accommodation?</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginLeft: 36 }}>
+                <Text style={[styles.radioLabel, {marginBottom: 12}]}>Will you stay over both nights (8 Sep and 9 Sep)?</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12, marginLeft: 0 }}>
                     <TouchableOpacity
                       style={[styles.radioRow, { marginRight: 16 }]}
                       onPress={() => setRequireAccommodation(true)}
@@ -209,7 +208,7 @@ const handleUpdateAttendance = async () => {
                   </View>
                 {requireAccommodation && (
                   <View> 
-                    <Text style={[styles.radioLabel, { marginBottom: 8, marginLeft: 36 }]}>Please provide the name of a colleague you wish to share a room with. Leave blank if you don't have anyone in mind.</Text>
+                    <Text style={[styles.radioLabel, { marginBottom: 8, marginLeft: 0 }]}>Who is your roomy of choice? Leave blank if you don't have anyone in mind.</Text>
                     <TextInput
                       style={styles.inputRoomShare}
                       placeholder="Room share colleague's name"
@@ -222,17 +221,26 @@ const handleUpdateAttendance = async () => {
                 )}
               </View>
             </View>
-            <View style={[styles.inputContainer, styles.textInputLong]}>
-              <Text style={[styles.radioLabel, {marginBottom: 8}]}>please select your jacket size?</Text>
-              <TouchableOpacity
+            <View style={[styles.inputContainer, styles.textInputLong, { width: '100%' }]}>
+              <Text style={[styles.radioLabel, {marginBottom: 8}]}>Please select your jacket/hoodie size?</Text>
+                <TouchableOpacity
                 style={styles.dropdownTrigger}
                 onPress={() => setSelectJacketSize(true)}
-              >
-                <Text style={jacketSizeSelected ? styles.dropdownText : styles.dropdownPlaceholder}>
+                >
+                <Text
+                  style={[
+                  jacketSizeSelected ? styles.dropdownText : styles.dropdownPlaceholder,
+                  { flex: 1 }
+                  ]}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
                   {jacketSizeSelected ? jacketSizeSelected.label : 'Select your jacket size'}
                 </Text>
-                <Icon name="chevron-down-outline" size={22} color="#bdbdbd" style={{ marginRight: 10 }} />
-              </TouchableOpacity>
+                <View style={{ flexShrink: 0, alignItems: 'flex-end' }}>
+                  <Icon name="chevron-down-outline" size={22} color="#bdbdbd" />
+                </View>
+                </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginBottom: 18 }}>
               <Text style={[styles.radioLabel, { marginRight: 12, marginBottom: 0 }]}>Tell us about you</Text>
@@ -381,7 +389,6 @@ const styles = StyleSheet.create({
     color: '#222',
     minHeight: 40,
     marginBottom: 18,
-    marginLeft: 36,
   },
   button: {
     flexDirection: 'row',
@@ -449,7 +456,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingRight: 6,
+    paddingLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
