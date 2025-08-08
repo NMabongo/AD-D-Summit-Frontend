@@ -237,7 +237,6 @@ if (confirmPassword !== password) {
               }}
             >
               <ActivityIndicator size="large" color="#7EC60B" />
-              <Text style={{ marginTop: 8 }}>Registering...</Text>
             </View>
           )}
         <ImageBackground
