@@ -16,8 +16,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 
 const transportationOptions = [
-  { label: 'Hook me up with a lift from the Waterfall', value: 'office' },
-  { label: "I'l be driving there", value: 'own' },
+  { label: 'Hook me up with a lift from our Waterfall office', value: 'office' },
+  { label: "I'll be driving there", value: 'own' },
 ];
   const profileBackground = require('@/assets/images/confirmTransportation.jpg')
 

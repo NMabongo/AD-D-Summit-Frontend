@@ -135,8 +135,7 @@ const handleUpdateAttendance = async () => {
         >
           <View style={styles.overlay}>
             <Text style={styles.title}>Confirm your attendance</Text>
-            <Text style={styles.subtitle}>Summit dates:  8 - 10 Sep '25</Text>
-
+            
             <View style={{ marginTop: 16, marginBottom: 18 }}>
               {attendanceOptions.map(option => (
                 <View  key={option.value}>

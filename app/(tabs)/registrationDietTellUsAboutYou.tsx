@@ -211,7 +211,7 @@ const handleUpdateAttendance = async () => {
                     <Text style={[styles.radioLabel, { marginBottom: 8, marginLeft: 0 }]}>Who is your roomy of choice? Leave blank if you don't have anyone in mind.</Text>
                     <TextInput
                       style={styles.inputRoomShare}
-                      placeholder="Room share colleague's name"
+                      placeholder="Please enter preferred roomy's name"
                       placeholderTextColor="#bdbdbd"
                       value={roommate}
                       onChangeText={setRoommate}
