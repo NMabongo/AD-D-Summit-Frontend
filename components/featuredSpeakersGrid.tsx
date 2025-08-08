@@ -16,7 +16,13 @@ import ErrorModal from './ErrorModal';
 
 const placeholderAvatar = require('@/assets/icons/profile-icon.png');
 
-export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = false }) {
+interface FeaturedSpeakersGridProps {
+  horizontal?: boolean;
+  fromHome?: boolean;
+  onSpeakersLoaded?: (hasSpeakers: boolean) => void;
+}
+
+export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = false, onSpeakersLoaded = () => {}, }: FeaturedSpeakersGridProps) {
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
   const[errorVisible, setErrorVisible] = useState(false);
   const[errorMessage, setErrorMessage] = useState('');
@@ -42,17 +48,21 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
 
           const data = await response.json();
           if (response.ok) {
-            setSpeakers(data.speakers as Speaker[]);
+            const speakerList = data.speakers as Speaker[];
+            setSpeakers(speakerList);
+            onSpeakersLoaded(speakerList.length > 0);
           } else {
             setErrorModalTitle('Error');
-            setErrorMessage('Failed to load Speaker data. Please try again. later');
+            setErrorMessage('Failed to load Speaker data. Please try again later.');
             setErrorVisible(true);
+            onSpeakersLoaded(false);
           }
         } catch (error) {
           console.error('Error fetching speakers:', error);
           setErrorModalTitle('Error');
-          setErrorMessage('Speaker\'s  data cannot be loaded at this time, please try again later.');
+          setErrorMessage("Speakers' data cannot be loaded at this time, please try again later.");
           setErrorVisible(true);
+          onSpeakersLoaded(false);
         }
       };
       fetchSpeakers();
@@ -62,7 +72,7 @@ export default function FeaturedSpeakersGrid({ horizontal = false, fromHome = fa
 return (
   <ScrollView contentContainerStyle={{}} horizontal={horizontal}>
     <View style={styles.speakersGrid}>
-      {speakers.length > 0 ? (
+      {speakers.length > 0 &&
         speakers.map((speaker) => (
           <TouchableOpacity
             key={speaker.id}
@@ -91,14 +101,7 @@ return (
               <Text style={styles.speakerTitle}>{speaker.expertise}</Text>
             </View>
           </TouchableOpacity>
-        ))
-      ) : (
-        <View style={[styles.speakerCard, { width: cardWidth, alignItems: 'center', justifyContent: 'center' }]}>
-          <Ionicons name="person" size={40} color="#BDBDBD" />
-          <Text style={styles.speakerName}>No speakers yet</Text>
-          <Text style={styles.speakerTitle}>Check back later</Text>
-        </View>
-      )}
+        ))}
     </View> 
     <ErrorModal
       visible={errorVisible}

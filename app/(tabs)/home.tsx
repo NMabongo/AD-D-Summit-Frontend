@@ -19,6 +19,7 @@ export default function Home() {
   const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
   const [attendeeCount, setAttendeeCount] = useState<number | null>(null);
   const [showMap, setShowMap] = useState(false);
+  const [hasSpeakers, setHasSpeakers] = useState(false);
 
   const router = useRouter();
   const nextTime = useMemo(() => {
@@ -135,8 +136,8 @@ const renderAgendaSection = () => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.agendaSessionTitle}>Watch the space!</Text>
-            <Text style={styles.agendaSessionDesc}>Stay tuned for updates.</Text>
+            <Text style={styles.agendaSessionTitle}>⏳ Not quite showtime!</Text>
+            <Text style={styles.agendaSessionDesc}>The agenda’s still backstage. Stay tuned for the big reveal!</Text>
           </View>
         </View>
       </View>
@@ -293,15 +294,19 @@ const renderAgendaSection = () => {
 
           {renderAgendaSection()}
 
-        <View>
+          {hasSpeakers && (
           <View style={styles.agendaHeaderRow}>
             <Text style={styles.agendaTitle}>Featured Speakers</Text>
             <TouchableOpacity onPress={() => router.push('/(tabs)/featuredSpeakers')}>
               <Text style={styles.fullSchedule}>View All</Text>
             </TouchableOpacity>
           </View>
-          <FeaturedSpeakersGrid horizontal={true} fromHome={true} />
-        </View>
+          )}
+
+          <FeaturedSpeakersGrid
+            onSpeakersLoaded={(has) => setHasSpeakers(has)}
+            fromHome={true}
+            horizontal={true} />
 
       <View style={styles.quickActionsContainer}>
           <Text style={styles.contactTitle}>Contact Us</Text>
