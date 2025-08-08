@@ -80,8 +80,7 @@ const handleUpdateTellUsAboutYourself = async () => {
       return;
     }
     try {
-    
-      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/ConfirmAttendance', {
+      const response = await fetch('https://deloittesummitbe.azurewebsites.net/api/User/TellUsAboutYouUpdate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
