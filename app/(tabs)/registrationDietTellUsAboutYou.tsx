@@ -37,7 +37,6 @@ const jacketSizeOptions = [
 
   
 export default function RegistrationAttendanceConfirmation() {
-  const [selected, setSelected] = useState('');
   const [jacketSizeSelected, setJacketSizeSelected] = useState<{ label: string; value: string } | null>(null);
   const [funFact, setFunFact] = useState('');
   const { email } = useLocalSearchParams();
@@ -75,7 +74,7 @@ export default function RegistrationAttendanceConfirmation() {
     return true;
   };
 
-const handleUpdateAttendance = async () => {
+const handleUpdateTellUsAboutYourself = async () => {
 
     if (!validateParameters()) {
       return;
@@ -89,7 +88,6 @@ const handleUpdateAttendance = async () => {
          // Authorization: ``
         },
         body:JSON.stringify({
-          attending: selected,
           email: email,
           funFact: funFact,
           dietaryPreference: dietarySelected === 'Other' ? otherDietary : dietarySelected,
@@ -109,23 +107,23 @@ const handleUpdateAttendance = async () => {
         if (data.statusCode === 200) {
           nextScreen();
         }else{
-          console.error('Confirm attandance Failed;', {response})
+          console.error('Tell us about you Failed;', {response})
           setErrorModalTitle('Error');            
-          setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+          setErrorModalMessage(`Could not update your information at this time. Please try again later`);     
           setErrorModalVisible(true);
         }
       } else {
         data = null;
-          console.error('Confirm attandance Failed;', {response})
+          console.error('Tell us about you Failed;', {response})
           setErrorModalTitle('Error');            
-          setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+          setErrorModalMessage(`Could not update your information at this time. Please try again later`);     
           setErrorModalVisible(true);
       }
 
     } catch (error) {
-      console.error('Confirm attandance Failed;', {error})
+      console.error('Tell us about you Failed;', {error})
       setErrorModalTitle('Error');            
-      setErrorModalMessage(`Could not confirm your attandance at this time. Please try again later`);     
+      setErrorModalMessage(`Could not update your information at this time. Please try again later`);     
       setErrorModalVisible(true);
     }
   };
@@ -257,7 +255,7 @@ const handleUpdateAttendance = async () => {
               textAlignVertical="top"
             />
 
-            <TouchableOpacity style={styles.button} onPress={handleUpdateAttendance}>
+            <TouchableOpacity style={styles.button} onPress={handleUpdateTellUsAboutYourself}>
               <Icon name="person-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
