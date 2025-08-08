@@ -4,6 +4,7 @@ import FullScreenLoader from '@/components/FullScreenLoader';
 import HeaderWithMenu from '@/components/HeaderWithMenu';
 import MapModal from '@/components/MapModal';
 import NavigationBar from '@/components/navigationBar';
+import SummitFAQCard from '@/components/SummitFAQCard';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
 import { Route, useFocusEffect, useRouter } from 'expo-router';
@@ -307,6 +308,11 @@ const renderAgendaSection = () => {
             onSpeakersLoaded={(has) => setHasSpeakers(has)}
             fromHome={true}
             horizontal={true} />
+
+           <View style={styles.agendaHeaderRow}>
+            <Text style={styles.agendaTitle}>FAQs</Text>
+          </View>
+          <SummitFAQCard />
 
       <View style={styles.quickActionsContainer}>
           <Text style={styles.contactTitle}>Contact Us</Text>
