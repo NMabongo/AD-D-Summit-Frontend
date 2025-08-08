@@ -35,7 +35,7 @@ export default function RegistrationTransportationConfirmation() {
   const nextScreen = () => {
     router.push({
         pathname: '/(tabs)/registrationDietTellUsAboutYou',
-        params: { email: email }
+        params: { email: email, registered: 'true'}
       });
   };
   const handleUpdateTravel = async () => {

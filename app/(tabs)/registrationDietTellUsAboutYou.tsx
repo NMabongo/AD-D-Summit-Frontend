@@ -55,6 +55,7 @@ export default function RegistrationAttendanceConfirmation() {
     pathname: '/home', 
     params: { 
       email: email,
+      registered: 'true',
     }} );
 }
 

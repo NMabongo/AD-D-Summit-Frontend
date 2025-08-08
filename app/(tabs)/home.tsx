@@ -7,9 +7,9 @@ import NavigationBar from '@/components/navigationBar';
 import SummitFAQCard from '@/components/SummitFAQCard';
 import useTimer from '@/components/useTimer';
 import { AgendaItem } from '@/constants/AgendaItem';
-import { Route, useFocusEffect, useRouter } from 'expo-router';
+import { Route, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { default as Icon, default as Ionicons } from 'react-native-vector-icons/Ionicons';
@@ -21,6 +21,8 @@ export default function Home() {
   const [attendeeCount, setAttendeeCount] = useState<number | null>(null);
   const [showMap, setShowMap] = useState(false);
   const [hasSpeakers, setHasSpeakers] = useState(false);
+  const { registered } = useLocalSearchParams();
+  const [showBanner, setShowBanner] = useState(false);
 
   const router = useRouter();
   const nextTime = useMemo(() => {
@@ -91,6 +93,17 @@ export default function Home() {
       fetchEvents();
     }, [])
   );
+
+useEffect(() => {
+  if (registered === 'true' && !loading) {
+    setShowBanner(true);
+    const timer = setTimeout(() => {
+      setShowBanner(false);
+      router.replace('/(tabs)/home');
+    }, 4000);
+    return () => clearTimeout(timer);
+  }
+}, [registered, loading]);
 
   const days = useMemo(() => {
     const grouped: { [key: string]: AgendaItem[] } = {};
@@ -200,6 +213,34 @@ const renderAgendaSection = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <StatusBar style="light" translucent backgroundColor="transparent" />
+            {showBanner && (
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#F5FDF7',
+                borderLeftWidth: 6,
+                borderLeftColor: '#66BB6A', 
+                marginHorizontal: 16,
+                marginTop: 12,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                shadowColor: '#000',
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                shadowOffset: { width: 0, height: 2 },
+                elevation: 2,
+              }}>
+                <Text style={{
+                  color: '#333',
+                  fontSize: 14,
+                  fontWeight: '500',
+                  flex: 1,
+                }}>
+                  Your registration was successful. Welcome to Deloitte Summit!
+                </Text>
+              </View>
+            )}
+
       { loading ?   <FullScreenLoader/> : (
         <>
       <View style={styles.headerContainer}>

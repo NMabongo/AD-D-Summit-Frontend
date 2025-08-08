@@ -183,7 +183,7 @@ if (confirmPassword !== password) {
         await handleLogin();
         router.push({
           pathname: '/(tabs)/registrationAttendanceConfirmation',
-          params: { email: email }
+          params: { email: email, registered: 'true' },        
         });
       } else {
         setErrorModalTitle(failedRegistration);

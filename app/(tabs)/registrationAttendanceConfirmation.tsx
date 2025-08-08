@@ -49,6 +49,7 @@ export default function RegistrationAttendanceConfirmation() {
         pathname: '/registrationTransportationConfirmation',
         params: {
           email: email,
+          registered: 'true',
         }
       });
     } else {
@@ -56,6 +57,7 @@ export default function RegistrationAttendanceConfirmation() {
         pathname: '/home',
         params: {
           email: email,
+          registered: 'true',
         }
       });
     }
