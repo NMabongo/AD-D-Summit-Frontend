@@ -97,8 +97,7 @@ export default function RegistrationTransportationConfirmation() {
       >
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <View style={styles.overlay}>
-            <Text style={styles.title}>Confirm your transportation</Text>
-            <Text style={styles.title}>Let us know your preference</Text>
+            <Text style={styles.title}>How will you travel to the venue?</Text>
             <View style={{ justifyContent: 'center' }}>
               <TouchableOpacity
                   style={styles.mapButton}
