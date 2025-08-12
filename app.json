@@ -2,7 +2,7 @@
   "expo": {
     "name": "AD-D-Summit",
     "slug": "AD-D-Summit",
-    "version": "1.0.3",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icons/africa.png",
     "scheme": "addsummit",
@@ -22,7 +22,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.nmabongo.ADDSummit"
+      "package": "com.nmabongo.ADDSummit",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
