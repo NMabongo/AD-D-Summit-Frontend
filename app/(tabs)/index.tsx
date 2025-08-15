@@ -1,13 +1,58 @@
 import en from "@/assets/translations/en.json";
-import { router } from 'expo-router';
-import React from 'react';
+import * as AuthSession from 'expo-auth-session';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 
-    const profileBackground = require('@/assets/images/WelcomeBackground-2.png')
+  const profileBackground = require('@/assets/images/WelcomeBackground-2.png')
+const azureConfig = {
+    clientId: 'YOUR_AZURE_CLIENT_ID', // From Junaid
+    tenantId: 'YOUR_AZURE_TENANT_ID', // From Junaid
+    redirectUri: AuthSession.makeRedirectUri({}),
+    scopes: ['openid', 'profile', 'email', 'User.Read'],
+    useNonce: true,
+    usePKCE: true,
+};
+
+const serviceConfig = {
+    authorizationEndpoint: `https://login.microsoftonline.com/${azureConfig.tenantId}/oauth2/v2.0/authorize`,
+    tokenEndpoint: `https://login.microsoftonline.com/${azureConfig.tenantId}/oauth2/v2.0/token`,
+};
 
 export default function homeScreen(){
+  // Auth state variables
+  const [request, response, promptAsync] = AuthSession.useAuthRequest({
+          clientId: azureConfig.clientId,
+          redirectUri: azureConfig.redirectUri,
+          scopes: azureConfig.scopes,
+          responseType: AuthSession.ResponseType.Token,
+      }, serviceConfig);  
+
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+          if (response?.type === 'success') {
+              const { access_token } = response.params;
+              fetchUserInfo(access_token);
+          }
+      }, [response]);
+  
+      const fetchUserInfo = async (token: string) => {
+          setLoading(true);
+          try {
+              const res = await fetch('https://graph.microsoft.com/v1.0/me', {
+                  headers: { Authorization: `Bearer ${token}` },
+              });
+              const data = await res.json();
+              setUserInfo(data);
+          } catch (e) {
+              setUserInfo(null);
+          }
+          setLoading(false);
+      };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -28,7 +73,7 @@ export default function homeScreen(){
             <Text style={styles.hostedBy}>{en.welcomePage.hostedBy}</Text>
             <Text style={styles.cardSubtitle}>{en.welcomePage.cardSubtitlePractice}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={ () => router.push('/registrationScreen')}>
+          <TouchableOpacity style={styles.button} onPress={ () => promptAsync()}>
             <Text style={styles.buttonText}>{en.welcomePage.buttonText}</Text>
           </TouchableOpacity>
         </View>
